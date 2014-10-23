@@ -3,6 +3,9 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QLabel>
+#include <QListWidgetItem>
+#include <QGroupBox>
+#include <iostream>
 
 
 /* ********************************************************************************************* *
@@ -90,6 +93,28 @@ Settings::kochPrefLastChars() const {
 void
 Settings::setKochPrefLastChars(bool pref) {
   this->setValue("koch/prefLastChars", pref);
+}
+
+QSet<QChar>
+Settings::randomChars() const {
+  QSet<QChar> chars;
+  if (! this->contains("random/chars")) {
+    chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
+          << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
+          << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
+          << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@';
+  } else {
+    QString str = this->value("random/chars").toString();
+    for (int i=0; i<str.size(); i++) { chars.insert(str[i]); }
+  }
+  return chars;
+}
+void
+Settings::setRandomChars(const QSet<QChar> &chars) {
+  QString str;
+  QSet<QChar>::const_iterator c = chars.begin();
+  for (; c != chars.end(); c++) { str.append(*c); }
+  this->setValue("random/chars", str);
 }
 
 
@@ -216,6 +241,10 @@ TutorSettingsView::onTutorSelected(int idx) {
 
 void
 TutorSettingsView::save() {
+  // Save all tutors
+  _kochSettings->save();
+  _randSettings->save();
+
   // Get tutor by index
   Settings settings;
   if (0 == _tutor->currentIndex()) {
@@ -223,7 +252,6 @@ TutorSettingsView::save() {
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
   }
-  _kochSettings->save();
 }
 
 
@@ -231,7 +259,7 @@ TutorSettingsView::save() {
  * Koch Tutor Settings Widget
  * ********************************************************************************************* */
 KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
-  : QWidget(parent)
+  : QGroupBox(tr("Koch tutor settings"), parent)
 {
   Settings settings;
 
@@ -261,15 +289,102 @@ KochTutorSettingsView::save() {
  * Random Tutor Settings Widget
  * ********************************************************************************************* */
 RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
-  : QWidget(parent)
+  : QGroupBox(tr("Random tutor settings"),parent)
 {
   Settings settings;
+  QListWidgetItem *item = 0;
 
-  QVBoxLayout *layout = new QVBoxLayout();
-  layout->addWidget(new QLabel("TODO"));
+  QSet<QChar> enabled_chars = settings.randomChars();
+  QList<QChar> alpha, num, punct, prosign;
+  alpha << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
+        << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z';
+  num << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9';
+  punct << '.' << ',' << ':' << ';' << '&' << '?' << '+' << '-' << '@';
+  prosign << '/' << '=';
+
+  // Assemble char table
+  _alpha = new QListWidget();
+  _alpha->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  foreach (QChar c, alpha) {
+    item = new QListWidgetItem(c, _alpha);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (enabled_chars.contains(c)) {
+      item->setCheckState(Qt::Checked);
+    } else {
+      item->setCheckState(Qt::Unchecked);
+    }
+  }
+  // Assemble char table
+  _num = new QListWidget();
+  _num->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  foreach (QChar c, num) {
+    item = new QListWidgetItem(c, _num);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (enabled_chars.contains(c)) {
+      item->setCheckState(Qt::Checked);
+    } else {
+      item->setCheckState(Qt::Unchecked);
+    }
+  }
+  // Assemble punc table
+  _punct = new QListWidget();
+  _punct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  foreach (QChar c, punct) {
+    item = new QListWidgetItem(c, _punct);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (enabled_chars.contains(c)) {
+      item->setCheckState(Qt::Checked);
+    } else {
+      item->setCheckState(Qt::Unchecked);
+    }
+  }
+  // Assemble prosig table
+  _prosign = new QListWidget();
+  _prosign->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  foreach (QChar c, prosign) {
+    item = new QListWidgetItem(c, _prosign);
+    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    if (enabled_chars.contains(c)) {
+      item->setCheckState(Qt::Checked);
+    } else {
+      item->setCheckState(Qt::Unchecked);
+    }
+  }
+
+  QTabWidget *tabs = new QTabWidget();
+  tabs->addTab(_alpha, tr("Characters"));
+  tabs->addTab(_num, tr("Numbers"));
+  tabs->addTab(_punct, tr("Punctuations"));
+  tabs->addTab(_prosign, tr("Prosigns"));
+
+  QHBoxLayout *layout = new QHBoxLayout();
+  layout->addWidget(tabs);
   this->setLayout(layout);
 }
 
 void
 RandomTutorSettingsView::save() {
+  QSet<QChar> enabled_chars;
+  for (int i=0; i<_alpha->count(); i++) {
+    if (Qt::Checked == _alpha->item(i)->checkState()) {
+      enabled_chars.insert(_alpha->item(i)->text()[0]);
+    }
+  }
+  for (int i=0; i<_num->count(); i++) {
+    if (Qt::Checked == _num->item(i)->checkState()) {
+      enabled_chars.insert(_num->item(i)->text()[0]);
+    }
+  }
+  for (int i=0; i<_punct->count(); i++) {
+    if (Qt::Checked == _punct->item(i)->checkState()) {
+      enabled_chars.insert(_punct->item(i)->text()[0]);
+    }
+  }
+  for (int i=0; i<_prosign->count(); i++) {
+    if (Qt::Checked == _prosign->item(i)->checkState()) {
+      enabled_chars.insert(_prosign->item(i)->text()[0]);
+    }
+  }
+
+  Settings().setRandomChars(enabled_chars);
 }

@@ -20,7 +20,7 @@ Application::Application(int argc, char *argv[])
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
     break;
   case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(this);
+    _tutor = new RandomTutor(settings.randomChars(), this);
     break;
   }
 
@@ -81,7 +81,7 @@ Application::applySettings()
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
     break;
   case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(this);
+    _tutor = new RandomTutor(settings.randomChars(), this);
     break;
   }
 }

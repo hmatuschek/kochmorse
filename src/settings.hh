@@ -9,7 +9,8 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSettings>
-
+#include <QListWidget>
+#include <QGroupBox>
 
 /** Represents global persistent settings. */
 class Settings: public QSettings
@@ -47,10 +48,13 @@ public:
 
   bool kochPrefLastChars() const;
   void setKochPrefLastChars(bool pref);
+
+  QSet<QChar> randomChars() const;
+  void setRandomChars(const QSet<QChar> &chars);
 };
 
 
-class KochTutorSettingsView: public QWidget
+class KochTutorSettingsView: public QGroupBox
 {
   Q_OBJECT
 
@@ -65,7 +69,7 @@ protected:
 };
 
 
-class RandomTutorSettingsView: public QWidget
+class RandomTutorSettingsView: public QGroupBox
 {
   Q_OBJECT
 
@@ -75,6 +79,10 @@ public:
   void save();
 
 protected:
+  QListWidget *_alpha;
+  QListWidget *_num;
+  QListWidget *_punct;
+  QListWidget *_prosign;
 };
 
 

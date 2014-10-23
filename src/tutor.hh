@@ -57,6 +57,7 @@ class RandomTutor: public Tutor
 
 public:
   explicit RandomTutor(QObject *parent=0);
+  explicit RandomTutor(const QSet<QChar> &chars, QObject *parent=0);
   virtual ~RandomTutor();
 
   QChar next();

@@ -117,11 +117,20 @@ RandomTutor::RandomTutor(QObject *parent)
 {
   // Init random number generator
   srand(time(0));
-  // Assemble default char-table
   _chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
          << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
          << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
          << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@';
+}
+
+RandomTutor::RandomTutor(const QSet<QChar> &chars, QObject *parent)
+  : Tutor(parent), _text(), _chars()
+{
+  // Init random number generator
+  srand(time(0));
+  _chars.reserve(chars.size());
+  QSet<QChar>::const_iterator c = chars.begin();
+  for (; c != chars.begin(); c++) { _chars.push_back(*c); }
 }
 
 RandomTutor::~RandomTutor() {
