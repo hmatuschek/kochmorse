@@ -20,7 +20,7 @@ public:
 public slots:
   void startSession();
   void stopSession();
-  /** Updates all object from the given settings. */
+  /** Updates all objects from the persisten settings. */
   void applySettings();
 
 signals:
