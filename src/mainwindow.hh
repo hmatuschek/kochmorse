@@ -2,7 +2,7 @@
 #define __KOCHMORSE_MAINWINDOW_HH__
 
 #include <QMainWindow>
-#include <QTextEdit>
+#include <QPlainTextEdit>
 #include <QAction>
 #include <QSlider>
 #include <QLabel>
@@ -22,11 +22,13 @@ protected slots:
 
   void onPlayToggled(bool play);
   void onPrefClicked();
+  void onAboutClicked();
   void onVolumeChanged(int value);
+  void onQuit();
 
 protected:
   Application &_app;
-  QTextEdit *_text;
+  QPlainTextEdit *_text;
   QAction *_play;
   QAction *_pref;
   QAction *_info;

@@ -1,10 +1,9 @@
-<!DOCTYPE RCC>
-
-<RCC version="1.0">
-<qresource>
- <file>icons/exit.svg</file>
- <file>icons/help.svg</file>
- <file>icons/play.svg</file>
- <file>icons/preferences.svg</file>
-</qresource>
+<RCC>
+    <qresource prefix="/">
+        <file>icons/exit.svg</file>
+        <file>icons/help.svg</file>
+        <file>icons/play.svg</file>
+        <file>icons/preferences.svg</file>
+        <file>text/about.html</file>
+    </qresource>
 </RCC>

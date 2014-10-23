@@ -8,6 +8,7 @@
 #include <QLabel>
 
 #include "settings.hh"
+#include "aboutdialog.hh"
 
 
 MainWindow::MainWindow(Application &app, QWidget *parent)
@@ -16,10 +17,13 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   this->setWindowTitle(tr("Koch Morse Tutor"));
   Settings settings;
 
-  _text = new QTextEdit();
+  _text = new QPlainTextEdit();
   _text->setMinimumSize(640,230);
-  _text->setFontFamily("Helvetica");
-  _text->setFontPointSize(12);
+  QFont f = _text->document()->defaultFont();
+  f.setFamily("Courier");
+  f.setPointSize(14);
+  f.setStyleHint(QFont::Monospace);
+  _text->document()->setDefaultFont(f);
   _text->setReadOnly(true);
 
   _play = new QAction(
@@ -68,7 +72,8 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   QObject::connect(&_app, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
   QObject::connect(_play, SIGNAL(triggered(bool)), this, SLOT(onPlayToggled(bool)));
   QObject::connect(_pref, SIGNAL(triggered()), this, SLOT(onPrefClicked()));
-  QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(close()));
+  QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
+  QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
   QObject::connect(_volume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
 }
 
@@ -86,7 +91,7 @@ MainWindow::onCharSend(QChar ch) {
 void
 MainWindow::onPlayToggled(bool play) {
   if (play) {
-    _text->clear();
+    _text->document()->clear();
     _app.startSession();
   } else {
     _app.stopSession();
@@ -97,8 +102,16 @@ void
 MainWindow::onPrefClicked() {
   SettingsDialog d;
   if (QDialog::Accepted == d.exec()) {
+    if (_play->isChecked()) {
+      _play->setChecked(false);
+    }
     _app.applySettings();
   }
+}
+
+void
+MainWindow::onAboutClicked() {
+  AboutDialog().exec();
 }
 
 void
@@ -112,4 +125,10 @@ MainWindow::onVolumeChanged(int value)
   Settings settings;
   settings.setVolume(factor);
   _volumeLabel->setText(tr("Volume: %1%").arg(int(100*settings.volume())));
+}
+
+void
+MainWindow::onQuit() {
+  _app.stopSession();
+  this->close();
 }

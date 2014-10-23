@@ -17,7 +17,8 @@ class Settings: public QSettings
   Q_OBJECT
 public:
   typedef enum {
-    TUTOR_KOCH = 0
+    TUTOR_KOCH = 0,
+    TUTOR_RANDOM = 1
   } Tutor;
 
 public:
@@ -64,6 +65,19 @@ protected:
 };
 
 
+class RandomTutorSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit RandomTutorSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+};
+
+
 class TutorSettingsView: public QWidget
 {
   Q_OBJECT
@@ -79,6 +93,7 @@ protected:
   QComboBox *_tutor;
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
+  RandomTutorSettingsView *_randSettings;
 };
 
 

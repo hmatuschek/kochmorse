@@ -14,8 +14,14 @@ Application::Application(int argc, char *argv[])
 
   _encoder = new MorseEncoder(_audio, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), true, this);
+
   switch (settings.tutor()) {
-  case Settings::TUTOR_KOCH: _tutor = new KochTutor(settings.kochLesson(), this); break;
+  case Settings::TUTOR_KOCH:
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
+    break;
+  case Settings::TUTOR_RANDOM:
+    _tutor = new RandomTutor(this);
+    break;
   }
 
   // Connect singals
@@ -71,9 +77,13 @@ Application::applySettings()
   // Reconfigure tutor
   delete _tutor;
   switch (settings.tutor()) {
-  case Settings::TUTOR_KOCH: _tutor = new KochTutor(settings.kochLesson(), this); break;
+  case Settings::TUTOR_KOCH:
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
+    break;
+  case Settings::TUTOR_RANDOM:
+    _tutor = new RandomTutor(this);
+    break;
   }
-
 }
 
 void

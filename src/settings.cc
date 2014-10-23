@@ -2,6 +2,8 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QFormLayout>
+#include <QLabel>
+
 
 /* ********************************************************************************************* *
  * Settings object
@@ -178,16 +180,22 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
 {
   _tutor = new QComboBox();
   _tutor->addItem(tr("Koch method"));
+  _tutor->addItem(tr("Random"));
 
   _kochSettings = new KochTutorSettingsView();
+  _randSettings = new RandomTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
+  _tutorSettings->addWidget(_randSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
     _tutor->setCurrentIndex(0);
     _tutorSettings->setCurrentIndex(0);
+  } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
+    _tutor->setCurrentIndex(1);
+    _tutorSettings->setCurrentIndex(1);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -212,6 +220,8 @@ TutorSettingsView::save() {
   Settings settings;
   if (0 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_KOCH);
+  } else if (1 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_RANDOM);
   }
   _kochSettings->save();
 }
@@ -244,4 +254,22 @@ KochTutorSettingsView::save() {
   Settings settings;
   settings.setKochLesson(_lesson->value());
   settings.setKochPrefLastChars(_prefLastChars->isChecked());
+}
+
+
+/* ********************************************************************************************* *
+ * Random Tutor Settings Widget
+ * ********************************************************************************************* */
+RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->addWidget(new QLabel("TODO"));
+  this->setLayout(layout);
+}
+
+void
+RandomTutorSettingsView::save() {
 }

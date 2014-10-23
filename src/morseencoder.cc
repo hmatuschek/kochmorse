@@ -14,7 +14,7 @@ inline QHash<QChar, QString> _initCodeTable() {
   table['u'] = "..-";    table['v'] = "...-";   table['w'] = ".--";    table['x'] = "-..-";
   table['y'] = "-.--";   table['z'] = "--..";   table['0'] = "-----";  table['1'] = ".----";
   table['2'] = "..---";  table['3'] = "...--";  table['4'] = "....-";  table['5'] = ".....";
-  table['6'] = "-....";  table['7'] = "--...";  table['8'] = "---..";  table['5'] = "----.";
+  table['6'] = "-....";  table['7'] = "--...";  table['8'] = "---..";  table['9'] = "----.";
   table['.'] = ".-.-.-"; table[','] = "--..--"; table['?'] = "..--.."; table['/'] = "-..-.";
   table['&'] = ".-...";  table[':'] = "---..."; table[';'] = "-.-.-."; table['='] = "-...-";
   table['+'] = ".-.-.";  table['-'] = "-....-"; table['@'] = ".--.-.";
@@ -47,7 +47,7 @@ MorseEncoder::_createSamples()
   _unitLength = size_t((60.*rate)/(50.*_speed));
   _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
   // The first and last epsilon samples are windowed
-  size_t epsilon = _unitLength/5;
+  size_t epsilon = _unitLength/8;
 
   // Create dit sample
   _ditSample.resize(2*_unitLength*sizeof(int16_t));
