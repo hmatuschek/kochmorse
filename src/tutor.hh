@@ -7,19 +7,24 @@
 #include <QSet>
 
 
-/** Abstract base class of all trainer classes. */
+/** Abstract base class of all tutor classes. */
 class Tutor : public QObject
 {
   Q_OBJECT
 
 protected:
+  /** Hidden constructor. */
   explicit Tutor(QObject *parent = 0);
 
 public:
+  /** Destructor. */
   virtual ~Tutor();
 
+  /** Gets the next char from a session. */
   virtual QChar next() = 0;
+  /** Returns true if the last char of a session has be taken. */
   virtual bool atEnd() = 0;
+  /** Reset the tutor (start a new session). */
   virtual void reset() = 0;
 };
 
