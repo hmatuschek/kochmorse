@@ -38,6 +38,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   _info = new QAction(
         QIcon::fromTheme("application-help", QIcon(":/icons/help.svg")), "", this);
+  _info->setToolTip(tr("About Koch Morse"));
 
   _volume = new QSlider(Qt::Horizontal);
   _volume->setMinimum(0);
@@ -54,6 +55,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   volPanel->setLayout(volPanelLayout);
 
   _quit = new QAction(QIcon(":/icons/exit.svg"), "", this);
+  _quit->setToolTip(tr("Quit Koch Morse"));
 
   QToolBar *tbox = new QToolBar();
   tbox->setAllowedAreas(Qt::TopToolBarArea | Qt::RightToolBarArea | Qt::LeftToolBarArea);
