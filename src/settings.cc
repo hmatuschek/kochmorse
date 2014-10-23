@@ -82,7 +82,7 @@ Settings::kochLesson() const {
 }
 void
 Settings::setKochLesson(int n) {
-  n = std::max(2, std::min(n, 42));
+  n = std::max(2, std::min(n, 41));
   this->setValue("koch/lesson", n);
 }
 

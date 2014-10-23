@@ -47,19 +47,19 @@ MorseEncoder::_createSamples()
   _unitLength = size_t((60.*rate)/(50.*_speed));
   _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
   // The first and last epsilon samples are windowed
-  size_t epsilon = _unitLength/8;
+  double epsilon = _unitLength/5;
 
   // Create dit sample
   _ditSample.resize(2*_unitLength*sizeof(int16_t));
   int16_t *ditData = reinterpret_cast<int16_t *>(_ditSample.data());
   for (size_t i=0; i<_unitLength; i++) {
     // gen tone
-    ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/rate);
+    ditData[i] = (2<<12)*std::cos((2*M_PI*_ditFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
       ditData[i] *= double(i+1)/epsilon;
     } if (i >= (_unitLength-epsilon)) {
-      ditData[i] *= double(_unitLength-i-1)/epsilon;
+      ditData[i] *= double(_unitLength-i)/epsilon;
     }
     double mid = (double(_unitLength-1)/2);
     ditData[i] *= (1.0 - std::pow((i-mid)/mid, 2.0));
@@ -72,12 +72,12 @@ MorseEncoder::_createSamples()
   int16_t *daData = reinterpret_cast<int16_t *>(_daSample.data());
   for (size_t i=0; i<(3*_unitLength); i++) {
     // gen tone
-    daData[i] = (2<<12)*std::sin((2*M_PI*_daFreq*i)/rate);
+    daData[i] = (2<<12)*std::cos((2*M_PI*_daFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
-      daData[i] *= double(i+1)/epsilon;
+      daData[i] *= double(i)/epsilon;
     } if (i >= (3*_unitLength-epsilon)) {
-      daData[i] *= double(3*_unitLength-i-1)/epsilon;
+      daData[i] *= double(3*_unitLength-i)/epsilon;
     }
   }
   // append 1 "dit" pause
