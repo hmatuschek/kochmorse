@@ -1,17 +1,13 @@
-#include "morseencoder.hh"
-#include "audiosink.hh"
-
+#include "application.hh"
+#include "mainwindow.hh"
 
 int main(int argc, char *argv[])
 {
-  AudioSink::init();
+  Application app(argc, argv);
+  MainWindow win(app);
+  win.show();
 
-  AudioSink sink;
-  MorseEncoder morse(&sink, 750, 750, 20, 15);
-
-  morse.send("Hallo World.");
-
-  AudioSink::finalize();
+  app.exec();
 
   return 0;
 }

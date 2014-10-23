@@ -12,7 +12,7 @@ class AudioSink : public QObject
   Q_OBJECT
 
 public:
-  explicit AudioSink(QObject *parent = 0, double sampleRate=8000);
+  explicit AudioSink(QObject *parent = 0, double sampleRate=16000);
   virtual ~AudioSink();
 
   void play(const QByteArray &data);

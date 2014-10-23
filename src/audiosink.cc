@@ -30,7 +30,6 @@ AudioSink::finalize() {
 
 void
 AudioSink::play(const QByteArray &data) {
-  std::cerr << "Play " << data.size()/2 << " samples." << std::endl;
   Pa_WriteStream(_stream, data.constData(), data.size()/2);
 }
 
