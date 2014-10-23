@@ -180,7 +180,7 @@ RandomTutor::reset()
 QSet<QChar>
 RandomTutor::chars() const {
   QSet<QChar> cs;
-  for (size_t i=0; i<_chars.size(); i++) { cs.insert(_chars[i]); }
+  for (int i=0; i<_chars.size(); i++) { cs.insert(_chars[i]); }
   return cs;
 }
 
