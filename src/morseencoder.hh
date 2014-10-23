@@ -27,6 +27,11 @@ public:
   double time() const;
   void resetTime();
 
+  void setSpeed(int speed);
+  void setEffSpeed(int speed);
+  void setTone(double freq);
+  void setDashTone(double freq);
+
 signals:
   /** Signals that a char was send. */
   void charSend(QChar ch);
@@ -36,6 +41,7 @@ signals:
 protected:
   virtual void run();
   void _send(QChar ch);
+  void _createSamples();
 
 protected:
   static QHash<QChar, QString> _codeTable;

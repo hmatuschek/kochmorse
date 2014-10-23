@@ -32,6 +32,12 @@ MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
     _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(), _queue(),
     _played(0)
 {
+  _createSamples();
+}
+
+void
+MorseEncoder::_createSamples()
+{
   // ensure effective speed is <= speed
   _effSpeed = std::min(_speed, _effSpeed);
   // Get sample rate from audio device
@@ -150,6 +156,27 @@ MorseEncoder::time() const {
 void
 MorseEncoder::resetTime() {
   _played = 0;
+}
+
+void
+MorseEncoder::setSpeed(int speed) {
+  _speed = speed; _createSamples();
+}
+
+void
+MorseEncoder::setEffSpeed(int speed) {
+  _effSpeed = speed; _createSamples();
+}
+
+void
+MorseEncoder::setTone(double freq) {
+  _ditFreq = freq; _daFreq=freq;
+  _createSamples();
+}
+
+void
+MorseEncoder::setDashTone(double freq) {
+  _daFreq = freq; _createSamples();
 }
 
 void

@@ -1,14 +1,20 @@
 #include "application.hh"
 #include <iostream>
+#include "settings.hh"
 
 
 Application::Application(int argc, char *argv[])
- : QApplication(argc, argv), _audio(0), _encoder(0), _trainer(0)
+ : QApplication(argc, argv), _audio(0), _encoder(0), _tutor(0)
 {
+  Settings settings;
+
   AudioSink::init();
   _audio = new AudioSink(this);
-  _encoder = new MorseEncoder(_audio, 750, 750, 20, 15, true, this);
-  _trainer = new KochTrainer(2, this);
+  _encoder = new MorseEncoder(_audio, settings.tone(), settings.tone()+settings.dashPitch(),
+                              settings.speed(), settings.effSpeed(), true, this);
+  switch (settings.tutor()) {
+  case Settings::TUTOR_KOCH: _tutor = new KochTutor(settings.kochLesson(), this); break;
+  }
 
   // Connect singals
   QObject::connect(_encoder, SIGNAL(charsSend()), this, SLOT(onCharsSend()));
@@ -26,23 +32,45 @@ Application::sessionTime() {
 
 void
 Application::startSession() {
-  _trainer->reset();
+  _tutor->reset();
   _encoder->start();
-  _encoder->send(_trainer->next());
+  _encoder->send(_tutor->next());
 }
 
 void
 Application::stopSession() {
   _encoder->stop();
-  _trainer->reset();
+  _tutor->reset();
+}
+
+void
+Application::applySettings()
+{
+  // Stop encoder if running
+  _encoder->stop();
+  // Get settings
+  Settings settings;
+
+  // Reconfigure encoder
+  _encoder->setSpeed(settings.speed());
+  _encoder->setEffSpeed(settings.effSpeed());
+  _encoder->setTone(settings.tone());
+  _encoder->setDashTone(settings.tone()+settings.dashPitch());
+
+  // Reconfigure tutor
+  delete _tutor;
+  switch (settings.tutor()) {
+  case Settings::TUTOR_KOCH: _tutor = new KochTutor(settings.kochLesson(), this); break;
+  }
+
 }
 
 void
 Application::onCharsSend() {
-  if (_trainer->atEnd()) {
+  if (_tutor->atEnd()) {
     emit sessionFinished(); return;
   }
-  _encoder->send(_trainer->next());
+  _encoder->send(_tutor->next());
 }
 
 void

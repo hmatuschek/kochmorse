@@ -1,9 +1,12 @@
 set(kochmorse_SOURCES main.cc
-    audiosink.cc morseencoder.cc trainer.cc application.cc mainwindow.cc)
+    audiosink.cc morseencoder.cc tutor.cc application.cc mainwindow.cc settings.cc)
 set(kochmorse_MOC_HEADERS
-    audiosink.hh morseencoder.hh trainer.hh application.hh mainwindow.hh)
+    audiosink.hh morseencoder.hh tutor.hh application.hh mainwindow.hh settings.hh)
+
 qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
 
+qt5_add_resources(kochmorse_RCC_SOURCES ../resources.qrc)
+
 set(kochmorse_HEADERS ${kochmorse_MOC_HEADERS})
-add_executable(kochmorse ${kochmorse_SOURCES} ${kochmorse_MOC_SOURCES})
+add_executable(kochmorse ${kochmorse_SOURCES} ${kochmorse_MOC_SOURCES} ${kochmorse_RCC_SOURCES})
 target_link_libraries(kochmorse ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${LIBS})

@@ -7,32 +7,36 @@
 
 
 /** Abstract base class of all trainer classes. */
-class Trainer : public QObject
+class Tutor : public QObject
 {
   Q_OBJECT
 
 protected:
-  explicit Trainer(QObject *parent = 0);
-  virtual ~Trainer();
+  explicit Tutor(QObject *parent = 0);
 
 public:
+  virtual ~Tutor();
+
   virtual QChar next() = 0;
   virtual bool atEnd() = 0;
   virtual void reset() = 0;
 };
 
 
-class KochTrainer: public Trainer
+class KochTutor: public Tutor
 {
   Q_OBJECT
 
 public:
-  KochTrainer(int lesson=2, QObject *parent=0);
-  virtual ~KochTrainer();
+  KochTutor(int lesson=2, QObject *parent=0);
+  virtual ~KochTutor();
 
   QChar next();
   bool atEnd();
   void reset();
+
+  int lesson() const;
+  void setLesson(int lesson);
 
 protected:
   int _lesson;

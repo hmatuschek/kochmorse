@@ -2,10 +2,9 @@
 #define __KOCHMORSE_MAINWINDOW_HH__
 
 #include <QMainWindow>
-#include <QPlainTextEdit>
-#include <QPushButton>
-#include <QSpinBox>
-#include <QLabel>
+#include <QTextEdit>
+#include <QAction>
+#include <QSlider>
 
 #include "application.hh"
 
@@ -19,15 +18,17 @@ public:
 protected slots:
   void onSessionFinished();
   void onCharSend(QChar ch);
+
   void onPlayToggled(bool play);
+  void onPrefClicked();
 
 protected:
   Application &_app;
-  QPlainTextEdit *_text;
-  QPushButton *_play;
-  QLabel *_time;
-  QSpinBox *_speed;
-  QSpinBox *_effSpeed;
+  QTextEdit *_text;
+  QAction *_play;
+  QAction *_pref;
+  QAction *_info;
+  QSlider *_volume;
 };
 
 #endif // __KOCHMORSE_MAINWINDOW_HH__

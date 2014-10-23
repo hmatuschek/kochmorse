@@ -4,7 +4,7 @@
 #include <QApplication>
 #include "audiosink.hh"
 #include "morseencoder.hh"
-#include "trainer.hh"
+#include "tutor.hh"
 
 
 class Application : public QApplication
@@ -19,6 +19,8 @@ public:
 public slots:
   void startSession();
   void stopSession();
+  /** Updates all object from the given settings. */
+  void applySettings();
 
 signals:
   void sessionFinished();
@@ -31,7 +33,7 @@ protected slots:
 protected:
   AudioSink *_audio;
   MorseEncoder *_encoder;
-  Trainer *_trainer;
+  Tutor *_tutor;
 };
 
 #endif // __KOCHMORSE_APPLICATION_HH__

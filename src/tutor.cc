@@ -1,16 +1,16 @@
-#include "trainer.hh"
+#include "tutor.hh"
 
 
 /* ********************************************************************************************* *
  * Trainer interface
  * ********************************************************************************************* */
-Trainer::Trainer(QObject *parent)
+Tutor::Tutor(QObject *parent)
   : QObject(parent)
 {
   // pass...
 }
 
-Trainer::~Trainer() {
+Tutor::~Tutor() {
   // pass...
 }
 
@@ -20,43 +20,55 @@ Trainer::~Trainer() {
  * ********************************************************************************************* */
 inline QVector<QChar> _initKochLessons() {
   QVector<QChar> chars;
-  chars << 'm' << 'n' << 'o';
+  chars << 'k' << 'm' << 'r' << 's' << 'u' << 'a' << 'p' << 't' << 'l' << 'o' << 'w'
+        << 'i' << '.' << 'n' << 'j' << 'e' << '=' << 'f' << '0' << 'y' << 'v' << ','
+        << 'g' << '5' << '/' << 'q' << '9' << 'z' << 'h' << '3' << '8' << 'b' << '?'
+        << '4' << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=';
   return chars;
 }
 // The vector of all chars ordered by lesson
-QVector<QChar> KochTrainer::_lessons = _initKochLessons();
+QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTrainer::KochTrainer(int lesson, QObject *parent)
-  : Trainer(parent), _lesson(lesson), _text()
+KochTutor::KochTutor(int lesson, QObject *parent)
+  : Tutor(parent), _lesson(lesson), _text()
 {
   // Init random number generator
   srand(time(0));
 }
 
-KochTrainer::~KochTrainer() {
+KochTutor::~KochTutor() {
   // pass...
 }
 
 QChar
-KochTrainer::next() {
+KochTutor::next() {
   if (0 == _text.size()) { reset(); }
   QChar ch = _text.first(); _text.pop_front();
   return ch;
 }
 
 bool
-KochTrainer::atEnd() {
+KochTutor::atEnd() {
   return 0 == _text.size();
 }
 
+int
+KochTutor::lesson() const {
+  return _lesson;
+}
 void
-KochTrainer::reset()
+KochTutor::setLesson(int lesson) {
+  _lesson = std::max(2, std::min(lesson, _lessons.size()));
+}
+
+void
+KochTutor::reset()
 {
   // Empty current session
   _text.clear();
-  // Insert "vvv "
-  _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back(' ');
+  // Insert "vvv\n"
+  _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
 
   // For 5 lines
   for (int l=0; l<5; l++) {
