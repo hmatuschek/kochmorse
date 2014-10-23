@@ -23,6 +23,9 @@ public:
 public:
   explicit Settings();
 
+  double volume() const;
+  void setVolume(double factor);
+
   int speed() const;
   void setSpeed(int speed);
 

@@ -16,7 +16,10 @@ public:
   virtual ~AudioSink();
 
   void play(const QByteArray &data);
+
   double rate() const;
+  double volume() const;
+  void setVolume(double factor);
 
 public:
   static void init();
@@ -25,6 +28,7 @@ public:
 protected:
   PaStream *_stream;
   double _rate;
+  double _volumeFactor;
 };
 
 

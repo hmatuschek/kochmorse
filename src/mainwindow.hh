@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QAction>
 #include <QSlider>
+#include <QLabel>
 
 #include "application.hh"
 
@@ -21,6 +22,7 @@ protected slots:
 
   void onPlayToggled(bool play);
   void onPrefClicked();
+  void onVolumeChanged(int value);
 
 protected:
   Application &_app;
@@ -29,6 +31,8 @@ protected:
   QAction *_pref;
   QAction *_info;
   QSlider *_volume;
+  QLabel *_volumeLabel;
+  QAction *_quit;
 };
 
 #endif // __KOCHMORSE_MAINWINDOW_HH__

@@ -7,9 +7,11 @@ Application::Application(int argc, char *argv[])
  : QApplication(argc, argv), _audio(0), _encoder(0), _tutor(0)
 {
   Settings settings;
-
   AudioSink::init();
+
   _audio = new AudioSink(this);
+  _audio->setVolume(settings.volume());
+
   _encoder = new MorseEncoder(_audio, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), true, this);
   switch (settings.tutor()) {
@@ -31,6 +33,11 @@ Application::sessionTime() {
 }
 
 void
+Application::setVolume(double factor) {
+  _audio->setVolume(factor);
+}
+
+void
 Application::startSession() {
   _tutor->reset();
   _encoder->start();
@@ -48,8 +55,12 @@ Application::applySettings()
 {
   // Stop encoder if running
   _encoder->stop();
+
   // Get settings
   Settings settings;
+
+  // Update audio settings
+  _audio->setVolume(settings.volume());
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());

@@ -15,6 +15,7 @@ public:
   virtual ~Application();
 
   int sessionTime();
+  void setVolume(double factor);
 
 public slots:
   void startSession();

@@ -12,6 +12,16 @@ Settings::Settings()
   // pass...
 }
 
+double
+Settings::volume() const {
+  return this->value("volume", 1).toDouble();
+}
+void
+Settings::setVolume(double factor) {
+  factor = std::max(0., std::min(factor, 2.));
+  this->setValue("volume", factor);
+}
+
 int
 Settings::speed() const {
   return this->value("speed", 20).toInt();

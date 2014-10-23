@@ -3,7 +3,7 @@
 
 
 AudioSink::AudioSink(QObject *parent, double sampleRate)
-  : QObject(parent), _stream(0), _rate(sampleRate)
+  : QObject(parent), _stream(0), _rate(sampleRate), _volumeFactor(1)
 {
   PaSampleFormat fmt = paInt16;
   size_t n_chanels = 1;
@@ -30,10 +30,25 @@ AudioSink::finalize() {
 
 void
 AudioSink::play(const QByteArray &data) {
-  Pa_WriteStream(_stream, data.constData(), data.size()/2);
+  QByteArray buffer(data);
+  int16_t *s = reinterpret_cast<int16_t *>(buffer.data());
+  for (int i=0; i<data.size()/2; i++) {
+    s[i] *= _volumeFactor;
+  }
+  Pa_WriteStream(_stream, buffer.constData(), buffer.size()/2);
 }
 
 double
 AudioSink::rate() const {
   return _rate;
+}
+
+double
+AudioSink::volume() const {
+  return _volumeFactor;
+}
+
+void
+AudioSink::setVolume(double factor) {
+  _volumeFactor = factor;
 }
