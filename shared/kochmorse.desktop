@@ -2,7 +2,7 @@
 Name=Koch Morse	
 Comment=A simple Morse tutor using the Koch method.
 Exec=kochmorse
-Icon=/usr/share/icons/kochmorse.png
+Icon=/usr/share/icons/kochmorse.svg
 Type=Application
 Categories=Education;
 Terminal=false

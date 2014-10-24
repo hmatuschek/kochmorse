@@ -3,7 +3,7 @@
 #include "settings.hh"
 
 
-Application::Application(int argc, char *argv[])
+Application::Application(int &argc, char *argv[])
  : QApplication(argc, argv), _audio(0), _encoder(0), _tutor(0)
 {
   Settings settings;
