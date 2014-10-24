@@ -29,6 +29,7 @@ public:
 };
 
 
+/** A tutor for the Koch method. */
 class KochTutor: public Tutor
 {
   Q_OBJECT
@@ -56,6 +57,7 @@ protected:
 };
 
 
+/** A simple tutor for random chars. */
 class RandomTutor: public Tutor
 {
   Q_OBJECT
@@ -78,5 +80,6 @@ protected:
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
 };
+
 
 #endif // __KOCHMORSE_TRAINER_HH__

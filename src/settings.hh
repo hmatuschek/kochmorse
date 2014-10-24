@@ -17,43 +17,55 @@ class Settings: public QSettings
 {
   Q_OBJECT
 public:
+  /** The possible morse tutors. */
   typedef enum {
-    TUTOR_KOCH = 0,
-    TUTOR_RANDOM = 1
+    TUTOR_KOCH = 0,   ///< Koch method.
+    TUTOR_RANDOM = 1  ///< Random chars.
   } Tutor;
 
 public:
+  /** Constructor. */
   explicit Settings();
-
+  /** Retuns the current volume settings. */
   double volume() const;
+  /** Sets the current volume. */
   void setVolume(double factor);
-
+  /** Retunrs the current character speed. */
   int speed() const;
+  /** Sets the character speed. */
   void setSpeed(int speed);
-
+  /** Retunrs the current effective (pause) speed. */
   int effSpeed() const;
+  /** Sets the effective (pause) speed. */
   void setEffSpeed(int speed);
-
+  /** Returns the current tone frequency. */
   int tone() const;
+  /** Sets the tone frequency. */
   void setTone(int freq);
-
+  /** Returns the current frequency shift for dashes. */
   int dashPitch() const;
+  /** Sets the frequency shift for dashes. */
   void setDashPitch(int pitch);
-
+  /** Returns the current tutor. */
   Tutor tutor() const;
+  /** Sets the tutor. */
   void setTutor(Tutor tutor);
-
+  /** Koch tutor: Retunrs the current lesson. */
   int kochLesson() const;
+  /** Koch tutor: Sets the lesson. */
   void setKochLesson(int n);
-
+  /** Koch tutor: Returns true if "new" chars are more likely to be picked by the tutor. */
   bool kochPrefLastChars() const;
+  /** Koch totor: Sets if "new" chars are more likely to be picked by the tutor. */
   void setKochPrefLastChars(bool pref);
-
+  /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
+  /** Random tutor: Sets the character set. */
   void setRandomChars(const QSet<QChar> &chars);
 };
 
 
+/** A configuration panel for the Koch tutor. */
 class KochTutorSettingsView: public QGroupBox
 {
   Q_OBJECT
@@ -61,6 +73,7 @@ class KochTutorSettingsView: public QGroupBox
 public:
   explicit KochTutorSettingsView(QWidget *parent=0);
 
+  /** Updates the persistent settings. */
   void save();
 
 protected:
@@ -69,6 +82,7 @@ protected:
 };
 
 
+/** A configuration panel for the Random tutor. */
 class RandomTutorSettingsView: public QGroupBox
 {
   Q_OBJECT
@@ -76,6 +90,7 @@ class RandomTutorSettingsView: public QGroupBox
 public:
   explicit RandomTutorSettingsView(QWidget *parent=0);
 
+  /** Updates the persistent settings. */
   void save();
 
 protected:
@@ -86,6 +101,7 @@ protected:
 };
 
 
+/** Tutor selection, also displays the config panel of the currently selected tutor. */
 class TutorSettingsView: public QWidget
 {
   Q_OBJECT
@@ -105,6 +121,7 @@ protected:
 };
 
 
+/** Configuration panel for the Morse code generation. */
 class CodeSettingsView: public QWidget
 {
   Q_OBJECT
@@ -122,6 +139,7 @@ protected:
 };
 
 
+/** The preferences dialog. */
 class SettingsDialog : public QDialog
 {
   Q_OBJECT
