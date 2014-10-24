@@ -204,6 +204,9 @@ RandomTutor::setChars(const QSet<QChar> &chars) {
 QSOTutor::QSOTutor(QObject *parent)
   : Tutor(parent)
 {
+  // Init RNG
+  srand(time(0));
+
   // Read
   QFile f(":qso/qso.txt");
   f.open(QFile::ReadOnly|QFile::Text);
