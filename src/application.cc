@@ -12,7 +12,7 @@ Application::Application(int &argc, char *argv[])
   _audio = new PortAudioSink(16e3, this);
   _audio->setVolume(settings.volume());
 
-  _noiseEffect = new NoiseEffect(_audio, true, 10, this);
+  _noiseEffect = new NoiseEffect(_audio, settings.noiseEnabled(), settings.noiseSNR(), this);
 
   _encoder = new MorseEncoder(_noiseEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), true, this);
@@ -69,6 +69,10 @@ Application::applySettings()
 
   // Update audio settings
   _audio->setVolume(settings.volume());
+
+  // Update effects
+  _noiseEffect->setEnabled(settings.noiseEnabled());
+  _noiseEffect->setSNR(settings.noiseSNR());
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());

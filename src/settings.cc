@@ -120,6 +120,25 @@ Settings::setRandomChars(const QSet<QChar> &chars) {
   this->setValue("random/chars", str);
 }
 
+bool
+Settings::noiseEnabled() const {
+  return value("noise/enabled", false).toBool();
+}
+void
+Settings::setNoiseEnabled(bool enabled) {
+  setValue("noise/enabled", enabled);
+}
+
+float
+Settings::noiseSNR() const {
+  return value("noise/SNR", 10.0).toFloat();
+}
+void
+Settings::setNoiseSNR(float snr) {
+  snr = std::max(-60.f, std::min(snr, 60.f));
+  setValue("noise/SNR", snr);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -131,10 +150,12 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
+  _effects = new EffectSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
   _tabs->addTab(_code, tr("Morse Code"));
+  _tabs->addTab(_effects, tr("Effects"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -153,6 +174,7 @@ void
 SettingsDialog::accept() {
   _tutor->save();
   _code->save();
+  _effects->save();
   QDialog::accept();
 }
 
@@ -396,3 +418,39 @@ RandomTutorSettingsView::save() {
 
   Settings().setRandomChars(enabled_chars);
 }
+
+
+/* ********************************************************************************************* *
+ * Effect Settings Widget
+ * ********************************************************************************************* */
+EffectSettingsView::EffectSettingsView(QWidget *parent)
+  : QWidget(parent), _noiseEnabled(0), _noiseSNR(0)
+{
+  Settings settings;
+
+  _noiseEnabled = new QCheckBox();
+  _noiseEnabled->setChecked(settings.noiseEnabled());
+
+  _noiseSNR = new QSpinBox();
+  _noiseSNR->setMinimum(-60);
+  _noiseSNR->setMaximum(60);
+  _noiseSNR->setValue(settings.noiseSNR());
+
+  QFormLayout *noiseLayout = new QFormLayout();
+  noiseLayout->addRow(tr("Enabled"), _noiseEnabled);
+  noiseLayout->addRow(tr("SNR (dB)"), _noiseSNR);
+  QGroupBox *noiseBox = new QGroupBox(tr("Noise"));
+  noiseBox->setLayout(noiseLayout);
+
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->addWidget(noiseBox);
+  setLayout(layout);
+}
+
+void
+EffectSettingsView::save() {
+  Settings settings;
+  settings.setNoiseEnabled(Qt::Checked == _noiseEnabled->checkState());
+  settings.setNoiseSNR(_noiseSNR->value());
+}
+
