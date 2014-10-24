@@ -13,8 +13,10 @@ Application::Application(int &argc, char *argv[])
   _audio->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(_audio, settings.noiseEnabled(), settings.noiseSNR(), this);
+  _fadingEffect = new FadingEffect(_noiseEffect, settings.fadingEnabled(),
+                                   settings.fadingMaxDamp(), settings.fadingRate(), this);
 
-  _encoder = new MorseEncoder(_noiseEffect, settings.tone(), settings.tone()+settings.dashPitch(),
+  _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), true, this);
 
   switch (settings.tutor()) {
@@ -73,6 +75,9 @@ Application::applySettings()
   // Update effects
   _noiseEffect->setEnabled(settings.noiseEnabled());
   _noiseEffect->setSNR(settings.noiseSNR());
+  _fadingEffect->setEnabled(settings.fadingEnabled());
+  _fadingEffect->setMaxDamp(settings.fadingMaxDamp());
+  _fadingEffect->setFadingRate(settings.fadingRate());
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());

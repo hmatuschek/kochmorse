@@ -29,4 +29,30 @@ protected:
   float _snr;
 };
 
+
+class FadingEffect: public AudioSink
+{
+  Q_OBJECT
+
+public:
+  FadingEffect(AudioSink *sink, bool enabled=false, float maxDamp=-10, float rate=0.1, QObject *parent=0);
+  virtual ~FadingEffect();
+
+  virtual void play(const QByteArray &data);
+  virtual double rate() const;
+
+  void setEnabled(bool enabled);
+  void setMaxDamp(float damp);
+  void setFadingRate(float rate);
+
+protected:
+  AudioSink *_sink;
+  bool _enabled;
+  float _maxDamp;
+  float _rate;
+  int _dS;
+  float _dF;
+  float _factor;
+};
+
 #endif // __KOCHMORSE_EFFECT_HH__

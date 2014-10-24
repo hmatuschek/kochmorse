@@ -81,6 +81,18 @@ public:
   float noiseSNR() const;
   /** Noise effect: Set SNR (dB). */
   void setNoiseSNR(float snr);
+
+  /** Fading effect: Enabled. */
+  bool fadingEnabled() const;
+  void setFadingEnabled(bool enabled);
+
+  /** Fading effect: rate [1/min]. */
+  float fadingRate() const;
+  void setFadingRate(float rate);
+
+  /** Fading effect: max damping [dB]. */
+  float fadingMaxDamp() const;
+  void setFadingMaxDamp(float damp);
 };
 
 
@@ -170,6 +182,9 @@ public:
 protected:
   QCheckBox *_noiseEnabled;
   QSpinBox  *_noiseSNR;
+  QCheckBox *_fadingEnabled;
+  QSpinBox  *_fadingRate;
+  QSpinBox  *_fadingMaxDamp;
 };
 
 

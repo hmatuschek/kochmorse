@@ -35,6 +35,7 @@ protected slots:
 protected:
   PortAudioSink *_audio;
   NoiseEffect *_noiseEffect;
+  FadingEffect *_fadingEffect;
   MorseEncoder *_encoder;
   Tutor *_tutor;
 };

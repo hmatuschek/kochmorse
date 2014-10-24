@@ -139,6 +139,35 @@ Settings::setNoiseSNR(float snr) {
   setValue("noise/SNR", snr);
 }
 
+bool
+Settings::fadingEnabled() const {
+  return value("fading/enabled", false).toBool();
+}
+void
+Settings::setFadingEnabled(bool enabled) {
+  setValue("fading/enabled", enabled);
+}
+
+float
+Settings::fadingRate() const {
+  return value("fading/rate", 12).toFloat();
+}
+void
+Settings::setFadingRate(float rate) {
+  rate = std::max(1.0f, std::min(rate, 60.0f));
+  setValue("fading/rate", rate);
+}
+
+float
+Settings::fadingMaxDamp() const {
+  return value("fading/maxDamp", -10).toFloat();
+}
+void
+Settings::setFadingMaxDamp(float damp) {
+  damp = std::max(-60.0f, std::min(damp, 0.0f));
+  setValue("fading/maxDamp", damp);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -442,15 +471,41 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   QGroupBox *noiseBox = new QGroupBox(tr("Noise"));
   noiseBox->setLayout(noiseLayout);
 
+  _fadingEnabled = new QCheckBox();
+  _fadingEnabled->setChecked(settings.fadingEnabled());
+
+  _fadingRate = new QSpinBox();
+  _fadingRate->setMinimum(1);
+  _fadingRate->setMaximum(60);
+  _fadingRate->setValue(settings.fadingRate());
+
+  _fadingMaxDamp = new QSpinBox();
+  _fadingMaxDamp->setMinimum(-60);
+  _fadingMaxDamp->setMaximum(0);
+  _fadingMaxDamp->setValue(settings.fadingMaxDamp());
+
+  QFormLayout *fadingLayout = new QFormLayout();
+  fadingLayout->addRow(tr("Enabled"), _fadingEnabled);
+  fadingLayout->addRow(tr("Rate [1/min]"), _fadingRate);
+  fadingLayout->addRow(tr("max. Damping [dB]"), _fadingMaxDamp);
+  QGroupBox *fadingBox = new QGroupBox(tr("Fading"));
+  fadingBox->setLayout(fadingLayout);
+
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(noiseBox);
+  layout->addWidget(fadingBox);
   setLayout(layout);
 }
 
 void
 EffectSettingsView::save() {
   Settings settings;
+
   settings.setNoiseEnabled(Qt::Checked == _noiseEnabled->checkState());
   settings.setNoiseSNR(_noiseSNR->value());
+
+  settings.setFadingEnabled(Qt::Checked == _fadingEnabled->checkState());
+  settings.setFadingRate(_fadingRate->value());
+  settings.setFadingMaxDamp(_fadingMaxDamp->value());
 }
 
