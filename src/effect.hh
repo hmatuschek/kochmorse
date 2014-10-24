@@ -3,6 +3,7 @@
 
 #include "audiosink.hh"
 
+
 /** Samples colored (filtered) noise and adds it to the clean signal. */
 class NoiseEffect : public AudioSink
 {
@@ -30,12 +31,13 @@ protected:
 };
 
 
+/** Implements an alternating fading of the signal. */
 class FadingEffect: public AudioSink
 {
   Q_OBJECT
 
 public:
-  FadingEffect(AudioSink *sink, bool enabled=false, float maxDamp=-10, float rate=0.1, QObject *parent=0);
+  FadingEffect(AudioSink *sink, bool enabled=false, float maxDamp=-10, float rate=12, QObject *parent=0);
   virtual ~FadingEffect();
 
   virtual void play(const QByteArray &data);

@@ -34,6 +34,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   // Play button
   _play = new QAction(
         QIcon::fromTheme("media-playback-start", QIcon(":/icons/play.svg")), "", this);
+  _play->setShortcut(QKeySequence::Save);
   _play->setToolTip(tr("Start/Stop"));
   _play->setCheckable(true);
   _play->setChecked(false);
@@ -41,6 +42,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   // Preferences button
   _pref = new QAction(
         QIcon::fromTheme("system-preferences", QIcon(":/icons/preferences.svg")), "", this);
+  _pref->setShortcut(QKeySequence::Preferences);
   _pref->setToolTip(tr("Settings"));
 
   // Info button

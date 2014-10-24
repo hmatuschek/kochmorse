@@ -346,7 +346,6 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   : QGroupBox(tr("Random tutor settings"),parent)
 {
   Settings settings;
-  QListWidgetItem *item = 0;
 
   QSet<QChar> enabled_chars = settings.randomChars();
   QList<QChar> alpha, num, punct, prosign;
@@ -358,56 +357,24 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
           << QChar(0x2403) /* SK */ << QChar(0x2406) /* SN */ << QChar(0x2407) /* KL */;
 
   // Assemble char table
-  _alpha = new QListWidget();
-  _alpha->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  _alpha = new ListWidget();
   foreach (QChar c, alpha) {
-    item = new QListWidgetItem(c, _alpha);
-    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    item->setData(Qt::UserRole, c);
-    if (enabled_chars.contains(c)) {
-      item->setCheckState(Qt::Checked);
-    } else {
-      item->setCheckState(Qt::Unchecked);
-    }
+    _alpha->addItem(c, c, enabled_chars.contains(c));
   }
   // Assemble char table
-  _num = new QListWidget();
-  _num->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  _num = new ListWidget();
   foreach (QChar c, num) {
-    item = new QListWidgetItem(c, _num);
-    item->setData(Qt::UserRole, c);
-    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    if (enabled_chars.contains(c)) {
-      item->setCheckState(Qt::Checked);
-    } else {
-      item->setCheckState(Qt::Unchecked);
-    }
+    _num->addItem(c, c, enabled_chars.contains(c));
   }
   // Assemble punc table
-  _punct = new QListWidget();
-  _punct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  _punct = new ListWidget();
   foreach (QChar c, punct) {
-    item = new QListWidgetItem(c, _punct);
-    item->setData(Qt::UserRole, c);
-    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    if (enabled_chars.contains(c)) {
-      item->setCheckState(Qt::Checked);
-    } else {
-      item->setCheckState(Qt::Unchecked);
-    }
+    _punct->addItem(c, c, enabled_chars.contains(c));
   }
   // Assemble prosig table
-  _prosign = new QListWidget();
-  _prosign->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+  _prosign = new ListWidget();
   foreach (QChar c, prosign) {
-    item = new QListWidgetItem(MorseEncoder::mapProsign(c), _prosign);
-    item->setData(Qt::UserRole, c);
-    item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
-    if (enabled_chars.contains(c)) {
-      item->setCheckState(Qt::Checked);
-    } else {
-      item->setCheckState(Qt::Unchecked);
-    }
+    _prosign->addItem(MorseEncoder::mapProsign(c), c, enabled_chars.contains(c));
   }
 
   QTabWidget *tabs = new QTabWidget();
@@ -424,24 +391,24 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
 void
 RandomTutorSettingsView::save() {
   QSet<QChar> enabled_chars;
-  for (int i=0; i<_alpha->count(); i++) {
-    if (Qt::Checked == _alpha->item(i)->checkState()) {
-      enabled_chars.insert(_alpha->item(i)->data(Qt::UserRole).toChar());
+  for (int i=0; i<_alpha->numRows(); i++) {
+    if (_alpha->isChecked(i)) {
+      enabled_chars.insert(_alpha->itemData(i).toChar());
     }
   }
-  for (int i=0; i<_num->count(); i++) {
-    if (Qt::Checked == _num->item(i)->checkState()) {
-      enabled_chars.insert(_num->item(i)->data(Qt::UserRole).toChar());
+  for (int i=0; i<_num->numRows(); i++) {
+    if (_num->isChecked(i)) {
+      enabled_chars.insert(_num->itemData(i).toChar());
     }
   }
-  for (int i=0; i<_punct->count(); i++) {
-    if (Qt::Checked == _punct->item(i)->checkState()) {
-      enabled_chars.insert(_punct->item(i)->data(Qt::UserRole).toChar());
+  for (int i=0; i<_punct->numRows(); i++) {
+    if (_punct->isChecked(i)) {
+      enabled_chars.insert(_punct->itemData(i).toChar());
     }
   }
-  for (int i=0; i<_prosign->count(); i++) {
-    if (Qt::Checked == _prosign->item(i)->checkState()) {
-      enabled_chars.insert(_prosign->item(i)->data(Qt::UserRole).toChar());
+  for (int i=0; i<_prosign->numRows(); i++) {
+    if (_prosign->isChecked(i)) {
+      enabled_chars.insert(_prosign->itemData(i).toChar());
     }
   }
 

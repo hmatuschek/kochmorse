@@ -9,7 +9,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSettings>
-#include <QListWidget>
+#include "listwidget.hh"
 #include <QGroupBox>
 
 /** Represents global persistent settings. */
@@ -125,10 +125,10 @@ public:
   void save();
 
 protected:
-  QListWidget *_alpha;
-  QListWidget *_num;
-  QListWidget *_punct;
-  QListWidget *_prosign;
+  ListWidget *_alpha;
+  ListWidget *_num;
+  ListWidget *_punct;
+  ListWidget *_prosign;
 };
 
 
