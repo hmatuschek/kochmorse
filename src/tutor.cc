@@ -1,9 +1,11 @@
 #include "tutor.hh"
 #include <cmath>
+#include <QFile>
+#include <iostream>
 
 
 /* ********************************************************************************************* *
- * Trainer interface
+ * Tutor interface
  * ********************************************************************************************* */
 Tutor::Tutor(QObject *parent)
   : QObject(parent)
@@ -193,4 +195,64 @@ RandomTutor::setChars(const QSet<QChar> &chars) {
   for (; c != chars.end(); c++) {
     _chars.push_back(*c);
   }
+}
+
+
+/* ********************************************************************************************* *
+ * QSOTrainer
+ * ********************************************************************************************* */
+QSOTutor::QSOTutor(QObject *parent)
+  : Tutor(parent)
+{
+  // Read
+  QFile f(":qso/qso.txt");
+  f.open(QFile::ReadOnly|QFile::Text);
+  if (! f.isOpen()) {
+    std::cerr << "Can not read QSO database." << std::endl;
+  }
+
+  while (! f.atEnd()) {
+    QString line(f.readLine());
+    line.replace("^ar", QChar('+'));
+    line.replace("^as", QChar('&'));
+    line.replace("^bt", QChar('='));
+    line.replace("^bk", QChar(0x2417));
+    line.replace("^cl", QChar(0x2404));
+    line.replace("^sk", QChar(0x2403));
+    line.replace("^sn", QChar(0x2406));
+    line.replace("^kl", QChar(0x2407));
+    line = line.simplified().toLower();
+    _qso.push_back(line);
+  }
+  std::cerr << "Read " << _qso.size() << " QSOs." << std::endl;
+}
+
+QSOTutor::~QSOTutor() {
+  // pass...
+}
+
+QChar
+QSOTutor::next() {
+  // If there are no QSOs
+  if (0 == _qso.size()) { return QChar(0); }
+  // If no QSO is selected yet
+  if (0 == _currentQSO.size()) {
+    // Sample next QSO
+    _currentQSO = _qso[ _qso.size()*(double(rand())/RAND_MAX) ];
+  }
+  // Get char from QSO
+  QChar c = _currentQSO[0];
+  // Update remaining text
+  _currentQSO = _currentQSO.remove(0, 1);
+  return c;
+}
+
+bool
+QSOTutor::atEnd() {
+  return 0 == _currentQSO.size();
+}
+
+void
+QSOTutor::reset() {
+  _currentQSO.clear();
 }

@@ -260,13 +260,16 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor = new QComboBox();
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
+  _tutor->addItem(tr("QSO"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
+  _qsoSettings  = new QSOTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
+  _tutorSettings->addWidget(_qsoSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
@@ -275,6 +278,9 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
     _tutor->setCurrentIndex(1);
     _tutorSettings->setCurrentIndex(1);
+  } else if (Settings::TUTOR_QSO == settings.tutor()) {
+    _tutor->setCurrentIndex(2);
+    _tutorSettings->setCurrentIndex(2);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -305,6 +311,8 @@ TutorSettingsView::save() {
     settings.setTutor(Settings::TUTOR_KOCH);
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
+  } else if (2 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_QSO);
   }
 }
 
@@ -413,6 +421,24 @@ RandomTutorSettingsView::save() {
   }
 
   Settings().setRandomChars(enabled_chars);
+}
+
+
+/* ********************************************************************************************* *
+ * QSO Tutor Settings Widget
+ * ********************************************************************************************* */
+QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
+  : QGroupBox(parent)
+{
+  QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->addWidget(label);
+  setLayout(layout);
+}
+
+void
+QSOTutorSettingsView::save() {
+  // pass...
 }
 
 

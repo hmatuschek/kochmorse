@@ -20,7 +20,8 @@ public:
   /** The possible morse tutors. */
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
-    TUTOR_RANDOM = 1  ///< Random chars.
+    TUTOR_RANDOM = 1, ///< Random chars.
+    TUTOR_QSO = 2     ///< QSO Tutor.
   } Tutor;
 
 public:
@@ -96,6 +97,17 @@ public:
 };
 
 
+/** A configuration panel for the QSO tutor. */
+class QSOTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit QSOTutorSettingsView(QWidget *parent=0);
+
+  void save();
+};
+
 /** A configuration panel for the Koch tutor. */
 class KochTutorSettingsView: public QGroupBox
 {
@@ -149,6 +161,7 @@ protected:
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
+  QSOTutorSettingsView *_qsoSettings;
 };
 
 

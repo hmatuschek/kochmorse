@@ -26,6 +26,9 @@ Application::Application(int &argc, char *argv[])
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), this);
     break;
+  case Settings::TUTOR_QSO:
+    _tutor = new QSOTutor(this);
+    break;
   }
 
   // Connect singals
@@ -93,6 +96,9 @@ Application::applySettings()
     break;
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), this);
+    break;
+  case Settings::TUTOR_QSO:
+    _tutor = new QSOTutor(this);
     break;
   }
 }

@@ -82,4 +82,21 @@ protected:
 };
 
 
+class QSOTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  explicit QSOTutor(QObject *parent=0);
+  virtual ~QSOTutor();
+
+  QChar next();
+  bool atEnd();
+  void reset();
+
+protected:
+  QVector<QString> _qso;
+  QString _currentQSO;
+};
+
 #endif // __KOCHMORSE_TRAINER_HH__

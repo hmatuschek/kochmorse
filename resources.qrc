@@ -6,5 +6,6 @@
         <file>icons/preferences.svg</file>
         <file>text/about.html</file>
         <file>icons/kochmorse.svg</file>
+        <file>qso/qso.txt</file>
     </qresource>
 </RCC>
