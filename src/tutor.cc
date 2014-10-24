@@ -207,9 +207,6 @@ QSOTutor::QSOTutor(QObject *parent)
   // Read
   QFile f(":qso/qso.txt");
   f.open(QFile::ReadOnly|QFile::Text);
-  if (! f.isOpen()) {
-    std::cerr << "Can not read QSO database." << std::endl;
-  }
 
   while (! f.atEnd()) {
     QString line(f.readLine());
@@ -224,7 +221,6 @@ QSOTutor::QSOTutor(QObject *parent)
     line = line.simplified().toLower();
     _qso.push_back(line);
   }
-  std::cerr << "Read " << _qso.size() << " QSOs." << std::endl;
 }
 
 QSOTutor::~QSOTutor() {
