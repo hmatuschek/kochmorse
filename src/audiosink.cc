@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-AudioSink::AudioSink(QObject *parent, double sampleRate)
+AudioSink::AudioSink(double sampleRate, QObject *parent)
   : QObject(parent), _stream(0), _rate(sampleRate), _volumeFactor(1)
 {
   PaSampleFormat fmt = paInt16;

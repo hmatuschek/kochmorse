@@ -14,9 +14,14 @@
 MainWindow::MainWindow(Application &app, QWidget *parent)
   : QMainWindow(parent), _app(app)
 {
+  // Window decoration
   this->setWindowTitle(tr("Koch Morse Tutor"));
+  this->setWindowIcon(QIcon(":/icons/kochmorse.svg"));
+
+  // Load persistent settings
   Settings settings;
 
+  // Assemble text view
   _text = new QPlainTextEdit();
   _text->setMinimumSize(640,230);
   QFont f = _text->document()->defaultFont();
@@ -26,20 +31,24 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _text->document()->setDefaultFont(f);
   _text->setReadOnly(true);
 
+  // Play button
   _play = new QAction(
         QIcon::fromTheme("media-playback-start", QIcon(":/icons/play.svg")), "", this);
   _play->setToolTip(tr("Start/Stop"));
   _play->setCheckable(true);
   _play->setChecked(false);
 
+  // Preferences button
   _pref = new QAction(
         QIcon::fromTheme("system-preferences", QIcon(":/icons/preferences.svg")), "", this);
   _pref->setToolTip(tr("Settings"));
 
+  // Info button
   _info = new QAction(
         QIcon::fromTheme("application-help", QIcon(":/icons/help.svg")), "", this);
   _info->setToolTip(tr("About Koch Morse"));
 
+  // Volume slider
   _volume = new QSlider(Qt::Horizontal);
   _volume->setMinimum(0);
   _volume->setMaximum(200);
@@ -54,9 +63,11 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   volPanelLayout->addWidget(_volumeLabel);
   volPanel->setLayout(volPanelLayout);
 
+  // Quit button
   _quit = new QAction(QIcon(":/icons/exit.svg"), "", this);
   _quit->setToolTip(tr("Quit Koch Morse"));
 
+  // Assemble tool bar
   QToolBar *tbox = new QToolBar();
   tbox->setAllowedAreas(Qt::TopToolBarArea | Qt::RightToolBarArea | Qt::LeftToolBarArea);
   tbox->addAction(_play);

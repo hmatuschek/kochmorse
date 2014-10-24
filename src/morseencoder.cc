@@ -25,6 +25,7 @@ inline QHash<QChar, QString> _initCodeTable() {
 QHash<QChar, QString> MorseEncoder::_codeTable = _initCodeTable();
 
 
+
 MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
                            double speed, double effSpeed, bool parallel, QObject *parent)
   : QThread(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
@@ -34,6 +35,7 @@ MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
 {
   _createSamples();
 }
+
 
 void
 MorseEncoder::_createSamples()
@@ -104,6 +106,7 @@ MorseEncoder::send(const QString &text) {
   }
 }
 
+
 void
 MorseEncoder::send(QChar ch) {
   if (_parallel) {
@@ -118,6 +121,7 @@ MorseEncoder::send(QChar ch) {
   }
 }
 
+
 void
 MorseEncoder::start() {
   if (! _parallel) { return; }
@@ -130,6 +134,7 @@ MorseEncoder::start() {
   // Start thread
   QThread::start();
 }
+
 
 void
 MorseEncoder::stop()
@@ -148,6 +153,7 @@ MorseEncoder::stop()
   this->wait();
 }
 
+
 double
 MorseEncoder::time() const {
   return _played;
@@ -157,6 +163,7 @@ void
 MorseEncoder::resetTime() {
   _played = 0;
 }
+
 
 void
 MorseEncoder::setSpeed(int speed) {
@@ -168,8 +175,9 @@ MorseEncoder::setEffSpeed(int speed) {
   _effSpeed = speed; _createSamples();
 }
 
+
 void
-MorseEncoder::setTone(double freq) {
+MorseEncoder::setDotTone(double freq) {
   _ditFreq = freq; _daFreq=freq;
   _createSamples();
 }
@@ -178,6 +186,7 @@ void
 MorseEncoder::setDashTone(double freq) {
   _daFreq = freq; _createSamples();
 }
+
 
 void
 MorseEncoder::run() {
@@ -197,6 +206,7 @@ MorseEncoder::run() {
     emit charSend(ch);
   }
 }
+
 
 void
 MorseEncoder::_send(QChar ch)

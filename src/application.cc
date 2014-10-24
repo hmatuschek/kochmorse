@@ -9,7 +9,7 @@ Application::Application(int argc, char *argv[])
   Settings settings;
   AudioSink::init();
 
-  _audio = new AudioSink(this);
+  _audio = new AudioSink(16e3, this);
   _audio->setVolume(settings.volume());
 
   _encoder = new MorseEncoder(_audio, settings.tone(), settings.tone()+settings.dashPitch(),
@@ -71,7 +71,7 @@ Application::applySettings()
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());
   _encoder->setEffSpeed(settings.effSpeed());
-  _encoder->setTone(settings.tone());
+  _encoder->setDotTone(settings.tone());
   _encoder->setDashTone(settings.tone()+settings.dashPitch());
 
   // Reconfigure tutor
