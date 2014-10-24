@@ -71,7 +71,7 @@ MorseEncoder::_createSamples()
   _unitLength = size_t((60.*rate)/(50.*_speed));
   _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
   // The first and last epsilon samples are windowed
-  double epsilon = _unitLength/5;
+  size_t epsilon = std::min(size_t(150), _unitLength/5);
 
   // Create dit sample
   _ditSample.resize(2*_unitLength*sizeof(int16_t));
