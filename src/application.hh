@@ -5,6 +5,7 @@
 #include "audiosink.hh"
 #include "morseencoder.hh"
 #include "tutor.hh"
+#include "effect.hh"
 
 
 class Application : public QApplication
@@ -32,7 +33,8 @@ protected slots:
   void onCharSend(QChar ch);
 
 protected:
-  AudioSink *_audio;
+  PortAudioSink *_audio;
+  NoiseEffect *_noiseEffect;
   MorseEncoder *_encoder;
   Tutor *_tutor;
 };

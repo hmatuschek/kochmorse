@@ -5,17 +5,35 @@
 #include <QByteArray>
 #include <portaudio.h>
 
+/** Base for all audio processing and playback classes. */
+class AudioSink: public QObject
+{
+  Q_OBJECT
+
+protected:
+  AudioSink(QObject *parent=0);
+
+public:
+  virtual ~AudioSink();
+
+  /** Processes or plays the given PCA (16bit, signed integer). */
+  virtual void play(const QByteArray &data) = 0;
+
+  /** Returns the sample-rate of the output. */
+  virtual double rate() const = 0;
+};
+
 
 /** Wraps PortAudio for playback. It chooses the default playback device.*/
-class AudioSink : public QObject
+class PortAudioSink : public AudioSink
 {
   Q_OBJECT
 
 public:
   /** Constructor. */
-  explicit AudioSink(double sampleRate=16000, QObject *parent = 0);
+  explicit PortAudioSink(double sampleRate=16000, QObject *parent = 0);
   /** Destructor. */
-  virtual ~AudioSink();
+  virtual ~PortAudioSink();
 
   /** Plays the given PCA (16bit, signed integer) blocking. */
   void play(const QByteArray &data);

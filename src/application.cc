@@ -4,15 +4,17 @@
 
 
 Application::Application(int &argc, char *argv[])
- : QApplication(argc, argv), _audio(0), _encoder(0), _tutor(0)
+ : QApplication(argc, argv), _audio(0), _noiseEffect(0), _encoder(0), _tutor(0)
 {
   Settings settings;
-  AudioSink::init();
+  PortAudioSink::init();
 
-  _audio = new AudioSink(16e3, this);
+  _audio = new PortAudioSink(16e3, this);
   _audio->setVolume(settings.volume());
 
-  _encoder = new MorseEncoder(_audio, settings.tone(), settings.tone()+settings.dashPitch(),
+  _noiseEffect = new NoiseEffect(_audio, true, 10, this);
+
+  _encoder = new MorseEncoder(_noiseEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), true, this);
 
   switch (settings.tutor()) {
@@ -30,7 +32,7 @@ Application::Application(int &argc, char *argv[])
 }
 
 Application::~Application() {
-  AudioSink::finalize();
+  PortAudioSink::finalize();
 }
 
 int

@@ -1,7 +1,9 @@
 set(kochmorse_SOURCES main.cc
-    audiosink.cc morseencoder.cc tutor.cc application.cc mainwindow.cc settings.cc aboutdialog.cc)
+    audiosink.cc effect.cc morseencoder.cc tutor.cc application.cc mainwindow.cc settings.cc
+    aboutdialog.cc)
 set(kochmorse_MOC_HEADERS
-    audiosink.hh morseencoder.hh tutor.hh application.hh mainwindow.hh settings.hh aboutdialog.hh)
+    audiosink.hh effect.hh morseencoder.hh tutor.hh application.hh mainwindow.hh settings.hh
+    aboutdialog.hh)
 
 qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
 
