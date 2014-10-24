@@ -6,6 +6,7 @@
 #include <QListWidgetItem>
 #include <QGroupBox>
 #include <iostream>
+#include "morseencoder.hh"
 
 
 /* ********************************************************************************************* *
@@ -82,7 +83,7 @@ Settings::kochLesson() const {
 }
 void
 Settings::setKochLesson(int n) {
-  n = std::max(2, std::min(n, 41));
+  n = std::max(2, std::min(n, 43));
   this->setValue("koch/lesson", n);
 }
 
@@ -102,7 +103,9 @@ Settings::randomChars() const {
     chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
           << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
           << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
-          << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@';
+          << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
+          << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
+          << QChar(0x2406) /* SN */;
   } else {
     QString str = this->value("random/chars").toString();
     for (int i=0; i<str.size(); i++) { chars.insert(str[i]); }
@@ -264,7 +267,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   Settings settings;
 
   _lesson = new QSpinBox();
-  _lesson->setMinimum(2); _lesson->setMaximum(42);
+  _lesson->setMinimum(2); _lesson->setMaximum(43);
   _lesson->setValue(settings.kochLesson());
 
   _prefLastChars = new QCheckBox();
@@ -299,8 +302,9 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   alpha << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
         << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z';
   num << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9';
-  punct << '.' << ',' << ':' << ';' << '&' << '?' << '+' << '-' << '@';
-  prosign << '/' << '=';
+  punct << '.' << ',' << ':' << ';' << '?' << '-' << '@' << '(' << ')' << '/';
+  prosign << '=' << '+' << '&' << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */
+          << QChar(0x2403) /* SK */ << QChar(0x2406) /* SN */ << QChar(0x2407) /* KL */;
 
   // Assemble char table
   _alpha = new QListWidget();
@@ -308,6 +312,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   foreach (QChar c, alpha) {
     item = new QListWidgetItem(c, _alpha);
     item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
+    item->setData(Qt::UserRole, c);
     if (enabled_chars.contains(c)) {
       item->setCheckState(Qt::Checked);
     } else {
@@ -319,6 +324,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   _num->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
   foreach (QChar c, num) {
     item = new QListWidgetItem(c, _num);
+    item->setData(Qt::UserRole, c);
     item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     if (enabled_chars.contains(c)) {
       item->setCheckState(Qt::Checked);
@@ -331,6 +337,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   _punct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
   foreach (QChar c, punct) {
     item = new QListWidgetItem(c, _punct);
+    item->setData(Qt::UserRole, c);
     item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     if (enabled_chars.contains(c)) {
       item->setCheckState(Qt::Checked);
@@ -342,7 +349,8 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   _prosign = new QListWidget();
   _prosign->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
   foreach (QChar c, prosign) {
-    item = new QListWidgetItem(c, _prosign);
+    item = new QListWidgetItem(MorseEncoder::mapProsign(c), _prosign);
+    item->setData(Qt::UserRole, c);
     item->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled);
     if (enabled_chars.contains(c)) {
       item->setCheckState(Qt::Checked);
@@ -367,22 +375,22 @@ RandomTutorSettingsView::save() {
   QSet<QChar> enabled_chars;
   for (int i=0; i<_alpha->count(); i++) {
     if (Qt::Checked == _alpha->item(i)->checkState()) {
-      enabled_chars.insert(_alpha->item(i)->text()[0]);
+      enabled_chars.insert(_alpha->item(i)->data(Qt::UserRole).toChar());
     }
   }
   for (int i=0; i<_num->count(); i++) {
     if (Qt::Checked == _num->item(i)->checkState()) {
-      enabled_chars.insert(_num->item(i)->text()[0]);
+      enabled_chars.insert(_num->item(i)->data(Qt::UserRole).toChar());
     }
   }
   for (int i=0; i<_punct->count(); i++) {
     if (Qt::Checked == _punct->item(i)->checkState()) {
-      enabled_chars.insert(_punct->item(i)->text()[0]);
+      enabled_chars.insert(_punct->item(i)->data(Qt::UserRole).toChar());
     }
   }
   for (int i=0; i<_prosign->count(); i++) {
     if (Qt::Checked == _prosign->item(i)->checkState()) {
-      enabled_chars.insert(_prosign->item(i)->text()[0]);
+      enabled_chars.insert(_prosign->item(i)->data(Qt::UserRole).toChar());
     }
   }
 

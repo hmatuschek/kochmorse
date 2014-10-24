@@ -24,7 +24,7 @@ inline QVector<QChar> _initKochLessons() {
   chars << 'k' << 'm' << 'r' << 's' << 'u' << 'a' << 'p' << 't' << 'l' << 'o' << 'w'
         << 'i' << '.' << 'n' << 'j' << 'e' << 'f' << '0' << 'y' << ',' << 'v' << 'g'
         << '5' << '/' << 'q' << '9' << 'z' << 'h' << '3' << '8' << 'b' << '?' << '4'
-        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=';
+        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=' << QChar(0x2403) << '+';
   return chars;
 }
 // The vector of all chars ordered by lesson
@@ -120,7 +120,9 @@ RandomTutor::RandomTutor(QObject *parent)
   _chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
          << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
          << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
-         << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@';
+         << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
+         << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
+         << QChar(0x2406) /* SN */;
 }
 
 RandomTutor::RandomTutor(const QSet<QChar> &chars, QObject *parent)

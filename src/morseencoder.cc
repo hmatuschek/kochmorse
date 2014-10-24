@@ -17,13 +17,35 @@ inline QHash<QChar, QString> _initCodeTable() {
   table['6'] = "-....";  table['7'] = "--...";  table['8'] = "---..";  table['9'] = "----.";
   table['.'] = ".-.-.-"; table[','] = "--..--"; table['?'] = "..--.."; table['/'] = "-..-.";
   table['&'] = ".-...";  table[':'] = "---..."; table[';'] = "-.-.-."; table['='] = "-...-";
-  table['+'] = ".-.-.";  table['-'] = "-....-"; table['@'] = ".--.-.";
+  table['+'] = ".-.-.";  table['('] = "-.--.";  table[')'] = "-.--.-"; table['-'] = "-....-";
+  table['@'] = ".--.-.";
+  // Some prosigns:
+  table[QChar(0x2417)] = "-...-.-";  // BK -> ETB
+  table[QChar(0x2404)] = "-.-..-.."; // CL -> EOT
+  table[QChar(0x2403)] = "...-.-";   // SK -> ETX
+  table[QChar(0x2406)] = "...-.";    // SN -> ACK
+  table[QChar(0x2407)] = "-.--.";    // KL -> BEL
+  // Other prosigns are repr. by their character representative:
+  // AR -> '+'; AS -> '&'; BT -> '=';
   return table;
 }
 
 /* Init static morse-code table. */
 QHash<QChar, QString> MorseEncoder::_codeTable = _initCodeTable();
 
+
+inline QHash<QChar, QString> _initProsignTable() {
+  QHash<QChar, QString> table;
+  table[QChar(0x2417)] = "BK"; // BK -> ETB
+  table[QChar(0x2404)] = "CL"; // CL -> EOT
+  table[QChar(0x2403)] = "SK"; // SK -> ETX
+  table[QChar(0x2406)] = "SN"; // SN -> ACK
+  table[QChar(0x2407)] = "KL"; // KL -> BEL
+  return table;
+}
+
+/* Init static morse-code table. */
+QHash<QChar, QString> MorseEncoder::_prosignTable = _initProsignTable();
 
 
 MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
@@ -187,6 +209,11 @@ MorseEncoder::setDashTone(double freq) {
   _daFreq = freq; _createSamples();
 }
 
+QString
+MorseEncoder::mapProsign(QChar ch) {
+  if (! _prosignTable.contains(ch)) { return ch; }
+  return _prosignTable[ch];
+}
 
 void
 MorseEncoder::run() {

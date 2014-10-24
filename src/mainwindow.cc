@@ -98,7 +98,7 @@ MainWindow::onSessionFinished() {
 void
 MainWindow::onCharSend(QChar ch) {
   // Update text-field
-  _text->insertPlainText(ch);
+  _text->insertPlainText(MorseEncoder::mapProsign(ch));
 }
 
 void
