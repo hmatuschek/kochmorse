@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <portaudio.h>
+#include <inttypes.h>
 
 /** Base for all audio processing and playback classes. */
 class AudioSink: public QObject
