@@ -5,9 +5,13 @@ QTGUI_FRAMEWORK = /opt/local/Library/Frameworks/QtGui.framework/Versions/5/QtGui
 QTWIDGETS_FRAMEWORK = /opt/local/Library/Frameworks/QtWidgets.framework/Versions/5/QtWidgets
 QTXML_FRAMEWORK = /opt/local/Library/Frameworks/QtXml.framework/Versions/5/QtXml
 QTSVG_FRAMEWORK = /opt/local/Library/Frameworks/QtSvg.framework/Versions/5/QtSvg
+QTPRINT_FRAMEWORK = /opt/local/Library/Frameworks/QtPrintSupport.framework/Versions/5/QtPrintSupport
+QT_PLUGINS = /opt/local/share/qt5/plugins
+QT_PLUGINS_PLATFORM =${QT_PLUGINS}/platforms
 APP_LIBRARY_DIR = KochMorse.app/Contents/Frameworks
 APP_BINARY_DIR  = KochMorse.app/Contents/MacOS
-VERSION = 3.0.0-rc.1
+APP_PLUGIN_DIR  = KochMorse.app/Contents/PlugIns
+VERSION = 3.0.0
 
 app: dmg
 
@@ -17,10 +21,10 @@ clean:
 	rm -f KochMorse-${VERSION}.dmg
 
 dmg: kochmorse-app
-	hdiutil create -srcfolder KochMorse.app KochMorse-${VERSION}.dmg
+	hdiutil create -srcfolder KochMorse.app kochmorse-${VERSION}.dmg
 
 
-kochmorse-app: QtGui QtSvg QtCore QtWidgets portaudio
+kochmorse-app: QtGui QtSvg QtCore QtWidgets QtPlugins portaudio
 	cp $(SYSTEM_BINARY_DIR)/kochmorse ${APP_BINARY_DIR}
 	install_name_tool -change ${QTCORE_FRAMEWORK} @executable_path/../Frameworks/QtCore ${APP_BINARY_DIR}/kochmorse
 	install_name_tool -change ${QTGUI_FRAMEWORK} @executable_path/../Frameworks/QtGui ${APP_BINARY_DIR}/kochmorse
@@ -31,6 +35,18 @@ kochmorse-app: QtGui QtSvg QtCore QtWidgets portaudio
 portaudio:
 	cp $(SYSTEM_LIBRARY_DIR)/libportaudio.2.dylib ${APP_LIBRARY_DIR}
 	install_name_tool -id @executable_path/../Frameworks/portaudio.2.dylib ${APP_LIBRARY_DIR}/libportaudio.2.dylib
+
+QtPlugins: QtPrintSupport libz 
+	cp ${QT_PLUGINS_PLATFORM}/libqcocoa.dylib ${APP_PLUGIN_DIR}/platforms
+	install_name_tool -id @executable_path/../PlugIns/platforms/libqcocoa.dylib ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${QTCORE_FRAMEWORK} @executable_path/../Frameworks/QtCore ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${QTGUI_FRAMEWORK} @executable_path/../Frameworks/QtGui ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${QTWIDGETS_FRAMEWORK} @executable_path/../Frameworks/QtWidgets ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${QTPRINT_FRAMEWORK} @executable_path/../Frameworks/QtPrintSupport ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libz.1.dylib @executable_path/../Frameworks/libz.1.dylib ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libglib-2.0.0.dylib @executable_path/../Frameworks/libglib-2.0.0.dylib ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libgthread-2.0.0.dylib @executable_path/../Frameworks/libgthread-2.0.0.dylib ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib ${APP_PLUGIN_DIR}/platforms/libqcocoa.dylib
 
 QtGui: QtCore libz libpng
 	cp ${QTGUI_FRAMEWORK} ${APP_LIBRARY_DIR}
@@ -71,6 +87,13 @@ QtCore: libz libicu libpcre libgthread libglib libintl
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libgthread-2.0.0.dylib @executable_path/../Frameworks/libgthread-2.0.0.dylib ${APP_LIBRARY_DIR}/QtCore
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libintl.8.dylib @executable_path/../Frameworks/libintl.8.dylib ${APP_LIBRARY_DIR}/QtCore
 
+QtPrintSupport: QtCore QtGui QtWidgets
+	cp ${QTPRINT_FRAMEWORK} ${APP_LIBRARY_DIR}
+	install_name_tool -id @executable_path/../Frameworks/QtPrintSupport ${APP_LIBRARY_DIR}/QtPrintSupport
+	install_name_tool -change ${QTCORE_FRAMEWORK} @executable_path/../Frameworks/QtCore ${APP_LIBRARY_DIR}/QtPrintSupport
+	install_name_tool -change ${QTGUI_FRAMEWORK} @executable_path/../Frameworks/QtGui ${APP_LIBRARY_DIR}/QtPrintSupport
+	install_name_tool -change ${QTWIDGETS_FRAMEWORK} @executable_path/../Frameworks/QtWidgets ${APP_LIBRARY_DIR}/QtPrintSupport
+	
 libz:
 	cp ${SYSTEM_LIBRARY_DIR}/libz.1.dylib ${APP_LIBRARY_DIR}
 	install_name_tool -id @executable_path/../Frameworks/libz.1.dylib ${APP_LIBRARY_DIR}/libz.1.dylib
