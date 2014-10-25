@@ -2,6 +2,7 @@
 
 KochMorse is a simple morse-code tutor using the [Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses [Qt5](https://qt-project.org) for the grafical user interface (GUI) and [PortAudio](http://www.portaudio.com/) as its audio backend. 
 
+<img src="http://i60.tinypic.com/mlnhqc.png" alt="Koch Morse in action." align="middle"/>
 
 ## Features
 Below, you will find a list of features of the current KochMorse release. The highlighted featrues are new features compared to the "old" python implementation
