@@ -2,7 +2,7 @@ Format: 3.0 (quilt)
 Source: kochmorse
 Binary: kochmorse
 Architecture: any
-Version: 3.0.0rc1-1
+Version: 3.0.0
 Maintainer: Hannes Matuschek <hmatuschek@gmail.com>
 Homepage: http://www.github.com/hmatuschek/kochmorse
 Standards-Version: 3.9.2
