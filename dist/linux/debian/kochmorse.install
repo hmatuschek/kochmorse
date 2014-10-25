@@ -1,0 +1,4 @@
+#! /usr/bin/dh-exec
+/usr/bin/kochmorse
+/usr/share/applications/*
+/usr/share/icons/*

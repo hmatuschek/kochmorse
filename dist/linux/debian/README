@@ -1,0 +1,16 @@
+Building a source-package for the openSuSE build service.
+
+1.) Get the sources
+2.) Unpack with
+      $ tar -xf kochmorse-x.x.x.tar.gz
+3.) Enter directory
+      $ cd kochmorse-x.x.x
+4.) Create build environment:
+      $ dh_make -f ../kochmorse-x.x.x.tar.gz
+5.) Cleanup directory and copy the "control", "rules" and "changelog" files from this
+    directory.
+      $ rm debian/*.ex debian/*.EX debian/README.debian debian/README.source
+      $ cp THISDIRECTORY/(control|rules|changelog) debian/
+6.) Build source package.
+      $ dpkg-buildpackage -S -us -uc 
+7.) Patch *.dsc files using templates in this directory.

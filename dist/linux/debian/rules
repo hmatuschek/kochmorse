@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+# Disable version check, will be updated by package manager.
+DEB_CMAKE_EXTRA_FLAGS = -DCMAKE_LIBRARY_ARCHITECTURE=${DEB_HOST_MULTIARCH} \
+  -DCMAKE_BUILD_TYPE=RELEASE
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/cmake.mk
