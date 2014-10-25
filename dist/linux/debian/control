@@ -1,55 +1,15 @@
-Source: intrinsic-noise-analyzer
+Source: kochmorse
 Priority: extra
 Maintainer: Hannes Matuschek <hmatuschek@gmail.com>
-Build-Depends: cdbs (>= 0.4.93~), dh-exec, debhelper (>= 9), cmake, libsbml5-dev (>= 5.6), libqt4-dev (>= 4.5), libqtcore4 (>= 4.5), libqtgui4 (>= 4.5), libginac-dev
+Build-Depends: cdbs (>= 0.4.51), dh-exec, debhelper (>= 8.0.0), cmake, qtbase5-dev (>= 5.0), portaudio19-dev
 Standards-Version: 3.9.2
 Section: science
-Homepage: http://www.ina.bio.ed.ac.uk
+Homepage: http://github.com/hmatuschek/kochmorse
 
-Package: intrinsic-noise-analyzer
+Package: kochmorse
 Section: science
 Architecture: any
 Multi-Arch: foreign
-Depends: ${shlibs:Depends}, ${misc:Depends}, libina (= ${binary:Version})
-Description: The Intrinsic Noise Analyzer
- iNA is a computational tool for quantitative analysis of fluctuations in biochemical reaction
- networks. Such fluctuations, also known as intrinsic noise, arise due to the stochastic nature of
- chemical reactions and cannot be ignored when some molecules are present in very low copy numbers
- only, as is the case in living cells. The SBML-based software computes statistical measures such
- as means and standard deviations of concentrations within a given accuracy. This is carried out
- automatically using the system size expansion whose leading order term is the popular Linear Noise
- Approximation. The results of the analysis can be tested against the computationally much more
- expensive stochastic simulation algorithm.
-
-Package: libina
-Section: science
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: The Intrinsic Noise Analyzer runtime library
- iNA is a computational tool for quantitative analysis of fluctuations in biochemical reaction
- networks. Such fluctuations, also known as intrinsic noise, arise due to the stochastic nature of
- chemical reactions and cannot be ignored when some molecules are present in very low copy numbers
- only, as is the case in living cells. The SBML-based software computes statistical measures such
- as means and standard deviations of concentrations within a given accuracy. This is carried out
- automatically using the system size expansion whose leading order term is the popular Linear Noise
- Approximation. The results of the analysis can be tested against the computationally much more
- expensive stochastic simulation algorithm.
-
-Package: libina-dev
-Section: science
-Architecture: any
-Multi-Arch: same
-Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}, libina (= ${binary:Version})
-Description: The Intrinsic Noise Analyzer runtime library
- iNA is a computational tool for quantitative analysis of fluctuations in biochemical reaction
- networks. Such fluctuations, also known as intrinsic noise, arise due to the stochastic nature of
- chemical reactions and cannot be ignored when some molecules are present in very low copy numbers
- only, as is the case in living cells. The SBML-based software computes statistical measures such
- as means and standard deviations of concentrations within a given accuracy. This is carried out
- automatically using the system size expansion whose leading order term is the popular Linear Noise
- Approximation. The results of the analysis can be tested against the computationally much more
- expensive stochastic simulation algorithm.
-
+Description: The Koch Morse Tutor
+ A simple morse tutor using the Koch method.
