@@ -4,8 +4,11 @@ KochMorse is a simple morse-code tutor using the [Koch method](http://www.qsl.ne
 
 <img src="http://i60.tinypic.com/mlnhqc.png" alt="Koch Morse in action." align="middle"/>
 
+KochMorse runs under Linux, MacOS X and even under Windows. See the [Install](https://github.com/hmatuschek/kochmorse/wiki/Install) wiki page for deatils.
+
+
 ## Features
-Below, you will find a list of features of the current KochMorse release. The highlighted featrues are new features compared to the "old" python implementation
+Below, you will find a list of features of the current KochMorse release. The highlighted featrues are new features compared to the "old" python implementation.
 
  * *A simplified GUI* -- All settings are now accessable via the Preferences dialog.
  * A morse tutor using the Koch method (of cause).
