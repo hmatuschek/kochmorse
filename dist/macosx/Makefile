@@ -11,6 +11,7 @@ QT_PLUGINS_PLATFORM =${QT_PLUGINS}/platforms
 APP_LIBRARY_DIR = KochMorse.app/Contents/Frameworks
 APP_BINARY_DIR  = KochMorse.app/Contents/MacOS
 APP_PLUGIN_DIR  = KochMorse.app/Contents/PlugIns
+APP_RESOURCE_DIR  = KochMorse.app/Contents/Resources
 VERSION = 3.0.0
 
 app: dmg
@@ -21,6 +22,7 @@ clean:
 	rm -f KochMorse-${VERSION}.dmg
 
 dmg: kochmorse-app
+	cp kochmorse.icns ${APP_RESOURCE_DIR}
 	hdiutil create -srcfolder KochMorse.app kochmorse-${VERSION}.dmg
 
 
