@@ -1,5 +1,4 @@
 #include "application.hh"
-#include <iostream>
 #include "settings.hh"
 
 
@@ -17,7 +16,7 @@ Application::Application(int &argc, char *argv[])
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
-                              settings.speed(), settings.effSpeed(), true, this);
+                              settings.speed(), settings.effSpeed(), settings.sound(), true, this);
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
@@ -87,6 +86,7 @@ Application::applySettings()
   _encoder->setEffSpeed(settings.effSpeed());
   _encoder->setDotTone(settings.tone());
   _encoder->setDashTone(settings.tone()+settings.dashPitch());
+  _encoder->setSound(settings.sound());
 
   // Reconfigure tutor
   delete _tutor;

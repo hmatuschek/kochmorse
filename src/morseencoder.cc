@@ -1,6 +1,5 @@
 #include "morseencoder.hh"
 #include <cmath>
-#include <iostream>
 
 
 /* Internal used function to initialize a static hash table. */
@@ -49,11 +48,11 @@ QHash<QChar, QString> MorseEncoder::_prosignTable = _initProsignTable();
 
 
 MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
-                           double speed, double effSpeed, bool parallel, QObject *parent)
+                           double speed, double effSpeed, Sound sound, bool parallel, QObject *parent)
   : QThread(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
-    _unitLength(0), _effUnitLength(0), _ditSample(), _daSample(), _icPause(), _iwPause(),
-    _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(), _queue(),
-    _played(0)
+    _sound(sound), _unitLength(0), _effUnitLength(0), _ditSample(), _daSample(), _icPause(),
+    _iwPause(), _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(),
+    _queue(), _played(0)
 {
   _createSamples();
 }
@@ -70,8 +69,20 @@ MorseEncoder::_createSamples()
   // Compute unit (dit) length (PARIS std. = 50 units per word) in samples
   _unitLength = size_t((60.*rate)/(50.*_speed));
   _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
+
   // The first and last epsilon samples are windowed
-  size_t epsilon = std::min(size_t(150), _unitLength/5);
+  size_t epsilon = 0;
+  switch (_sound) {
+  case SOUND_SOFT:
+    epsilon = (10*rate)/_ditFreq;
+    break;
+  case SOUND_SHARP:
+    epsilon = (5*rate)/_ditFreq;
+    break;
+  case SOUND_CRACKING:
+    epsilon = 0;
+    break;
+  }
 
   // Create dit sample
   _ditSample.resize(2*_unitLength*sizeof(int16_t));
@@ -207,6 +218,11 @@ MorseEncoder::setDotTone(double freq) {
 void
 MorseEncoder::setDashTone(double freq) {
   _daFreq = freq; _createSamples();
+}
+
+void
+MorseEncoder::setSound(Sound sound) {
+  _sound = sound; _createSamples();
 }
 
 QString

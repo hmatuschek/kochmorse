@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QListWidgetItem>
 #include <QGroupBox>
-#include <iostream>
 #include "morseencoder.hh"
 
 
@@ -66,6 +65,15 @@ void
 Settings::setDashPitch(int pitch) {
   pitch = std::max(-1000, std::min(pitch, 1000));
   this->setValue("dashPitch", pitch);
+}
+
+MorseEncoder::Sound
+Settings::sound() const {
+  return MorseEncoder::Sound(this->value("sound", MorseEncoder::SOUND_SOFT).toUInt());
+}
+void
+Settings::setSound(MorseEncoder::Sound sound) {
+  this->setValue("sound", uint(sound));
 }
 
 Settings::Tutor
@@ -232,12 +240,22 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   QIntValidator *pitch_val = new QIntValidator(-1000,1000);
   _daPitch->setValidator(pitch_val);
 
+  _sound = new QComboBox();
+  _sound->addItem(tr("Soft"), uint(MorseEncoder::SOUND_SOFT));
+  _sound->addItem(tr("Sharp"), uint(MorseEncoder::SOUND_SHARP));
+  _sound->addItem(tr("Cracking"), uint(MorseEncoder::SOUND_CRACKING));
+  switch (settings.sound()) {
+  case MorseEncoder::SOUND_SOFT: _sound->setCurrentIndex(0); break;
+  case MorseEncoder::SOUND_SHARP: _sound->setCurrentIndex(1); break;
+  case MorseEncoder::SOUND_CRACKING: _sound->setCurrentIndex(2); break;
+  }
+
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Speed (WPM)"), _speed);
   layout->addRow(tr("Eff. speed (WPM)"), _effSpeed);
   layout->addRow(tr("Tone (Hz)"), _tone);
   layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
-
+  layout->addRow(tr("Sound"), _sound);
   this->setLayout(layout);
 }
 
@@ -248,6 +266,7 @@ CodeSettingsView::save() {
   settings.setEffSpeed(_effSpeed->value());
   settings.setTone(_tone->text().toInt());
   settings.setDashPitch(_daPitch->text().toInt());
+  settings.setSound(MorseEncoder::Sound(_sound->currentIndex()));
 }
 
 
