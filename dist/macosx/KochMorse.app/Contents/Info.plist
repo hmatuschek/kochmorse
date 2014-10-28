@@ -6,7 +6,7 @@
 	<string>kochmorse</string>
 
 	<key>CFBundleGetInfoString</key>
-  <string>Koch Morse 3.0.0</string>
+	<string>Koch Morse 3.0.0</string>
 	
 	<key>CFBundleIdentifier</key>
 	<string>com.github.hmatuschek.kochmorse</string>
@@ -27,7 +27,7 @@
 	<string>3.0</string>
 
 	<key>CFBundleVersion</key>
-  <string>3.0.0</string>
+	<string>3.0.0</string>
 
 	<key>LSMinimumSystemVersion</key>
 	<string>10.9.0</string>
