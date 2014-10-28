@@ -80,7 +80,7 @@ MorseEncoder::_createSamples()
     epsilon = (5*rate)/_ditFreq;
     break;
   case SOUND_CRACKING:
-    epsilon = 0;
+    epsilon = (1*rate)/_ditFreq;;
     break;
   }
 
@@ -89,7 +89,7 @@ MorseEncoder::_createSamples()
   int16_t *ditData = reinterpret_cast<int16_t *>(_ditSample.data());
   for (size_t i=0; i<_unitLength; i++) {
     // gen tone
-    ditData[i] = (2<<12)*std::cos((2*M_PI*_ditFreq*i)/rate);
+    ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
       ditData[i] *= double(i+1)/epsilon;
@@ -107,7 +107,7 @@ MorseEncoder::_createSamples()
   int16_t *daData = reinterpret_cast<int16_t *>(_daSample.data());
   for (size_t i=0; i<(3*_unitLength); i++) {
     // gen tone
-    daData[i] = (2<<12)*std::cos((2*M_PI*_daFreq*i)/rate);
+    daData[i] = (2<<12)*std::sin((2*M_PI*_daFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
       daData[i] *= double(i)/epsilon;
