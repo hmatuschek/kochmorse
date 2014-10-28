@@ -9,6 +9,6 @@ Homepage: http://github.com/hmatuschek/kochmorse
 Package: kochmorse
 Section: unknown
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, qt5-image-formats-plugins (>= 5.0)
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5svg5 (>= 5.0)
 Description: Koch Morse Tutor
  A simple morse tutor using the Koch method.
