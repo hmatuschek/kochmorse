@@ -40,6 +40,9 @@ section "install"
 	# Files added here should be removed by the uninstaller (see section "uninstall")
 	file "kochmorse.exe"
         file "*.dll"
+        file /r "platforms"
+        file /r "imageformats"
+        file /r "iconengines"
 	# Add any other files for the install directory (license files, app data, etc) here
  
 	# Uninstaller - See function un.onInit and section "uninstall" for configuration

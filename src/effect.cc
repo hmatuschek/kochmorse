@@ -1,4 +1,5 @@
 #include "effect.hh"
+#include <time.h>
 #include <cmath>
 
 
@@ -116,7 +117,7 @@ FadingEffect::play(const QByteArray &data)
   QByteArray buffer(data);
   int16_t *values = reinterpret_cast<int16_t *>(buffer.data());
   // Do!
-  for (size_t i=0; i<(buffer.size()/2); i++) {
+  for (int i=0; i<(buffer.size()/2); i++) {
     if (0 >= _dS) {
       // Sample next change-point
       _dS = -sRate*60*std::log(double(rand())/RAND_MAX)/_rate;
