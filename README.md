@@ -21,8 +21,8 @@ Below, you will find a list of features of the current KochMorse release. The hi
 
 
 ## Releases 
-
- * 2014-10-25 - **Version 3.0** - First "official" release of the C++ reimplementation. See [release details](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) for more information.
+ * 2014-10-29 - [**Version 3.1.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.1.0)
+ * 2014-10-25 - [**Version 3.0.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) - First "official" release of the C++ reimplementation.
 
 
 ## History
