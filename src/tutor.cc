@@ -134,7 +134,7 @@ RandomTutor::RandomTutor(const QSet<QChar> &chars, QObject *parent)
   srand(time(0));
   _chars.reserve(chars.size());
   QSet<QChar>::const_iterator c = chars.begin();
-  for (; c != chars.begin(); c++) { _chars.push_back(*c); }
+  for (; c != chars.end(); c++) { _chars.push_back(*c); }
 }
 
 RandomTutor::~RandomTutor() {
