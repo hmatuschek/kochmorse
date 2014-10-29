@@ -1,6 +1,5 @@
 #include "morseencoder.hh"
 #include <cmath>
-#include <iostream>
 
 
 /* Internal used function to initialize a static hash table. */
@@ -49,11 +48,11 @@ QHash<QChar, QString> MorseEncoder::_prosignTable = _initProsignTable();
 
 
 MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
-                           double speed, double effSpeed, bool parallel, QObject *parent)
+                           double speed, double effSpeed, Sound sound, bool parallel, QObject *parent)
   : QThread(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
-    _unitLength(0), _effUnitLength(0), _ditSample(), _daSample(), _icPause(), _iwPause(),
-    _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(), _queue(),
-    _played(0)
+    _sound(sound), _unitLength(0), _effUnitLength(0), _ditSample(), _daSample(), _icPause(),
+    _iwPause(), _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(),
+    _queue(), _played(0)
 {
   _createSamples();
 }
@@ -70,15 +69,27 @@ MorseEncoder::_createSamples()
   // Compute unit (dit) length (PARIS std. = 50 units per word) in samples
   _unitLength = size_t((60.*rate)/(50.*_speed));
   _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
+
   // The first and last epsilon samples are windowed
-  size_t epsilon = std::min(size_t(150), _unitLength/5);
+  size_t epsilon = 0;
+  switch (_sound) {
+  case SOUND_SOFT:
+    epsilon = (10*rate)/_ditFreq;
+    break;
+  case SOUND_SHARP:
+    epsilon = (5*rate)/_ditFreq;
+    break;
+  case SOUND_CRACKING:
+    epsilon = (1*rate)/_ditFreq;;
+    break;
+  }
 
   // Create dit sample
   _ditSample.resize(2*_unitLength*sizeof(int16_t));
   int16_t *ditData = reinterpret_cast<int16_t *>(_ditSample.data());
   for (size_t i=0; i<_unitLength; i++) {
     // gen tone
-    ditData[i] = (2<<12)*std::cos((2*M_PI*_ditFreq*i)/rate);
+    ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
       ditData[i] *= double(i+1)/epsilon;
@@ -96,7 +107,7 @@ MorseEncoder::_createSamples()
   int16_t *daData = reinterpret_cast<int16_t *>(_daSample.data());
   for (size_t i=0; i<(3*_unitLength); i++) {
     // gen tone
-    daData[i] = (2<<12)*std::cos((2*M_PI*_daFreq*i)/rate);
+    daData[i] = (2<<12)*std::sin((2*M_PI*_daFreq*i)/rate);
     // apply window
     if (i <= epsilon) {
       daData[i] *= double(i)/epsilon;
@@ -207,6 +218,11 @@ MorseEncoder::setDotTone(double freq) {
 void
 MorseEncoder::setDashTone(double freq) {
   _daFreq = freq; _createSamples();
+}
+
+void
+MorseEncoder::setSound(Sound sound) {
+  _sound = sound; _createSamples();
 }
 
 QString

@@ -1,7 +1,6 @@
 #include "tutor.hh"
 #include <cmath>
 #include <QFile>
-#include <iostream>
 #include <time.h>
 
 

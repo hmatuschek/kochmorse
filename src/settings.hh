@@ -11,8 +11,10 @@
 #include <QSettings>
 #include "listwidget.hh"
 #include <QGroupBox>
+#include "morseencoder.hh"
 
-/** Represents global persistent settings. */
+
+/** Represents the global persistent settings. */
 class Settings: public QSettings
 {
   Q_OBJECT
@@ -52,6 +54,11 @@ public:
   int dashPitch() const;
   /** Sets the frequency shift for dashes. */
   void setDashPitch(int pitch);
+
+  /** Returns the currently selected sound. */
+  MorseEncoder::Sound sound() const;
+  /** Sets the sound. */
+  void setSound(MorseEncoder::Sound sound);
 
   /** Returns the current tutor. */
   Tutor tutor() const;
@@ -180,6 +187,7 @@ protected:
   QSpinBox *_effSpeed;
   QLineEdit *_tone;
   QLineEdit *_daPitch;
+  QComboBox *_sound;
 };
 
 

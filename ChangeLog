@@ -1,0 +1,6 @@
+Sat, 25 October 2014 -- 3.0.0
+	* Initial Release.
+
+Tue, 28 October 2014 -- 3.1.0
+  * Fixed random number generators.
+  * Added morse-code sound configuration.

@@ -1,4 +1,9 @@
-SET PATH=C:/MinGW/bin;C:/Qt/Qt5.3.2/5.3/mingw482_32/bin;%PATH%
+SET QT_PATH=C:/Qt/Qt5.3.2
+SET QT_BIN_PATH=%QT_PATH%/5.3/mingw482_32/bin
+SET QT_INCLUDE_PAHT=%QT_PATH%/Tools/mingw482_32/i686-w64-mingw32/include
+SET MINGW_PATH=C:/MinGW
+SET MINGW_BIN_PATH=%MINGW_PAHT%/bin
+SET PATH=%MINGW_PATH;%QT_BIN_PATH%;%PATH%
 
-cmake ../.. -G "MinGW Makefiles" -DKOCHMORSE_LIBS="-lportaudio" -DCMAKE_CXX_FLAGS="-IC:/Qt/Qt5.3.2/Tools/mingw482_32/i686-w64-mingw32/include"
+cmake ../.. -G "MinGW Makefiles" -DKOCHMORSE_LIBS="-lportaudio" -DCMAKE_CXX_FLAGS="-I%QT_INCLUDE_PATH%"
 mingw32-make

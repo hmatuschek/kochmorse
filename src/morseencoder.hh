@@ -16,6 +16,14 @@ class MorseEncoder : public QThread
   Q_OBJECT
 
 public:
+  /** Possible sound variants. */
+  typedef enum {
+    SOUND_SOFT = 0,
+    SOUND_SHARP = 1,
+    SOUND_CRACKING = 2
+  } Sound;
+
+public:
   /** Constructor.
    * @param sink Specifies the audio-sink for the playback.
    * @param ditFreq Specifies the tone freqency of a dot (dit).
@@ -26,7 +34,7 @@ public:
    * @param parent Specifies the @c QObject parent. */
   explicit MorseEncoder(
       AudioSink *sink, double ditFreq, double daFreq, double speed, double effSpeed,
-      bool parallel=true, QObject *parent= 0);
+      Sound sound, bool parallel=true, QObject *parent= 0);
 
   /** Sends the given text. */
   void send(const QString &text);
@@ -50,6 +58,8 @@ public:
   void setDotTone(double freq);
   /** (Re-) Sets the dash-tone (da) frequency. */
   void setDashTone(double freq);
+  /** (Re-) Sets the sound. */
+  void setSound(Sound sound);
 
 signals:
   /** Signals that a char was send. */
@@ -58,6 +68,7 @@ signals:
   void charsSend();
 
 public:
+  /** Maps prosign characters to their textual representation. */
   static QString mapProsign(QChar ch);
 
 protected:
@@ -84,6 +95,8 @@ protected:
   double _speed;
   /** Effective speed (pauses) in WPM. */
   double _effSpeed;
+  /** The sound variant. */
+  Sound _sound;
 
   /** Length of a "dit" in samples. */
   size_t _unitLength;
