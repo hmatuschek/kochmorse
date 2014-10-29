@@ -68,6 +68,7 @@ signals:
   void charsSend();
 
 public:
+  /** Maps prosign characters to their textual representation. */
   static QString mapProsign(QChar ch);
 
 protected:

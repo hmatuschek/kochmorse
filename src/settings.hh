@@ -13,7 +13,8 @@
 #include <QGroupBox>
 #include "morseencoder.hh"
 
-/** Represents global persistent settings. */
+
+/** Represents the global persistent settings. */
 class Settings: public QSettings
 {
   Q_OBJECT

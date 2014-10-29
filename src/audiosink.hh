@@ -12,6 +12,7 @@ class AudioSink: public QObject
   Q_OBJECT
 
 protected:
+  /** Constructor. */
   AudioSink(QObject *parent=0);
 
 public:

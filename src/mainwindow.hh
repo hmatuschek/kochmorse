@@ -39,11 +39,17 @@ protected:
   Application &_app;
   /** Holds the text view. */
   QPlainTextEdit *_text;
+  /** QAction for the play/stop toggle button. */
   QAction *_play;
+  /** QAction for the "preferences" button. */
   QAction *_pref;
+  /** QAction for the "about" button. */
   QAction *_info;
+  /** A slider to control the volume. */
   QSlider *_volume;
+  /** The label displaying the current volume value. */
   QLabel *_volumeLabel;
+  /** The action for the "quit" button. */
   QAction *_quit;
 };
 
