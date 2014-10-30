@@ -27,7 +27,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -ggdb")
 
 # Sources...
 add_subdirectory(src)
-add_subdirectory(test)
 
 # Source distribution packages:
 set(CPACK_PACKAGE_VERSION_MAJOR "3")
