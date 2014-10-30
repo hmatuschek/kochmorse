@@ -1,22 +1,27 @@
 #include "application.hh"
 #include "settings.hh"
+#include "globals.hh"
+#include <cmath>
 
 
 Application::Application(int &argc, char *argv[])
- : QApplication(argc, argv), _audio(0), _noiseEffect(0), _encoder(0), _tutor(0)
+ : QApplication(argc, argv), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
 {
   Settings settings;
-  PortAudioSink::init();
+  PortAudio::init();
 
-  _audio = new PortAudioSink(16e3, this);
-  _audio->setVolume(settings.volume());
+  _audio_sink = new PortAudioSink(this);
+  _audio_sink->setVolume(settings.volume());
 
-  _noiseEffect = new NoiseEffect(_audio, settings.noiseEnabled(), settings.noiseSNR(), this);
+  _noiseEffect = new NoiseEffect(_audio_sink, settings.noiseEnabled(), settings.noiseSNR(), this);
   _fadingEffect = new FadingEffect(_noiseEffect, settings.fadingEnabled(),
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), settings.sound(), true, this);
+
+  _decoder = new MorseDecoder(settings.speed(), settings.tone(), this);
+  _audio_src = new PortAudioSource(_decoder, this);
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
@@ -28,15 +33,22 @@ Application::Application(int &argc, char *argv[])
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);
     break;
+  case Settings::TUTOR_TX:
+    _tutor = 0;
+    break;
   }
 
   // Connect singals
   QObject::connect(_encoder, SIGNAL(charsSend()), this, SLOT(onCharsSend()));
   QObject::connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
+
+  QObject::connect(_decoder, SIGNAL(charReceived(QChar)), this, SLOT(onCharReceived(QChar)));
+  QObject::connect(_decoder, SIGNAL(unknownCharReceived(QString)), this, SLOT(onUnknownCharReceived(QString)));
 }
 
 Application::~Application() {
-  PortAudioSink::finalize();
+  _audio_src->stop();
+  PortAudio::finalize();
 }
 
 int
@@ -46,20 +58,31 @@ Application::sessionTime() {
 
 void
 Application::setVolume(double factor) {
-  _audio->setVolume(factor);
+  _audio_sink->setVolume(factor);
+  // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
+  double db = -60 + 60*(1-factor/2);
+  _decoder->setThreshold(std::pow(10, db/10));
 }
 
 void
 Application::startSession() {
-  _tutor->reset();
-  _encoder->start();
-  _encoder->send(_tutor->next());
+  if (_tutor) {
+    _tutor->reset();
+    _encoder->start();
+    _encoder->send(_tutor->next());
+  } else {
+    _audio_src->start();
+  }
 }
 
 void
 Application::stopSession() {
-  _encoder->stop();
-  _tutor->reset();
+  if (_tutor) {
+    _encoder->stop();
+    _tutor->reset();
+  } else {
+    _audio_src->stop();
+  }
 }
 
 void
@@ -67,12 +90,17 @@ Application::applySettings()
 {
   // Stop encoder if running
   _encoder->stop();
+  // Stop RX if running
+  _audio_src->stop();
 
   // Get settings
   Settings settings;
 
   // Update audio settings
-  _audio->setVolume(settings.volume());
+  _audio_sink->setVolume(settings.volume());
+  // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
+  double db = -60 + 60*(1-settings.volume()/2);
+  _decoder->setThreshold(std::pow(10, db/10));
 
   // Update effects
   _noiseEffect->setEnabled(settings.noiseEnabled());
@@ -89,7 +117,7 @@ Application::applySettings()
   _encoder->setSound(settings.sound());
 
   // Reconfigure tutor
-  delete _tutor;
+  if (_tutor) { delete _tutor; }
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
@@ -99,6 +127,9 @@ Application::applySettings()
     break;
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);
+    break;
+  case Settings::TUTOR_TX:
+    _tutor = 0;
     break;
   }
 }
@@ -113,5 +144,15 @@ Application::onCharsSend() {
 
 void
 Application::onCharSend(QChar ch) {
-  emit charSend(ch);
+  emit charSend(Globals::mapProsign(ch));
+}
+
+void
+Application::onCharReceived(QChar ch) {
+  emit charSend(Globals::mapProsign(ch));
+}
+
+void
+Application::onUnknownCharReceived(QString ch) {
+  emit charSend(QString("<%1>").arg(ch));
 }

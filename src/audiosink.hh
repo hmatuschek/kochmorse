@@ -23,6 +23,17 @@ public:
 };
 
 
+/** Static methods to port audio. */
+class PortAudio
+{
+public:
+  /** Initializes PortAudio library. */
+  static void init();
+  /** Terminates PortAudio library. */
+  static void finalize();
+};
+
+
 /** Wraps PortAudio for playback. It chooses the default playback device.*/
 class PortAudioSink : public AudioSink
 {
@@ -30,7 +41,7 @@ class PortAudioSink : public AudioSink
 
 public:
   /** Constructor. */
-  explicit PortAudioSink(double sampleRate=16000, QObject *parent = 0);
+  explicit PortAudioSink(QObject *parent = 0);
   /** Destructor. */
   virtual ~PortAudioSink();
 
@@ -41,20 +52,45 @@ public:
   /** Sets the current volume. */
   void setVolume(double factor);
 
-public:
-  /** Initializes PortAudio. */
-  static void init();
-  /** Terminates PortAudio. */
-  static void finalize();
-
 protected:
   /** The port-audio stream. */
   PaStream *_stream;
-  /** The sample-rate. */
-  double _rate;
   /** The current volume-factor. */
   double _volumeFactor;
 };
 
+
+/** Wraps PortAudio for recording. It chooses the default recording device.*/
+class PortAudioSource: public QObject
+{
+  Q_OBJECT
+
+public:
+  /** Constructor.
+   * @param sink Specifies the audio sink, the sample will be send to.
+   * @param parent Specified the QObject parent. */
+  explicit PortAudioSource(AudioSink *sink, QObject *parent=0);
+  /** Destructor. */
+  virtual ~PortAudioSource();
+
+  /** Starts processing. */
+  void start();
+  /** Stops processing. */
+  void stop();
+  /** Returns @c true if the input stream is running. */
+  bool isRunning() const;
+
+protected:
+  /** The callback used by PortAudio. */
+  static int _pa_callback(
+      const void *in, void *out, unsigned long Nframes,
+      const PaStreamCallbackTimeInfo *tinfo, PaStreamCallbackFlags flags, void *ctx);
+
+protected:
+  /** The port-audio stream. */
+  PaStream *_stream;
+  AudioSink *_sink;
+  QByteArray _buffer;
+};
 
 #endif // __KOCHMORSE_AUDIOSINK_HH__

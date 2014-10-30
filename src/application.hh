@@ -4,6 +4,7 @@
 #include <QApplication>
 #include "audiosink.hh"
 #include "morseencoder.hh"
+#include "morsedecoder.hh"
 #include "tutor.hh"
 #include "effect.hh"
 
@@ -34,17 +35,21 @@ signals:
   /** Gets emitted once a session is done. */
   void sessionFinished();
   /** Gets emitted once for each character send. */
-  void charSend(QChar ch);
+  void charSend(QString ch);
 
 protected slots:
   /** Gets called if the morse-encoder queue gets empty. */
   void onCharsSend();
   /** Gets called if a character was send by the encoder. */
   void onCharSend(QChar ch);
+  /** Gets called if the morse-decoder received a char. */
+  void onCharReceived(QChar ch);
+  /** Gets called if the morse-decoder received an unknown char. */
+  void onUnknownCharReceived(QString ch);
 
 protected:
   /** The audio output device. */
-  PortAudioSink *_audio;
+  PortAudioSink *_audio_sink;
   /** The noise effect instance. */
   NoiseEffect *_noiseEffect;
   /** The "fading" effect instance. */
@@ -53,6 +58,11 @@ protected:
   MorseEncoder *_encoder;
   /** The current tutor instance. */
   Tutor *_tutor;
+
+  /** The audio source device. */
+  PortAudioSource *_audio_src;
+  /** The decoder device. */
+  MorseDecoder *_decoder;
 };
 
 #endif // __KOCHMORSE_APPLICATION_HH__

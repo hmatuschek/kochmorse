@@ -1,7 +1,7 @@
 #include "globals.hh"
 #include <QString>
 
-const double Globals::sampleRate = 12e3;
+const double Globals::sampleRate = 16e3;
 
 /* Internal used function to initialize a static hash table. */
 inline QHash<QString, QChar> _initCodeTable() {

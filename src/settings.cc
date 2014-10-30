@@ -281,15 +281,18 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
   _tutor->addItem(tr("QSO"));
+  _tutor->addItem(tr("Transmit"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
   _qsoSettings  = new QSOTutorSettingsView();
+  _txSettings   = new TXTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
   _tutorSettings->addWidget(_qsoSettings);
+  _tutorSettings->addWidget(_txSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
@@ -301,6 +304,9 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_QSO == settings.tutor()) {
     _tutor->setCurrentIndex(2);
     _tutorSettings->setCurrentIndex(2);
+  } else if (Settings::TUTOR_TX == settings.tutor()) {
+    _tutor->setCurrentIndex(3);
+    _tutorSettings->setCurrentIndex(3);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -333,6 +339,8 @@ TutorSettingsView::save() {
     settings.setTutor(Settings::TUTOR_RANDOM);
   } else if (2 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_QSO);
+  } else if (3 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_TX);
   }
 }
 
@@ -458,6 +466,24 @@ QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
 
 void
 QSOTutorSettingsView::save() {
+  // pass...
+}
+
+
+/* ********************************************************************************************* *
+ * TX Tutor Settings Widget
+ * ********************************************************************************************* */
+TXTutorSettingsView::TXTutorSettingsView(QWidget *parent)
+  : QGroupBox(parent)
+{
+  QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->addWidget(label);
+  setLayout(layout);
+}
+
+void
+TXTutorSettingsView::save() {
   // pass...
 }
 

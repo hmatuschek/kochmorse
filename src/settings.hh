@@ -23,7 +23,8 @@ public:
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
-    TUTOR_QSO = 2     ///< QSO Tutor.
+    TUTOR_QSO = 2,    ///< QSO Tutor.
+    TUTOR_TX  = 3     ///< The TX tutor.
   } Tutor;
 
 public:
@@ -104,6 +105,18 @@ public:
 };
 
 
+/** A configuration panel for the TX tutor. */
+class TXTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit TXTutorSettingsView(QWidget *parent=0);
+
+  void save();
+};
+
+
 /** A configuration panel for the QSO tutor. */
 class QSOTutorSettingsView: public QGroupBox
 {
@@ -169,6 +182,7 @@ protected:
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
   QSOTutorSettingsView *_qsoSettings;
+  TXTutorSettingsView *_txSettings;
 };
 
 

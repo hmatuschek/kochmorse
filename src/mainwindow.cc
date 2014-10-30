@@ -85,7 +85,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   this->setCentralWidget(_text);
 
   QObject::connect(&_app, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
-  QObject::connect(&_app, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
+  QObject::connect(&_app, SIGNAL(charSend(QString)), this, SLOT(onCharSend(QString)));
   QObject::connect(_play, SIGNAL(triggered(bool)), this, SLOT(onPlayToggled(bool)));
   QObject::connect(_pref, SIGNAL(triggered()), this, SLOT(onPrefClicked()));
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
@@ -99,9 +99,9 @@ MainWindow::onSessionFinished() {
 }
 
 void
-MainWindow::onCharSend(QChar ch) {
+MainWindow::onCharSend(QString ch) {
   // Update text-field
-  _text->insertPlainText(Globals::mapProsign(ch));
+  _text->insertPlainText(ch);
 }
 
 void

@@ -22,7 +22,7 @@ protected slots:
   /** Gets called, once a tutor session is finished. */
   void onSessionFinished();
   /** Gets called, once a char was send. */
-  void onCharSend(QChar ch);
+  void onCharSend(QString ch);
   /** Gets called on play-button press. */
   void onPlayToggled(bool play);
   /** Gets called on preferences-button press. */

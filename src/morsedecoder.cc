@@ -6,7 +6,8 @@
 
 MorseDecoder::MorseDecoder(double speed, double freq, QObject *parent)
   : AudioSink(parent), _speed(speed), _freq(freq), _unitLength(0),
-    _Nsamples(0), _buffer(0), _sinTable(0), _cosTable(0), _threshold(1e-5), _delaySize(0)
+    _Nsamples(0), _buffer(0), _sinTable(0), _cosTable(0), _threshold(1e-5), _delaySize(0),
+    _lastChar('\0')
 {
   _updateConfig();
 }
@@ -25,6 +26,11 @@ MorseDecoder::setFreq(double freq) {
 void
 MorseDecoder::setSpeed(double wpm) {
   _speed = wpm; _updateConfig();
+}
+
+void
+MorseDecoder::setThreshold(double threshold) {
+  _threshold = threshold;
 }
 
 void
@@ -55,6 +61,7 @@ MorseDecoder::_updateConfig() {
     _delayLine[i] = 0;
   }
   _pauseCount = 0;
+  _lastChar = '\0';
 }
 
 
@@ -75,6 +82,7 @@ MorseDecoder::play(const QByteArray &data) {
       sin_sum /= _unitLength; cos_sum /= _unitLength;
       float pwr = sin_sum*sin_sum + cos_sum*cos_sum;
       _delayLine[_delaySize] = (pwr > _threshold);
+      //emit detectedSignal(pwr > _threshold);
       _delaySize++;
     }
     if (_isDot()) {
@@ -119,17 +127,19 @@ MorseDecoder::_processSymbol(char sym) {
       _pauseCount++;
       if (2 == _pauseCount) {
         _pauseCount = 0;
-        std::cerr << "Received & decoded pause." << std::endl;
-        emit charReceived(' ');
+        if (' ' != _lastChar) {
+          emit charReceived(' ');
+          _lastChar = ' ';
+        }
       }
     } else {
       // try to decode symbol...
       if (! Globals::codeTable.contains(_symbols)) {
-        std::cerr << "Drop unknown symbol " << _symbols.toStdString() << std::endl;
+        emit unknownCharReceived(_symbols);
+        _lastChar = '\0';
       } else {
-        std::cerr << "Received & decoded symbol " <<
-                     QString(Globals::codeTable[_symbols]).toStdString() << std::endl;
         emit charReceived(Globals::codeTable[_symbols]);
+        _lastChar = Globals::codeTable[_symbols];
       }
       _symbols.clear();
       _pauseCount = 0;

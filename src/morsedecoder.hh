@@ -16,10 +16,13 @@ public:
 
   void setFreq(double freq);
   void setSpeed(double wpm);
+  void setThreshold(double threshold);
 
   void play(const QByteArray &data);
 
 signals:
+  void detectedSignal(int sig);
+  void unknownCharReceived(const QString &pattern);
   void charReceived(QChar ch);
 
 protected:
@@ -49,6 +52,8 @@ protected:
 
   size_t _pauseCount;
   QString _symbols;
+
+  QChar _lastChar;
 };
 
 #endif // __KOCHMORSE_MORSEDECODER_HH__
