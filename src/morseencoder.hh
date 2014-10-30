@@ -67,10 +67,6 @@ signals:
   /** Signals that all chars in the queue have been send. */
   void charsSend();
 
-public:
-  /** Maps prosign characters to their textual representation. */
-  static QString mapProsign(QChar ch);
-
 protected:
   /** The main function of the parallel thread. */
   virtual void run();
@@ -78,12 +74,6 @@ protected:
   void _send(QChar ch);
   /** (Re-) Creates the dit, da and pause samples. */
   void _createSamples();
-
-protected:
-  /** The static morse-code table. */
-  static QHash<QChar, QString> _codeTable;
-  /** Maps my prosign unicode chars to text repr. */
-  static QHash<QChar, QString> _prosignTable;
 
 protected:
   /** The current dot-tone frequency. */

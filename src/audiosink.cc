@@ -55,11 +55,6 @@ PortAudioSink::play(const QByteArray &data) {
 }
 
 double
-PortAudioSink::rate() const {
-  return _rate;
-}
-
-double
 PortAudioSink::volume() const {
   return _volumeFactor;
 }

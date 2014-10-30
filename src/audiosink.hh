@@ -20,9 +20,6 @@ public:
 
   /** Processes or plays the given PCA (16bit, signed integer). */
   virtual void play(const QByteArray &data) = 0;
-
-  /** Returns the sample-rate of the output. */
-  virtual double rate() const = 0;
 };
 
 
@@ -39,8 +36,6 @@ public:
 
   /** Plays the given PCA (16bit, signed integer) blocking. */
   void play(const QByteArray &data);
-  /** Returns the sample-rate of the output. */
-  double rate() const;
   /** Returns the current volume. */
   double volume() const;
   /** Sets the current volume. */

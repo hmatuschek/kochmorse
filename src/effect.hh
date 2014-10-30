@@ -16,8 +16,6 @@ public:
   virtual ~NoiseEffect();
   /** Processes the given data. */
   virtual void play(const QByteArray &data);
-  /** Returns the sample-rate in Hz. */
-  virtual double rate() const;
   /** Enable/Disable the effect. */
   void setEnabled(bool enabled);
   /** Sets the SNR. */
@@ -54,8 +52,6 @@ public:
   virtual ~FadingEffect();
   /** Processes the input audio data. */
   virtual void play(const QByteArray &data);
-  /** Retunrs the sample-rate. */
-  virtual double rate() const;
   /** Enable/disable the effect. */
   void setEnabled(bool enabled);
   /** (Re-) Set the maximum damping factor. */

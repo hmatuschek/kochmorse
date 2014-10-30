@@ -1,7 +1,7 @@
 #include "effect.hh"
 #include <time.h>
 #include <cmath>
-
+#include "globals.hh"
 
 
 /* ******************************************************************************************** *
@@ -65,11 +65,6 @@ NoiseEffect::play(const QByteArray &data) {
   _sink->play(buffer);
 }
 
-double
-NoiseEffect::rate() const {
-  return _sink->rate();
-}
-
 void
 NoiseEffect::setEnabled(bool enabled) {
   _enabled = enabled;
@@ -92,12 +87,10 @@ FadingEffect::FadingEffect(AudioSink *sink, bool enabled, float maxDamp, float r
   // init RNG
   srand(time(0));
 
-  // Get sample rate
-  double sRate = _sink->rate();
   // Compute max damping factor
   _maxDamp = std::min(1., std::pow(10, maxDamp/10));
   // Sample first change-point
-  _dS = -sRate*60*std::log(double(rand())/RAND_MAX)/_rate;
+  _dS = -Globals::sampleRate*60*std::log(double(rand())/RAND_MAX)/_rate;
   // compute slope
   _dF = -(1-_maxDamp)/_dS;
 }
@@ -111,8 +104,6 @@ FadingEffect::play(const QByteArray &data)
 {
   // Skip if disabled
   if (! _enabled) { _sink->play(data); return; }
-  // Get sample rate
-  double sRate = _sink->rate();
   // Copy input buffer
   QByteArray buffer(data);
   int16_t *values = reinterpret_cast<int16_t *>(buffer.data());
@@ -120,7 +111,7 @@ FadingEffect::play(const QByteArray &data)
   for (int i=0; i<(buffer.size()/2); i++) {
     if (0 >= _dS) {
       // Sample next change-point
-      _dS = -sRate*60*std::log(double(rand())/RAND_MAX)/_rate;
+      _dS = -Globals::sampleRate*60*std::log(double(rand())/RAND_MAX)/_rate;
       // compute slope:
       if (_dF < 0) { _dF = (1-_maxDamp)/_dS; }
       else { _dF = -(1-_maxDamp)/_dS; }
@@ -129,11 +120,6 @@ FadingEffect::play(const QByteArray &data)
     values[i] *= _factor; _factor += _dF; _dS--;
   }
   _sink->play(buffer);
-}
-
-double
-FadingEffect::rate() const {
-  return _sink->rate();
 }
 
 void

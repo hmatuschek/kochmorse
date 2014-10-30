@@ -1,50 +1,8 @@
 #include "morseencoder.hh"
+#include "globals.hh"
 #include <cmath>
 
 
-/* Internal used function to initialize a static hash table. */
-inline QHash<QChar, QString> _initCodeTable() {
-  QHash<QChar, QString> table;
-  table['a'] = ".-";     table['b'] = "-...";   table['c'] = "-.-.";   table['d'] = "-..";
-  table['e'] = ".";      table['f'] = "..-.";   table['g'] = "--.";    table['h'] = "....";
-  table['i'] = "..";     table['j'] = ".---";   table['k'] = "-.-";    table['l'] = ".-..";
-  table['m'] = "--";     table['n'] = "-.";     table['o'] = "---";    table['p'] = ".--.";
-  table['q'] = "--.-";   table['r'] = ".-.";    table['s'] = "...";    table['t'] = "-";
-  table['u'] = "..-";    table['v'] = "...-";   table['w'] = ".--";    table['x'] = "-..-";
-  table['y'] = "-.--";   table['z'] = "--..";   table['0'] = "-----";  table['1'] = ".----";
-  table['2'] = "..---";  table['3'] = "...--";  table['4'] = "....-";  table['5'] = ".....";
-  table['6'] = "-....";  table['7'] = "--...";  table['8'] = "---..";  table['9'] = "----.";
-  table['.'] = ".-.-.-"; table[','] = "--..--"; table['?'] = "..--.."; table['/'] = "-..-.";
-  table['&'] = ".-...";  table[':'] = "---..."; table[';'] = "-.-.-."; table['='] = "-...-";
-  table['+'] = ".-.-.";  table['('] = "-.--.";  table[')'] = "-.--.-"; table['-'] = "-....-";
-  table['@'] = ".--.-.";
-  // Some prosigns:
-  table[QChar(0x2417)] = "-...-.-";  // BK -> ETB
-  table[QChar(0x2404)] = "-.-..-.."; // CL -> EOT
-  table[QChar(0x2403)] = "...-.-";   // SK -> ETX
-  table[QChar(0x2406)] = "...-.";    // SN -> ACK
-  table[QChar(0x2407)] = "-.--.";    // KL -> BEL
-  // Other prosigns are repr. by their character representative:
-  // AR -> '+'; AS -> '&'; BT -> '=';
-  return table;
-}
-
-/* Init static morse-code table. */
-QHash<QChar, QString> MorseEncoder::_codeTable = _initCodeTable();
-
-
-inline QHash<QChar, QString> _initProsignTable() {
-  QHash<QChar, QString> table;
-  table[QChar(0x2417)] = "BK"; // BK -> ETB
-  table[QChar(0x2404)] = "CL"; // CL -> EOT
-  table[QChar(0x2403)] = "SK"; // SK -> ETX
-  table[QChar(0x2406)] = "SN"; // SN -> ACK
-  table[QChar(0x2407)] = "KL"; // KL -> BEL
-  return table;
-}
-
-/* Init static morse-code table. */
-QHash<QChar, QString> MorseEncoder::_prosignTable = _initProsignTable();
 
 
 MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
@@ -63,24 +21,22 @@ MorseEncoder::_createSamples()
 {
   // ensure effective speed is <= speed
   _effSpeed = std::min(_speed, _effSpeed);
-  // Get sample rate from audio device
-  double rate = _sink->rate();
 
   // Compute unit (dit) length (PARIS std. = 50 units per word) in samples
-  _unitLength = size_t((60.*rate)/(50.*_speed));
-  _effUnitLength = size_t((60.*rate)/(50.*_effSpeed));
+  _unitLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
+  _effUnitLength = size_t((60.*Globals::sampleRate)/(50.*_effSpeed));
 
   // The first and last epsilon samples are windowed
   size_t epsilon = 0;
   switch (_sound) {
   case SOUND_SOFT:
-    epsilon = (10*rate)/_ditFreq;
+    epsilon = (10*Globals::sampleRate)/_ditFreq;
     break;
   case SOUND_SHARP:
-    epsilon = (5*rate)/_ditFreq;
+    epsilon = (5*Globals::sampleRate)/_ditFreq;
     break;
   case SOUND_CRACKING:
-    epsilon = (1*rate)/_ditFreq;;
+    epsilon = (1*Globals::sampleRate)/_ditFreq;;
     break;
   }
 
@@ -89,7 +45,7 @@ MorseEncoder::_createSamples()
   int16_t *ditData = reinterpret_cast<int16_t *>(_ditSample.data());
   for (size_t i=0; i<_unitLength; i++) {
     // gen tone
-    ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/rate);
+    ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/Globals::sampleRate);
     // apply window
     if (i <= epsilon) {
       ditData[i] *= double(i+1)/epsilon;
@@ -107,7 +63,7 @@ MorseEncoder::_createSamples()
   int16_t *daData = reinterpret_cast<int16_t *>(_daSample.data());
   for (size_t i=0; i<(3*_unitLength); i++) {
     // gen tone
-    daData[i] = (2<<12)*std::sin((2*M_PI*_daFreq*i)/rate);
+    daData[i] = (2<<12)*std::sin((2*M_PI*_daFreq*i)/Globals::sampleRate);
     // apply window
     if (i <= epsilon) {
       daData[i] *= double(i)/epsilon;
@@ -225,12 +181,6 @@ MorseEncoder::setSound(Sound sound) {
   _sound = sound; _createSamples();
 }
 
-QString
-MorseEncoder::mapProsign(QChar ch) {
-  if (! _prosignTable.contains(ch)) { return ch; }
-  return _prosignTable[ch];
-}
-
 void
 MorseEncoder::run() {
   while (_running) {
@@ -261,29 +211,29 @@ MorseEncoder::_send(QChar ch)
     // "play" inter-word pause
     _sink->play(_iwPause);
     // Update time
-    _played += double(1000*_iwPause.size())/(2*_sink->rate());
+    _played += double(1000*_iwPause.size())/(2*Globals::sampleRate);
     return;
   }
   // If not in code-table skip
-  if (! _codeTable.contains(ch)) { return; }
+  if (! Globals::charTable.contains(ch)) { return; }
   // Get code
-  QString code = _codeTable[ch];
+  QString code = Globals::charTable[ch];
   // Send code
   for (QString::iterator sym=code.begin(); sym!=code.end(); sym++) {
     if ('.' == *sym) {
       // Play "dit"
       _sink->play(_ditSample);
       // Update time
-      _played += double(1000*_ditSample.size())/(2*_sink->rate());
+      _played += double(1000*_ditSample.size())/(2*Globals::sampleRate);
     } else {
       // Play "da"
       _sink->play(_daSample);
       // update time
-      _played += double(1000*_daSample.size())/(2*_sink->rate());
+      _played += double(1000*_daSample.size())/(2*Globals::sampleRate);
     }
   }
   // Send inter char pause:
   _sink->play(_icPause);
   // Update time elapsed
-  _played += double(1000*_icPause.size())/(2*_sink->rate());
+  _played += double(1000*_icPause.size())/(2*Globals::sampleRate);
 }

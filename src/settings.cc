@@ -6,6 +6,7 @@
 #include <QListWidgetItem>
 #include <QGroupBox>
 #include "morseencoder.hh"
+#include "globals.hh"
 
 
 /* ********************************************************************************************* *
@@ -401,7 +402,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   // Assemble prosig table
   _prosign = new ListWidget();
   foreach (QChar c, prosign) {
-    _prosign->addItem(MorseEncoder::mapProsign(c), c, enabled_chars.contains(c));
+    _prosign->addItem(Globals::mapProsign(c), c, enabled_chars.contains(c));
   }
 
   QTabWidget *tabs = new QTabWidget();

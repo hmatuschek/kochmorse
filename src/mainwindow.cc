@@ -9,6 +9,7 @@
 
 #include "settings.hh"
 #include "aboutdialog.hh"
+#include "globals.hh"
 
 
 MainWindow::MainWindow(Application &app, QWidget *parent)
@@ -100,7 +101,7 @@ MainWindow::onSessionFinished() {
 void
 MainWindow::onCharSend(QChar ch) {
   // Update text-field
-  _text->insertPlainText(MorseEncoder::mapProsign(ch));
+  _text->insertPlainText(Globals::mapProsign(ch));
 }
 
 void
