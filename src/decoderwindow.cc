@@ -5,7 +5,7 @@
 
 
 DecoderWindow::DecoderWindow(QWidget *parent)
-  : QMainWindow(parent), _decoder(20, 700), _audio_src(&_decoder), _lastChar('\0')
+  : QMainWindow(parent), _decoder(20), _audio_src(&_decoder), _lastChar('\0')
 {
   _textView = new QPlainTextEdit();
   _textView->setMinimumSize(640,230);
@@ -70,7 +70,6 @@ DecoderWindow::onUnknownCharReceived(QString pattern)  {
 void
 DecoderWindow::onFequencySet(QString val) {
   _audio_src.stop();
-  _decoder.setFreq(val.toDouble());
   _audio_src.start();
 }
 

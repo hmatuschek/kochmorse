@@ -20,7 +20,7 @@ Application::Application(int &argc, char *argv[])
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), settings.sound(), true, this);
 
-  _decoder = new MorseDecoder(settings.speed(), settings.tone(), this);
+  _decoder = new MorseDecoder(settings.speed(), this);
   _audio_src = new PortAudioSource(_decoder, this);
 
   switch (settings.tutor()) {
@@ -115,6 +115,9 @@ Application::applySettings()
   _encoder->setDotTone(settings.tone());
   _encoder->setDashTone(settings.tone()+settings.dashPitch());
   _encoder->setSound(settings.sound());
+
+  // Reconfigure decoder
+  _decoder->setSpeed(settings.speed());
 
   // Reconfigure tutor
   if (_tutor) { delete _tutor; }

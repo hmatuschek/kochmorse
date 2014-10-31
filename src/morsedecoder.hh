@@ -11,10 +11,9 @@ class MorseDecoder : public AudioSink
   Q_OBJECT
 
 public:
-  explicit MorseDecoder(double speed, double freq, QObject *parent = 0);
+  explicit MorseDecoder(double speed, QObject *parent = 0);
   virtual ~MorseDecoder();
 
-  void setFreq(double freq);
   void setSpeed(double wpm);
   void setThreshold(double threshold);
 
@@ -35,15 +34,11 @@ protected:
 
 protected:
   double _speed;
-  double _freq;
 
   size_t _unitLength;
 
   size_t _Nsamples;
   int16_t *_buffer;
-
-  float *_sinTable;
-  float *_cosTable;
 
   float _threshold;
 

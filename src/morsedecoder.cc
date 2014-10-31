@@ -4,9 +4,9 @@
 #include "globals.hh"
 
 
-MorseDecoder::MorseDecoder(double speed, double freq, QObject *parent)
-  : AudioSink(parent), _speed(speed), _freq(freq), _unitLength(0),
-    _Nsamples(0), _buffer(0), _sinTable(0), _cosTable(0), _threshold(1e-5), _delaySize(0),
+MorseDecoder::MorseDecoder(double speed, QObject *parent)
+  : AudioSink(parent), _speed(speed), _unitLength(0),
+    _Nsamples(0), _buffer(0), _threshold(1e-5), _delaySize(0),
     _lastChar('\0')
 {
   _updateConfig();
@@ -14,13 +14,6 @@ MorseDecoder::MorseDecoder(double speed, double freq, QObject *parent)
 
 MorseDecoder::~MorseDecoder() {
   delete _buffer;
-  delete _sinTable;
-  delete _cosTable;
-}
-
-void
-MorseDecoder::setFreq(double freq) {
-  _freq = freq; _updateConfig();
 }
 
 void
@@ -37,31 +30,20 @@ void
 MorseDecoder::_updateConfig() {
   // Free "old" tables and buffers.
   if (0 != _buffer) { delete _buffer; }
-  if (0 != _sinTable) { delete _sinTable; }
-  if (0 != _cosTable) { delete _cosTable; }
 
   // Compute dit length in samples from speed and sample rate
   size_t ditLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
   _unitLength = std::max(size_t(1), ditLength/2);
   _delaySize = 0;
   _Nsamples = 0;
+  _pauseCount = 0;
+  _lastChar = '\0';
 
   // Allocate buffers and tables
   _buffer   = new int16_t[_unitLength];
-  _sinTable = new float[_unitLength];
-  _cosTable = new float[_unitLength];
-
   // Init tables and buffers
-  for (size_t i=0; i<_unitLength; i++) {
-    _buffer[i] = 0;
-    _sinTable[i] = std::sin((2*M_PI*_freq*i)/Globals::sampleRate);
-    _cosTable[i] = std::cos((2*M_PI*_freq*i)/Globals::sampleRate);
-  }
-  for (size_t i=0; i<8; i++) {
-    _delayLine[i] = 0;
-  }
-  _pauseCount = 0;
-  _lastChar = '\0';
+  for (size_t i=0; i<_unitLength; i++) { _buffer[i] = 0; }
+  for (size_t i=0; i<8; i++) { _delayLine[i] = 0; }
 }
 
 
