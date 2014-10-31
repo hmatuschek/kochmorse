@@ -73,22 +73,20 @@ MorseDecoder::play(const QByteArray &data) {
     _buffer[_Nsamples] = data_ptr[i]; _Nsamples++;
     if (_unitLength == _Nsamples) {
       _Nsamples = 0;
-      float sin_sum = 0, cos_sum = 0;
+      float nrm2 = 0;
       for (size_t j=0; j<_unitLength; j++) {
         float x = float(_buffer[j])/(2<<15);
-        sin_sum += _sinTable[j]*x;
-        cos_sum += _cosTable[j]*x;
+        nrm2 += x*x;
       }
-      sin_sum /= _unitLength; cos_sum /= _unitLength;
-      float pwr = sin_sum*sin_sum + cos_sum*cos_sum;
-      _delayLine[_delaySize] = (pwr > _threshold);
+      nrm2 /= _unitLength;
+      _delayLine[_delaySize] = (nrm2 > _threshold);
       //emit detectedSignal(pwr > _threshold);
       _delaySize++;
     }
-    if (_isDot()) {
-      _delaySize = 0; _processSymbol('.');
-    } else if (_isDash()) {
+    if (_isDash()) {
       _delaySize = 0; _processSymbol('-');
+    } else if (_isDot()) {
+      _delaySize = 0; _processSymbol('.');
     } else if (_isPause()) {
       _delaySize = 0; _processSymbol(' ');
     }
@@ -103,13 +101,13 @@ MorseDecoder::play(const QByteArray &data) {
 
 bool
 MorseDecoder::_isDot() const {
-  return (4 == _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (0 == _delayLine[2])
+  return (4 <= _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (0 == _delayLine[2])
       && (0 == _delayLine[3]);
 }
 
 bool
 MorseDecoder::_isDash() const {
-  return (8 == _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (1 == _delayLine[2])
+  return (8 <= _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (1 == _delayLine[2])
       && (1 == _delayLine[3]) && (1 == _delayLine[4]) && (1 == _delayLine[5])
       && (0 == _delayLine[6]) && (0 == _delayLine[7]);
 }
