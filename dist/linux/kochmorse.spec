@@ -1,6 +1,6 @@
 Summary: A simple morse tutor using the Koch method
 
-%define version 3.2.0
+%define version 3.1.0
 
 License: GPL-2.0+
 Group: Applications/Communications
@@ -14,7 +14,7 @@ Buildroot: /tmp/kochmorserpm
 BuildRequires: gcc-c++, cmake, portaudio-devel
 Requires: portaudio 
 %if 0%{?suse_version}
-BuildRequires: libqt5-qtbase-devel, update-desktop-files
+BuildRequires: libqt5-qtbase-devel, update-desktop-files, alsa-devel
 Requires: libqt5-qtbase 
 %endif
 %if 0%{?fedora}
