@@ -34,7 +34,7 @@ Settings::speed() const {
 }
 void
 Settings::setSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 35));
+  speed = std::max(5, std::min(speed, 100));
   this->setValue("speed", speed);
 }
 
@@ -44,7 +44,7 @@ Settings::effSpeed() const {
 }
 void
 Settings::setEffSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 35));
+  speed = std::max(5, std::min(speed, 100));
   this->setValue("effSpeed", speed);
 }
 
@@ -226,11 +226,11 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   Settings settings;
 
   _speed = new QSpinBox();
-  _speed->setMinimum(5); _speed->setMaximum(35);
+  _speed->setMinimum(5); _speed->setMaximum(100);
   _speed->setValue(settings.speed());
 
   _effSpeed = new QSpinBox();
-  _effSpeed->setMinimum(5); _speed->setMaximum(35);
+  _effSpeed->setMinimum(5); _speed->setMaximum(100);
   _effSpeed->setValue(settings.effSpeed());
 
   _tone = new QLineEdit(QString::number(settings.tone()));
