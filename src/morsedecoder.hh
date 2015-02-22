@@ -17,7 +17,7 @@ public:
   void setSpeed(double wpm);
   void setThreshold(double threshold);
 
-  void play(const QByteArray &data);
+  void process(const QByteArray &data);
 
 signals:
   void detectedSignal(int sig);

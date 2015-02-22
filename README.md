@@ -1,23 +1,30 @@
 # KochMorse -- A morse-code tutor
 
-KochMorse is a simple morse-code tutor using the [Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses [Qt5](https://qt-project.org) for the graphical user interface (GUI) and [PortAudio](http://www.portaudio.com/) as its audio backend. 
+KochMorse is a simple morse-code tutor using the
+[Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses
+[Qt5](https://qt-project.org) for the graphical user interface (GUI) and
+[PortAudio](http://www.portaudio.com/) as its audio backend.
 
 <img src="http://i60.tinypic.com/mlnhqc.png" alt="Koch Morse in action." align="middle"/>
 
-KochMorse runs under Linux, MacOS X and even under Windows. See the [Install](https://github.com/hmatuschek/kochmorse/wiki/Install) wiki page for details.
+KochMorse runs under Linux, MacOS X and even under Windows. See the
+[Install](https://github.com/hmatuschek/kochmorse/wiki/Install) wiki page for details.
 
 
 ## Features
-Below, you will find a list of features of the current KochMorse release. The highlighted features are new features compared to the "old" python implementation.
+Below, you will find a list of features of the current KochMorse release. The highlighted features
+are new features compared to the "old" python implementation.
 
  * *A simplified GUI* -- All settings are now accessible via the Preferences dialog.
  * A morse tutor using the Koch method (of cause).
  * *A random morse tutor* -- Allows to select a set of characters and prosigns for practicing.
  * *A QSO tutor* -- Selects a random QSO from a set of over 900 for practicing.
- * Different speed of characters and pauses. This allows to practice the reading in full speed, while having enough time to write the character.  
+ * Different speed of characters and pauses. This allows to practice the reading in full speed,
+   while having enough time to write the character.
  * *Different tones for dashes and dots.*
  * *Noise audio effect* -- Increases the difficulty to read the morse code for practicing.
- * *Fading audio effect* -- Periodically fades the morse signal for practicing. In conjecture with the noise effect, it simulates the conditions on HF bands pretty well.
+ * *Fading audio effect* -- Periodically fades the morse signal for practicing. In conjecture with
+   the noise effect, it simulates the conditions on HF bands pretty well.
 
 
 ## Releases 

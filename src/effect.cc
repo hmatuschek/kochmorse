@@ -33,9 +33,9 @@ NoiseEffect::gaussRNG(float &a, float &b) {
 }
 
 void
-NoiseEffect::play(const QByteArray &data) {
+NoiseEffect::process(const QByteArray &data) {
   // If disabled -> skip
-  if (! _enabled) { _sink->play(data); return; }
+  if (! _enabled) { _sink->process(data); return; }
   // Number of frames
   size_t n = (data.size()/2);
 
@@ -62,7 +62,7 @@ NoiseEffect::play(const QByteArray &data) {
     float a, b; gaussRNG(a,b);
     in[n-1] = s_factor*in[n-1] + n_factor*a;
   }
-  _sink->play(buffer);
+  _sink->process(buffer);
 }
 
 void
@@ -100,10 +100,10 @@ FadingEffect::~FadingEffect() {
 }
 
 void
-FadingEffect::play(const QByteArray &data)
+FadingEffect::process(const QByteArray &data)
 {
   // Skip if disabled
-  if (! _enabled) { _sink->play(data); return; }
+  if (! _enabled) { _sink->process(data); return; }
   // Copy input buffer
   QByteArray buffer(data);
   int16_t *values = reinterpret_cast<int16_t *>(buffer.data());
@@ -119,7 +119,7 @@ FadingEffect::play(const QByteArray &data)
     // Scale value
     values[i] *= _factor; _factor += _dF; _dS--;
   }
-  _sink->play(buffer);
+  _sink->process(buffer);
 }
 
 void

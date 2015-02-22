@@ -15,7 +15,7 @@ public:
   /** Destructor. */
   virtual ~NoiseEffect();
   /** Processes the given data. */
-  virtual void play(const QByteArray &data);
+  virtual void process(const QByteArray &data);
   /** Enable/Disable the effect. */
   void setEnabled(bool enabled);
   /** Sets the SNR. */
@@ -51,7 +51,7 @@ public:
   /** Destructor. */
   virtual ~FadingEffect();
   /** Processes the input audio data. */
-  virtual void play(const QByteArray &data);
+  virtual void process(const QByteArray &data);
   /** Enable/disable the effect. */
   void setEnabled(bool enabled);
   /** (Re-) Set the maximum damping factor. */

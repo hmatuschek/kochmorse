@@ -48,7 +48,7 @@ MorseDecoder::_updateConfig() {
 
 
 void
-MorseDecoder::play(const QByteArray &data) {
+MorseDecoder::process(const QByteArray &data) {
   size_t Nframes = data.size()/2;
   const int16_t *data_ptr = reinterpret_cast<const int16_t *>(data.data());
   for (size_t i=0; i<Nframes; i++) {
@@ -62,7 +62,6 @@ MorseDecoder::play(const QByteArray &data) {
       }
       nrm2 /= _unitLength;
       _delayLine[_delaySize] = (nrm2 > _threshold);
-      //emit detectedSignal(pwr > _threshold);
       _delaySize++;
     }
     if (_isDash()) {

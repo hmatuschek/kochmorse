@@ -209,7 +209,7 @@ MorseEncoder::_send(QChar ch)
   // If space -> send inter-word pause
   if ((' ' == ch) || ('\n') == ch){
     // "play" inter-word pause
-    _sink->play(_iwPause);
+    _sink->process(_iwPause);
     // Update time
     _played += double(1000*_iwPause.size())/(2*Globals::sampleRate);
     return;
@@ -222,18 +222,18 @@ MorseEncoder::_send(QChar ch)
   for (QString::iterator sym=code.begin(); sym!=code.end(); sym++) {
     if ('.' == *sym) {
       // Play "dit"
-      _sink->play(_ditSample);
+      _sink->process(_ditSample);
       // Update time
       _played += double(1000*_ditSample.size())/(2*Globals::sampleRate);
     } else {
       // Play "da"
-      _sink->play(_daSample);
+      _sink->process(_daSample);
       // update time
       _played += double(1000*_daSample.size())/(2*Globals::sampleRate);
     }
   }
   // Send inter char pause:
-  _sink->play(_icPause);
+  _sink->process(_icPause);
   // Update time elapsed
   _played += double(1000*_icPause.size())/(2*Globals::sampleRate);
 }

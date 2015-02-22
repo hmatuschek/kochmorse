@@ -51,7 +51,7 @@ PortAudioSink::~PortAudioSink() {
 }
 
 void
-PortAudioSink::play(const QByteArray &data) {
+PortAudioSink::process(const QByteArray &data) {
   QByteArray buffer(data);
   int16_t *s = reinterpret_cast<int16_t *>(buffer.data());
   for (int i=0; i<data.size()/2; i++) {
@@ -125,6 +125,6 @@ PortAudioSource::_pa_callback(const void *in, void *out, unsigned long Nframes,
   PortAudioSource *self = reinterpret_cast<PortAudioSource *>(ctx);
   int16_t *data = reinterpret_cast<int16_t *>(self->_buffer.data());
   memcpy(data, in, Nframes*sizeof(int16_t));
-  self->_sink->play(QByteArray::fromRawData(self->_buffer.data(), Nframes*sizeof(int16_t)));
+  self->_sink->process(QByteArray::fromRawData(self->_buffer.data(), Nframes*sizeof(int16_t)));
   return paContinue;
 }

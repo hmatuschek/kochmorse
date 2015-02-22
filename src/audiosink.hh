@@ -6,7 +6,7 @@
 #include <portaudio.h>
 #include <inttypes.h>
 
-/** Base for all audio processing and playback classes. */
+/** Base for all audio processing or playback classes. */
 class AudioSink: public QObject
 {
   Q_OBJECT
@@ -16,14 +16,15 @@ protected:
   AudioSink(QObject *parent=0);
 
 public:
+  /** Destructor. */
   virtual ~AudioSink();
 
   /** Processes or plays the given PCA (16bit, signed integer). */
-  virtual void play(const QByteArray &data) = 0;
+  virtual void process(const QByteArray &data) = 0;
 };
 
 
-/** Static methods to port audio. */
+/** Static methods to PortAudio. */
 class PortAudio
 {
 public:
@@ -46,7 +47,7 @@ public:
   virtual ~PortAudioSink();
 
   /** Plays the given PCA (16bit, signed integer) blocking. */
-  void play(const QByteArray &data);
+  void process(const QByteArray &data);
   /** Returns the current volume. */
   double volume() const;
   /** Sets the current volume. */
@@ -89,7 +90,9 @@ protected:
 protected:
   /** The port-audio stream. */
   PaStream *_stream;
+  /** The first processing node. */
   AudioSink *_sink;
+  /** Output buffer. */
   QByteArray _buffer;
 };
 
