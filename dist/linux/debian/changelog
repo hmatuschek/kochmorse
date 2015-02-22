@@ -1,4 +1,11 @@
-kochmorse (3.1.0-1) stable; urgency=low
+kochmorse (3.2.0-1) unstable; urgency=low
+
+  * Added a ridiculous strict morse decoder.
+  * Fixed morse sound.
+
+ -- Hannes Matuschek <hmatuschek@gmail.com>  Sun, 22 February 2015 00:00:00 +0000
+
+kochmorse (3.1.0-1) unstable; urgency=low
 
   * Fixed an issue with Random tutor under linux.
   * Fixed deployment for Windows.
@@ -7,7 +14,7 @@ kochmorse (3.1.0-1) stable; urgency=low
 
  -- Hannes Matuschek <hmatuschek@gmail.com>  Fri, 31 October 2014 00:00:00 +0000
 
-kochmorse (3.0.0-1) stable; urgency=low
+kochmorse (3.0.0-1) unstable; urgency=low
 
   * Initial official release.
 
