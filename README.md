@@ -28,6 +28,7 @@ are new features compared to the "old" python implementation.
 
 
 ## Releases 
+ * 2015-02-22 - [**Version 3.2.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.0)
  * 2014-10-29 - [**Version 3.1.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.1.0)
  * 2014-10-25 - [**Version 3.0.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) - First "official" release of the C++ reimplementation.
 
