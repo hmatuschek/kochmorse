@@ -51,11 +51,6 @@ Application::~Application() {
   PortAudio::finalize();
 }
 
-int
-Application::sessionTime() {
-  return _encoder->time();
-}
-
 void
 Application::setVolume(double factor) {
   _audio_sink->setVolume(factor);

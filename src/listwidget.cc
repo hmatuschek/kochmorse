@@ -28,6 +28,8 @@ ListWidget::addItem(const QString &name, const QVariant &data, bool checked) {
   if (checked) { item->setCheckState(Qt::Checked); }
   else { item->setCheckState(Qt::Unchecked); }
   item->setData(Qt::UserRole, data);
+  QFont font = item->font(); font.setFamily("Courier");
+  item->setFont(font);
 }
 
 int

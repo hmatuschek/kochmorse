@@ -395,22 +395,26 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   // Assemble char table
   _alpha = new ListWidget();
   foreach (QChar c, alpha) {
-    _alpha->addItem(c, c, enabled_chars.contains(c));
+    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    _alpha->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble char table
   _num = new ListWidget();
   foreach (QChar c, num) {
-    _num->addItem(c, c, enabled_chars.contains(c));
+    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    _num->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble punc table
   _punct = new ListWidget();
   foreach (QChar c, punct) {
-    _punct->addItem(c, c, enabled_chars.contains(c));
+    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    _punct->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble prosig table
   _prosign = new ListWidget();
   foreach (QChar c, prosign) {
-    _prosign->addItem(Globals::mapProsign(c), c, enabled_chars.contains(c));
+    QString txt = QString("%1 (%2)").arg(Globals::mapProsign(c)).arg(Globals::charTable[c]);
+    _prosign->addItem(txt, c, enabled_chars.contains(c));
   }
 
   QTabWidget *tabs = new QTabWidget();

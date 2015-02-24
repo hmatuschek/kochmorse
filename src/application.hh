@@ -18,8 +18,7 @@ public:
   explicit Application(int &argc, char *argv[]);
   /** Destructor. */
   virtual ~Application();
-  /** The time of the session. */
-  int sessionTime();
+
   /** Sets the output volume. */
   void setVolume(double factor);
 

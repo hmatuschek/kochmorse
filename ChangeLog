@@ -2,7 +2,14 @@ Sat, 25 October 2014 -- 3.0.0
 	* Initial Release.
 
 Wed, 29 October 2014 -- 3.1.0
-  * Fixed an issue with Random tutor under linux.
-  * Fixed deployment for Windows.
-  * Fixed an issue with the RNGs.
-  * Added support to select morse "Sound".
+	* Fixed an issue with Random tutor under linux.
+	* Fixed deployment for Windows.
+	* Fixed an issue with the RNGs.
+	* Added support to select morse "Sound".
+
+Sun, 22 February 2015 -- 3.2.0
+	* Fixed code sound.
+	* Added strict morse decoder.
+
+UNRELEASED 2015 -- 3.3.0
+	* Displays code in Random tutor settings.

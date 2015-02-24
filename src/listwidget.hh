@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QListWidget>
+#include <QFont>
 
 /** A simple widget to show a list of chekable items with additional options to select all/none or
  * to invert the selection. */
