@@ -49,18 +49,24 @@ MorseDecoder::_updateConfig() {
 
 void
 MorseDecoder::process(const QByteArray &data) {
+  // Extract frames from raw data
   size_t Nframes = data.size()/2;
   const int16_t *data_ptr = reinterpret_cast<const int16_t *>(data.data());
+  // Process each frame
   for (size_t i=0; i<Nframes; i++) {
+    // Appen frame to buffer
     _buffer[_Nsamples] = data_ptr[i]; _Nsamples++;
+    // if a unit length (1/2 dot) has been read
     if (_unitLength == _Nsamples) {
       _Nsamples = 0;
+      // Compute 2-norm
       float nrm2 = 0;
       for (size_t j=0; j<_unitLength; j++) {
         float x = float(_buffer[j])/(2<<15);
         nrm2 += x*x;
       }
       nrm2 /= _unitLength;
+      // Push symbol to delay line
       _delayLine[_delaySize] = (nrm2 > _threshold);
       _delaySize++;
 
@@ -71,6 +77,7 @@ MorseDecoder::process(const QByteArray &data) {
       } else if (_isPause()) {
         _delaySize = 0; _processSymbol(' ');
       }
+
       // Implement ring-buffer behavior
       if (8 == _delaySize) {
         memmove(_delayLine, _delayLine+1, 7*sizeof(int16_t));
@@ -83,21 +90,20 @@ MorseDecoder::process(const QByteArray &data) {
 
 bool
 MorseDecoder::_isDot() const {
-  if (4 <= _delaySize) { return false; }
+  if (3 <= _delaySize) { return false; }
   size_t n = _delaySize-1;
-  // Check if [..., 1, 1, 0, 0] at [..., n-3, n-2, n-1, n]
-  return (1 == _delayLine[n-3]) && (1 == _delayLine[n-2]) && (0 == _delayLine[n-1])
-      && (0 == _delayLine[n]);
+  // Check if [..., 1, 1, 0] at [..., n-2, n-1, n]
+  return (1 == _delayLine[n-2]) && (1 == _delayLine[n-1]) && (0 == _delayLine[n]);
 }
 
 bool
 MorseDecoder::_isDash() const {
-  if (8 <= _delaySize) { return false; }
+  if (7 <= _delaySize) { return false; }
   size_t n = _delaySize-1;
-  // Check if [..., 1, 1, 1, 1, 1, 1, 0, 0] at [..., n-7, n-6, ..., n-1, n]
-  return (1 == _delayLine[n-7]) && (1 == _delayLine[n-6]) && (1 == _delayLine[n-5])
-      && (1 == _delayLine[n-4]) && (1 == _delayLine[n-3]) && (1 == _delayLine[n-2])
-      && (0 == _delayLine[n-1]) && (0 == _delayLine[n]);
+  // Check if [..., 1, 1, 1, 1, 1, 1, 0] at [..., n-6, n-5, ..., n-1, n]
+  return (1 == _delayLine[n-6]) && (1 == _delayLine[n-5]) && (1 == _delayLine[n-4])
+      && (1 == _delayLine[n-3]) && (1 == _delayLine[n-2]) && (1 == _delayLine[n-1])
+      && (0 == _delayLine[n]);
 }
 
 bool
