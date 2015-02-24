@@ -63,18 +63,19 @@ MorseDecoder::process(const QByteArray &data) {
       nrm2 /= _unitLength;
       _delayLine[_delaySize] = (nrm2 > _threshold);
       _delaySize++;
-    }
-    if (_isDash()) {
-      _delaySize = 0; _processSymbol('-');
-    } else if (_isDot()) {
-      _delaySize = 0; _processSymbol('.');
-    } else if (_isPause()) {
-      _delaySize = 0; _processSymbol(' ');
-    }
-    // Implement ring-buffer behavior
-    if (8 == _delaySize) {
-      memmove(_delayLine, _delayLine+1, 7*sizeof(int16_t));
-      _delaySize--;
+
+      if (_isDash()) {
+        _delaySize = 0; _processSymbol('-');
+      } else if (_isDot()) {
+        _delaySize = 0; _processSymbol('.');
+      } else if (_isPause()) {
+        _delaySize = 0; _processSymbol(' ');
+      }
+      // Implement ring-buffer behavior
+      if (8 == _delaySize) {
+        memmove(_delayLine, _delayLine+1, 7*sizeof(int16_t));
+        _delaySize--;
+      }
     }
   }
 }
@@ -82,21 +83,29 @@ MorseDecoder::process(const QByteArray &data) {
 
 bool
 MorseDecoder::_isDot() const {
-  return (4 <= _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (0 == _delayLine[2])
-      && (0 == _delayLine[3]);
+  if (4 <= _delaySize) { return false; }
+  size_t n = _delaySize-1;
+  // Check if [..., 1, 1, 0, 0] at [..., n-3, n-2, n-1, n]
+  return (1 == _delayLine[n-3]) && (1 == _delayLine[n-2]) && (0 == _delayLine[n-1])
+      && (0 == _delayLine[n]);
 }
 
 bool
 MorseDecoder::_isDash() const {
-  return (8 <= _delaySize) && (1 == _delayLine[0]) && (1 == _delayLine[1]) && (1 == _delayLine[2])
-      && (1 == _delayLine[3]) && (1 == _delayLine[4]) && (1 == _delayLine[5])
-      && (0 == _delayLine[6]) && (0 == _delayLine[7]);
+  if (8 <= _delaySize) { return false; }
+  size_t n = _delaySize-1;
+  // Check if [..., 1, 1, 1, 1, 1, 1, 0, 0] at [..., n-7, n-6, ..., n-1, n]
+  return (1 == _delayLine[n-7]) && (1 == _delayLine[n-6]) && (1 == _delayLine[n-5])
+      && (1 == _delayLine[n-4]) && (1 == _delayLine[n-3]) && (1 == _delayLine[n-2])
+      && (0 == _delayLine[n-1]) && (0 == _delayLine[n]);
 }
 
 bool
 MorseDecoder::_isPause() const {
-  return (4 <= _delaySize) && (0 == _delayLine[0]) && (0 == _delayLine[1]) && (0 == _delayLine[2])
-      && (0 == _delayLine[3]);
+  if (4 <= _delaySize) { return false; }
+  size_t n = _delaySize-1;
+  return (0 == _delayLine[n-3]) && (0 == _delayLine[n-2]) && (0 == _delayLine[n-1])
+      && (0 == _delayLine[n]);
 }
 
 void
