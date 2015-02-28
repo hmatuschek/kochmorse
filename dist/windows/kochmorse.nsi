@@ -4,14 +4,14 @@
 # These three must be integers
 !define VERSIONMAJOR 3
 !define VERSIONMINOR 2
-!define VERSIONBUILD 0
+!define VERSIONBUILD 1
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
  
 InstallDir "$PROGRAMFILES\${APPNAME}"
 
 Name "${APPNAME}"
-outFile "kochmorse-3.2.0-setup.exe"
+outFile "kochmorse-3.2.1-setup.exe"
 
 !include LogicLib.nsh
  

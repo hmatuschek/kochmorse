@@ -1,4 +1,12 @@
 kochmorse (3.2.0-1) unstable; urgency=low
+   
+   * Displays code in Random tutor settings.
+   * Fixed KN prosign.
+   * Relaxed decoder.
+
+ -- Hannes Matuschek <hmatuschek@gmail.com>  Sat, 23 February 2015 00:00:00 +0000
+
+kochmorse (3.2.0-1) unstable; urgency=low
 
   * Added a ridiculous strict morse decoder.
   * Fixed morse sound.

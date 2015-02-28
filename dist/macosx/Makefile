@@ -15,7 +15,7 @@ APP_LIBRARY_DIR = KochMorse.app/Contents/Frameworks
 APP_BINARY_DIR  = KochMorse.app/Contents/MacOS
 APP_PLUGIN_DIR  = KochMorse.app/Contents/PlugIns
 APP_RESOURCE_DIR  = KochMorse.app/Contents/Resources
-VERSION = 3.2.0
+VERSION = 3.2.1
 
 app: dmg
 
