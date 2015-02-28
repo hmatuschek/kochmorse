@@ -43,7 +43,7 @@ protected:
   float _threshold;
 
   size_t _delaySize;
-  int16_t _delayLine[8];
+  bool _delayLine[8];
 
   size_t _pauseCount;
   QString _symbols;

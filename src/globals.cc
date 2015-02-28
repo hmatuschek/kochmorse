@@ -24,7 +24,7 @@ inline QHash<QString, QChar> _initCodeTable() {
   table["-.-..-.."] = QChar(0x2404); // CL -> EOT
   table["...-.-"] = QChar(0x2403);   // SK -> ETX
   table["...-."] = QChar(0x2406);    // SN -> ACK
-  table["-.--."] = QChar(0x2407);    // KL -> BEL
+  table["-.--."] = QChar(0x2407);    // KN -> BEL
   // Other prosigns are repr. by their character representative:
   // AR -> '+'; AS -> '&'; BT -> '=';
   return table;
@@ -55,7 +55,7 @@ inline QHash<QChar, QString> _initCharTable() {
   table[QChar(0x2404)] = "-.-..-.."; // CL -> EOT
   table[QChar(0x2403)] = "...-.-";   // SK -> ETX
   table[QChar(0x2406)] = "...-.";    // SN -> ACK
-  table[QChar(0x2407)] = "-.--.";    // KL -> BEL
+  table[QChar(0x2407)] = "-.--.";    // KN -> BEL
   // Other prosigns are repr. by their character representative:
   // AR -> '+'; AS -> '&'; BT -> '=';
   return table;
@@ -71,7 +71,7 @@ inline QHash<QChar, QString> _initProsignTable() {
   table[QChar(0x2404)] = "CL"; // CL -> EOT
   table[QChar(0x2403)] = "SK"; // SK -> ETX
   table[QChar(0x2406)] = "SN"; // SN -> ACK
-  table[QChar(0x2407)] = "KL"; // KL -> BEL
+  table[QChar(0x2407)] = "KN"; // KN -> BEL
   return table;
 }
 

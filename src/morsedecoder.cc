@@ -80,7 +80,7 @@ MorseDecoder::process(const QByteArray &data) {
 
       // Implement ring-buffer behavior
       if (8 == _delaySize) {
-        memmove(_delayLine, _delayLine+1, 7*sizeof(int16_t));
+        memmove(_delayLine, _delayLine+1, 7*sizeof(bool));
         _delaySize--;
       }
     }
