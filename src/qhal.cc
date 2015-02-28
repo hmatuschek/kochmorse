@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QBuffer>
 #include <QIODevice>
-
+#include <limits>
 
 /* ******************************************************************************************** *
  * Implementation some helper functions
@@ -122,7 +122,7 @@ QHalTree::read(QIODevice &device) {
 
   // Read branches
   size_t n=0; device.read((char *)&n, sizeof(size_t));
-  for (int i=0; i<n; i++) {
+  for (size_t i=0; i<n; i++) {
     QHalTree *node = new QHalTree(device);
     _branches.push_back(node);
     _symbols[node->symbol()] = i;
@@ -142,7 +142,7 @@ QHalTree::serialize(QIODevice &device) {
   size_t n = _branches.size();
   device.write((char *)&n, sizeof(size_t));
   // serialize branches
-  for (int i=0; i<n; i++) {
+  for (size_t i=0; i<n; i++) {
     _branches[i]->serialize(device);
   }
 }
@@ -197,7 +197,7 @@ QHalDict::contains(const QString &word) const {
 
 bool
 QHalDict::contains(size_t symbol) const {
-  return _symbols.size() < symbol;
+  return size_t(_symbols.size()) < symbol;
 }
 
 size_t
@@ -217,7 +217,7 @@ QHalDict::read(QIODevice &device) {
   // Read number of elements
   size_t n=0; device.read((char *)&n, sizeof(size_t));
   // Read elements
-  for (int symbol=0; symbol<n; symbol++) {
+  for (size_t symbol=0; symbol<n; symbol++) {
     // Read string size
     size_t s=0; device.read((char *)&s, sizeof(size_t));
     // Read encoded string
@@ -236,7 +236,7 @@ QHalDict::serialize(QIODevice &device) {
   size_t n = _symbols.size();
   device.write((char *)&n, sizeof(size_t));
   // serialize strings
-  for (size_t i=0; i<_symbols.size(); i++) {
+  for (int i=0; i<_symbols.size(); i++) {
     // Encode string in local 8bit form (i.e. UTF-8)
     QByteArray tmp = _symbols[i].toLocal8Bit();
     // Get size
@@ -455,7 +455,7 @@ QHalModel::makeReply(const QStringList &keywords) {
 size_t
 QHalModel::seed(const QStringList &keywords) {
   size_t symbol;
-  unsigned int stop;
+  int stop;
 
   /* Fix, thanks to Mark Tarrabain */
   if (_context[0]->empty()) {
@@ -507,7 +507,7 @@ QHalModel::babble(const QStringList &keywords, const QStringList &replies) {
       break;
     }
     count -= node->branch(i)->count();
-    i = (i>=(node->size()-1)) ? 0 : (i+1);
+    i = (i>=int(node->size()-1)) ? 0 : (i+1);
   }
 
   return(symbol);
