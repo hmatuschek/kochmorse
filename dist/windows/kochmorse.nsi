@@ -11,7 +11,7 @@ RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on
 InstallDir "$PROGRAMFILES\${APPNAME}"
 
 Name "${APPNAME}"
-outFile "kochmorse-3.2.1-setup.exe"
+outFile "kochmorse-3.2.2-setup.exe"
 
 !include LogicLib.nsh
  
