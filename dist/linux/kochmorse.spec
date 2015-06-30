@@ -1,6 +1,6 @@
 Summary: A simple morse tutor using the Koch method
 
-%define version 3.2.1
+%define version 3.2.2
 
 License: GPL-2.0+
 Group: Applications/Communications
