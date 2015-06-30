@@ -15,7 +15,7 @@ APP_LIBRARY_DIR = KochMorse.app/Contents/Frameworks
 APP_BINARY_DIR  = KochMorse.app/Contents/MacOS
 APP_PLUGIN_DIR  = KochMorse.app/Contents/PlugIns
 APP_RESOURCE_DIR  = KochMorse.app/Contents/Resources
-VERSION = 3.2.1
+VERSION = 3.2.2
 
 app: dmg
 
@@ -103,9 +103,9 @@ QtCore: libz libicu libpcre libgthread libglib libintl
 	cp ${QTCORE_FRAMEWORK} ${APP_LIBRARY_DIR}
 	install_name_tool -id @executable_path/../Frameworks/QtCore ${APP_LIBRARY_DIR}/QtCore
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libz.1.dylib @executable_path/../Frameworks/libz.1.dylib ${APP_LIBRARY_DIR}/QtCore
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicui18n.54.dylib @executable_path/../Frameworks/libicui18n.54.dylib ${APP_LIBRARY_DIR}/QtCore
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicuuc.54.dylib @executable_path/../Frameworks/libicuuc.54.dylib ${APP_LIBRARY_DIR}/QtCore
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.54.dylib @executable_path/../Frameworks/libicudata.54.dylib ${APP_LIBRARY_DIR}/QtCore
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicui18n.55.dylib @executable_path/../Frameworks/libicui18n.55.dylib ${APP_LIBRARY_DIR}/QtCore
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicuuc.55.dylib @executable_path/../Frameworks/libicuuc.55.dylib ${APP_LIBRARY_DIR}/QtCore
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.55.dylib @executable_path/../Frameworks/libicudata.55.dylib ${APP_LIBRARY_DIR}/QtCore
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libpcre16.0.dylib @executable_path/../Frameworks/libpcre16.0.dylib ${APP_LIBRARY_DIR}/QtCore
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libglib-2.0.0.dylib @executable_path/../Frameworks/libglib-2.0.0.dylib ${APP_LIBRARY_DIR}/QtCore
 	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libgthread-2.0.0.dylib @executable_path/../Frameworks/libgthread-2.0.0.dylib ${APP_LIBRARY_DIR}/QtCore
@@ -123,15 +123,15 @@ libz:
 	install_name_tool -id @executable_path/../Frameworks/libz.1.dylib ${APP_LIBRARY_DIR}/libz.1.dylib
 
 libicu:
-	cp ${SYSTEM_LIBRARY_DIR}/libicudata.54.dylib ${APP_LIBRARY_DIR}
-	install_name_tool -id @executable_path/../Frameworks/libicudata.54.dylib ${APP_LIBRARY_DIR}/libicudata.54.dylib
-	cp ${SYSTEM_LIBRARY_DIR}/libicuuc.54.dylib ${APP_LIBRARY_DIR}
-	install_name_tool -id @executable_path/../Frameworks/libicuuc.54.dylib ${APP_LIBRARY_DIR}/libicuuc.54.dylib
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.54.dylib @executable_path/../Frameworks/libicudata.54.dylib ${APP_LIBRARY_DIR}/libicuuc.54.dylib
-	cp ${SYSTEM_LIBRARY_DIR}/libicui18n.54.dylib ${APP_LIBRARY_DIR}
-	install_name_tool -id @executable_path/../Frameworks/libicui18n.54.dylib ${APP_LIBRARY_DIR}/libicui18n.54.dylib
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.54.dylib @executable_path/../Frameworks/libicudata.54.dylib ${APP_LIBRARY_DIR}/libicui18n.54.dylib
-	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicuuc.54.dylib @executable_path/../Frameworks/libicuuc.54.dylib ${APP_LIBRARY_DIR}/libicui18n.54.dylib
+	cp ${SYSTEM_LIBRARY_DIR}/libicudata.55.dylib ${APP_LIBRARY_DIR}
+	install_name_tool -id @executable_path/../Frameworks/libicudata.55.dylib ${APP_LIBRARY_DIR}/libicudata.55.dylib
+	cp ${SYSTEM_LIBRARY_DIR}/libicuuc.55.dylib ${APP_LIBRARY_DIR}
+	install_name_tool -id @executable_path/../Frameworks/libicuuc.55.dylib ${APP_LIBRARY_DIR}/libicuuc.55.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.55.dylib @executable_path/../Frameworks/libicudata.55.dylib ${APP_LIBRARY_DIR}/libicuuc.55.dylib
+	cp ${SYSTEM_LIBRARY_DIR}/libicui18n.55.dylib ${APP_LIBRARY_DIR}
+	install_name_tool -id @executable_path/../Frameworks/libicui18n.55.dylib ${APP_LIBRARY_DIR}/libicui18n.55.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicudata.55.dylib @executable_path/../Frameworks/libicudata.55.dylib ${APP_LIBRARY_DIR}/libicui18n.55.dylib
+	install_name_tool -change ${SYSTEM_LIBRARY_DIR}/libicuuc.55.dylib @executable_path/../Frameworks/libicuuc.55.dylib ${APP_LIBRARY_DIR}/libicui18n.55.dylib
 
 libpcre:
 	cp ${SYSTEM_LIBRARY_DIR}/libpcre16.0.dylib ${APP_LIBRARY_DIR}
