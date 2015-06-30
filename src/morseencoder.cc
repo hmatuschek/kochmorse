@@ -48,12 +48,10 @@ MorseEncoder::_createSamples()
     ditData[i] = (2<<12)*std::sin((2*M_PI*_ditFreq*i)/Globals::sampleRate);
     // apply window
     if (i <= epsilon) {
-      ditData[i] *= double(i+1)/epsilon;
+      ditData[i] *= double(i)/epsilon;
     } if (i >= (_unitLength-epsilon)) {
       ditData[i] *= double(_unitLength-i)/epsilon;
     }
-    double mid = (double(_unitLength-1)/2);
-    ditData[i] *= (1.0 - std::pow((i-mid)/mid, 2.0));
   }
   // append 1 "dit" pause
   for (size_t i=_unitLength; i<(2*_unitLength); i++) { ditData[i] = 0; }
