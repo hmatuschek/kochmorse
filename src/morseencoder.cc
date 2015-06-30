@@ -52,8 +52,6 @@ MorseEncoder::_createSamples()
     } if (i >= (_unitLength-epsilon)) {
       ditData[i] *= double(_unitLength-i)/epsilon;
     }
-    double mid = (double(_unitLength-1)/2);
-    ditData[i] *= (1.0 - std::pow((i-mid)/mid, 2.0));
   }
   // append 1 "dit" pause
   for (size_t i=_unitLength; i<(2*_unitLength); i++) { ditData[i] = 0; }
