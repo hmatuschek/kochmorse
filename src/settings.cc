@@ -105,6 +105,24 @@ Settings::setKochPrefLastChars(bool pref) {
   this->setValue("koch/prefLastChars", pref);
 }
 
+int
+Settings::kochMinGroupSize() const {
+  return this->value("koch/minGroupSize", 5).toInt();
+}
+void
+Settings::setKochMinGroupSize(int size) {
+  this->setValue("koch/minGroupSize", size);
+}
+
+int
+Settings::kochMaxGroupSize() const {
+  return this->value("koch/maxGroupSize", 5).toInt();
+}
+void
+Settings::setKochMaxGroupSize(int size) {
+  this->setValue("koch/maxGroupSize", size);
+}
+
 QSet<QChar>
 Settings::randomChars() const {
   QSet<QChar> chars;
@@ -360,10 +378,24 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   _prefLastChars = new QCheckBox();
   _prefLastChars->setChecked(settings.kochPrefLastChars());
 
+  _minGroupSize = new QSpinBox();
+  _minGroupSize->setValue(settings.kochMinGroupSize());
+  _minGroupSize->setMinimum(1);
+  _minGroupSize->setMaximum(settings.kochMaxGroupSize());
+
+  _maxGroupSize = new QSpinBox();
+  _maxGroupSize->setValue(settings.kochMaxGroupSize());
+  _maxGroupSize->setMinimum(settings.kochMinGroupSize());
+  _maxGroupSize->setMaximum(20);
+
+  // Cross connect min and max group size splin boxes to maintain
+  // consistent settings
+
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
   layout->addRow(tr("Prefer last chars"), _prefLastChars);
-
+  layout->addRow(tr("Min. group size"), _minGroupSize);
+  layout->addRow(tr("Max. group size"), _maxGroupSize);
   this->setLayout(layout);
 }
 
@@ -372,6 +404,18 @@ KochTutorSettingsView::save() {
   Settings settings;
   settings.setKochLesson(_lesson->value());
   settings.setKochPrefLastChars(_prefLastChars->isChecked());
+  settings.setKochMinGroupSize(_minGroupSize->value());
+  settings.setKochMaxGroupSize(_maxGroupSize->value());
+}
+
+void
+KochTutorSettingsView::onMinSet(int value) {
+  _maxGroupSize->setMinimum(value);
+}
+
+void
+KochTutorSettingsView::onMaxSet(int value) {
+  _minGroupSize->setMaximum(value);
 }
 
 

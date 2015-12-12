@@ -25,7 +25,8 @@ Application::Application(int &argc, char *argv[])
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
+                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
     break;
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), this);
@@ -118,7 +119,8 @@ Application::applySettings()
   if (_tutor) { delete _tutor; }
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), this);
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
+                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
     break;
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), this);

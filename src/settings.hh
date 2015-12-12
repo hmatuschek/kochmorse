@@ -76,6 +76,11 @@ public:
   /** Koch totor: Sets if "new" chars are more likely to be picked by the tutor. */
   void setKochPrefLastChars(bool pref);
 
+  int kochMinGroupSize() const;
+  void setKochMinGroupSize(int size);
+  int kochMaxGroupSize() const;
+  void setKochMaxGroupSize(int size);
+
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
   /** Random tutor: Sets the character set. */
@@ -139,9 +144,15 @@ public:
   /** Updates the persistent settings. */
   void save();
 
+protected slots:
+  void onMinSet(int value);
+  void onMaxSet(int value);
+
 protected:
   QSpinBox *_lesson;
   QCheckBox *_prefLastChars;
+  QSpinBox *_minGroupSize;
+  QSpinBox *_maxGroupSize;
 };
 
 

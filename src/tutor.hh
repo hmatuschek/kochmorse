@@ -40,7 +40,7 @@ public:
    * @param prefLastChars If @c true, specifies the if the symbols of the more recent lessons
    *        should be samples more likely by the tutor.
    * @param parent Specifies the QObject parent. */
-  KochTutor(int lesson=2, bool prefLastChars=false, QObject *parent=0);
+  KochTutor(int lesson=2, bool prefLastChars=false, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
   /** Destructor. */
   virtual ~KochTutor();
 
@@ -65,6 +65,8 @@ protected:
   int _lesson;
   /** The "prefer last chars" flag. */
   bool _prefLastChars;
+  size_t _minGroupSize;
+  size_t _maxGroupSize;
   /** The list of chars of the current session. */
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */

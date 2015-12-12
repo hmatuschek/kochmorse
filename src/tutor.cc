@@ -33,8 +33,10 @@ inline QVector<QChar> _initKochLessons() {
 QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTutor::KochTutor(int lesson, bool prefLastChars, QObject *parent)
-  : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars), _text()
+KochTutor::KochTutor(int lesson, bool prefLastChars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+  : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars),
+    _minGroupSize(std::min(minGroupSize, maxGroupSize)), _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
+    _text()
 {
   // Init random number generator
   srand(time(0));
@@ -83,12 +85,12 @@ KochTutor::reset()
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
 
-  // For 5 lines
-  for (int l=0; l<5; l++) {
-    // and 5 groups
-    for (int g=0; g<5; g++) {
-      // of 5 chars
-      for (int c=0; c<5; c++) {
+  // for each of the 5 lines
+  for (size_t l=0; l<5; l++) {
+    for (size_t i=0; i<25;) {
+      // Sample group size
+      size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
+      for (size_t j=0; j<n; j++) {
         // Sample char from lesson
         size_t idx = 0;
         if (_prefLastChars) {
@@ -102,6 +104,7 @@ KochTutor::reset()
         }
         _text.push_back(_lessons[idx]);
       }
+      i += n;
       _text.push_back(' ');
     }
     _text.push_back('=');
