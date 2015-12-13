@@ -16,11 +16,11 @@ Below, you will find a list of features of the current KochMorse release. The hi
 are new features compared to the "old" python implementation.
 
  * *A simplified GUI* -- All settings are now accessible via the Preferences dialog.
- * A morse tutor using the Koch method (of cause).
+ * A morse tutor using the Koch method (of course).
  * *A random morse tutor* -- Allows to select a set of characters and prosigns for practicing.
  * *A QSO tutor* -- Selects a random QSO from a set of over 900 for practicing.
  * Different speed of characters and pauses. This allows to practice the reading in full speed,
-   while having enough time to write the character.
+   while having enough time to write the character down.
  * *Different tones for dashes and dots.*
  * *Noise audio effect* -- Increases the difficulty to read the morse code for practicing.
  * *Fading audio effect* -- Periodically fades the morse signal for practicing. In conjecture with
