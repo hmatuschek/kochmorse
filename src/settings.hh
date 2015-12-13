@@ -85,6 +85,10 @@ public:
   QSet<QChar> randomChars() const;
   /** Random tutor: Sets the character set. */
   void setRandomChars(const QSet<QChar> &chars);
+  int randomMinGroupSize() const;
+  void setRandomMinGroupSize(int size);
+  int randomMaxGroupSize() const;
+  void setRandomMaxGroupSize(int size);
 
   /** Noise effect: Enabled. */
   bool noiseEnabled() const;
@@ -167,11 +171,17 @@ public:
   /** Updates the persistent settings. */
   void save();
 
+protected slots:
+  void onMinSet(int value);
+  void onMaxSet(int value);
+
 protected:
   ListWidget *_alpha;
   ListWidget *_num;
   ListWidget *_punct;
   ListWidget *_prosign;
+  QSpinBox *_minGroupSize;
+  QSpinBox *_maxGroupSize;
 };
 
 

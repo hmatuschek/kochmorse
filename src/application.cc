@@ -29,7 +29,8 @@ Application::Application(int &argc, char *argv[])
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
     break;
   case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(settings.randomChars(), this);
+    _tutor = new RandomTutor(settings.randomChars(),
+                             settings.randomMinGroupSize(), settings.randomMaxGroupSize(), this);
     break;
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);
@@ -123,7 +124,8 @@ Application::applySettings()
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
     break;
   case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(settings.randomChars(), this);
+    _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
+                             settings.randomMaxGroupSize(), this);
     break;
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);

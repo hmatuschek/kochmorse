@@ -139,12 +139,33 @@ Settings::randomChars() const {
   }
   return chars;
 }
+
 void
 Settings::setRandomChars(const QSet<QChar> &chars) {
   QString str;
   QSet<QChar>::const_iterator c = chars.begin();
   for (; c != chars.end(); c++) { str.append(*c); }
   this->setValue("random/chars", str);
+}
+
+void
+Settings::setRandomMinGroupSize(int size) {
+  this->setValue("random/minGroupSize", size);
+}
+
+int
+Settings::randomMinGroupSize() const {
+  return this->value("random/minGroupSize", 5).toInt();
+}
+
+void
+Settings::setRandomMaxGroupSize(int size) {
+  this->setValue("random/maxGroupSize", size);
+}
+
+int
+Settings::randomMaxGroupSize() const {
+  return this->value("random/maxGroupSize", 5).toInt();
 }
 
 bool
@@ -390,6 +411,8 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
 
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
+  connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
+  connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
@@ -467,9 +490,28 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   tabs->addTab(_punct, tr("Punctuations"));
   tabs->addTab(_prosign, tr("Prosigns"));
 
-  QHBoxLayout *layout = new QHBoxLayout();
+  _minGroupSize = new QSpinBox();
+  _minGroupSize->setValue(settings.randomMinGroupSize());
+  _minGroupSize->setMinimum(1);
+  _minGroupSize->setMaximum(settings.randomMaxGroupSize());
+
+  _maxGroupSize = new QSpinBox();
+  _maxGroupSize->setValue(settings.randomMaxGroupSize());
+  _maxGroupSize->setMinimum(settings.randomMinGroupSize());
+  _maxGroupSize->setMaximum(20);
+
+  // Cross connect min and max group size splin boxes to maintain
+  // consistent settings
+  connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
+  connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
+
+  QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(tabs);
-  this->setLayout(layout);
+  QFormLayout *box = new QFormLayout();
+  box->addRow(tr("Min. group size"), _minGroupSize);
+  box->addRow(tr("Max. group size"), _maxGroupSize);
+  layout->addLayout(box);
+  setLayout(layout);
 }
 
 void
@@ -497,6 +539,18 @@ RandomTutorSettingsView::save() {
   }
 
   Settings().setRandomChars(enabled_chars);
+  Settings().setRandomMinGroupSize(_minGroupSize->value());
+  Settings().setRandomMaxGroupSize(_maxGroupSize->value());
+}
+
+void
+RandomTutorSettingsView::onMinSet(int value) {
+  _maxGroupSize->setMinimum(value);
+}
+
+void
+RandomTutorSettingsView::onMaxSet(int value) {
+  _minGroupSize->setMaximum(value);
 }
 
 

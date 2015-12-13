@@ -117,8 +117,8 @@ KochTutor::reset()
 /* ********************************************************************************************* *
  * RandomTutor
  * ********************************************************************************************* */
-RandomTutor::RandomTutor(QObject *parent)
-  : Tutor(parent), _text(), _chars()
+RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _text(), _chars()
 {
   // Init random number generator
   srand(time(0));
@@ -130,8 +130,8 @@ RandomTutor::RandomTutor(QObject *parent)
          << QChar(0x2406) /* SN */;
 }
 
-RandomTutor::RandomTutor(const QSet<QChar> &chars, QObject *parent)
-  : Tutor(parent), _text(), _chars()
+RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _text(), _chars()
 {
   // Init random number generator
   srand(time(0));
@@ -167,16 +167,17 @@ RandomTutor::reset()
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
 
-  // For 5 lines
-  for (int l=0; l<5; l++) {
-    // and 5 groups
-    for (int g=0; g<5; g++) {
-      // of 5 chars
-      for (int c=0; c<5; c++) {
+  // for each of the 5 lines
+  for (size_t l=0; l<5; l++) {
+    for (size_t i=0; i<25;) {
+      // Sample group size
+      size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
+      for (size_t j=0; j<n; j++) {
         // Sample char from chars
         size_t idx = _chars.size()*double(rand())/RAND_MAX;
         _text.push_back(_chars[idx]);
       }
+      i += n;
       _text.push_back(' ');
     }
     _text.push_back('=');

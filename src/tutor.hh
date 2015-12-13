@@ -81,9 +81,9 @@ class RandomTutor: public Tutor
 
 public:
   /** Constructor. Uses all symbols for practicing. */
-  explicit RandomTutor(QObject *parent=0);
+  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
   /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
-  explicit RandomTutor(const QSet<QChar> &chars, QObject *parent=0);
+  explicit RandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
   /** Destructor. */
   virtual ~RandomTutor();
 
@@ -100,6 +100,10 @@ public:
   void setChars(const QSet<QChar> &chars);
 
 protected:
+  /** Minimum group size. */
+  size_t _minGroupSize;
+  /** Maximum group size. */
+  size_t _maxGroupSize;
   /** Text for the current session. */
   QList<QChar> _text;
   /** Vector of chars to choose from. */
