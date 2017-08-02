@@ -111,6 +111,47 @@ protected:
 };
 
 
+/** A simple tutor for random chars. */
+class EndlessRandomTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  /** Constructor. Uses all symbols for practicing. */
+  explicit EndlessRandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
+  /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
+  explicit EndlessRandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
+  /** Destructor. */
+  virtual ~EndlessRandomTutor();
+
+  /** Samples the next symbol. */
+  QChar next();
+  /** If @c true, the current session is at the end. */
+  bool atEnd();
+  /** Reset/restarts a session. */
+  void reset();
+
+  /** Returns the set of characters to practice. */
+  QSet<QChar> chars() const;
+  /** Resets the set of characters to practice. */
+  void setChars(const QSet<QChar> &chars);
+
+protected:
+  /** Adds a line to the queue. */
+  void _addLine();
+
+protected:
+  /** Minimum group size. */
+  size_t _minGroupSize;
+  /** Maximum group size. */
+  size_t _maxGroupSize;
+  /** Text for the current session. */
+  QList<QChar> _line;
+  /** Vector of chars to choose from. */
+  QVector<QChar> _chars;
+};
+
+
 /** A simple QSO tutor. */
 class QSOTutor: public Tutor
 {

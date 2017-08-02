@@ -203,6 +203,95 @@ RandomTutor::setChars(const QSet<QChar> &chars) {
 
 
 /* ********************************************************************************************* *
+ * EndlessRandomTutor
+ * ********************************************************************************************* */
+EndlessRandomTutor::EndlessRandomTutor(size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _line(), _chars()
+{
+  // Init random number generator
+  srand(time(0));
+  _chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
+         << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
+         << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
+         << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
+         << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
+         << QChar(0x2406) /* SN */;
+}
+
+EndlessRandomTutor::EndlessRandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _line(), _chars()
+{
+  // Init random number generator
+  srand(time(0));
+  _chars.reserve(chars.size());
+  QSet<QChar>::const_iterator c = chars.begin();
+  for (; c != chars.end(); c++) { _chars.push_back(*c); }
+}
+
+EndlessRandomTutor::~EndlessRandomTutor() {
+  // pass...
+}
+
+QChar
+EndlessRandomTutor::next() {
+  if (0 == _chars.size()) { return '\0'; }
+  if (0 == _line.size())
+    _addLine();
+  QChar ch = _line.first(); _line.pop_front();
+  return ch;
+}
+
+bool
+EndlessRandomTutor::atEnd() {
+  return (0 == _chars.size());
+}
+
+void
+EndlessRandomTutor::reset()
+{
+  // Empty current session
+  _line.clear();
+  // If empty char set -> done.
+  if (0 == _chars.size()) { return; }
+  // Insert "vvv\n"
+  _line.push_back('v'); _line.push_back('v'); _line.push_back('v'); _line.push_back('\n');
+  _addLine();
+}
+
+void
+EndlessRandomTutor::_addLine() {
+  for (size_t i=0; i<25;) {
+    // Sample group size
+    size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
+    for (size_t j=0; j<n; j++) {
+      // Sample char from chars
+      size_t idx = _chars.size()*double(rand())/RAND_MAX;
+      _line.push_back(_chars[idx]);
+     }
+     i += n;
+     _line.push_back(' ');
+   }
+   _line.push_back('=');
+}
+
+QSet<QChar>
+EndlessRandomTutor::chars() const {
+  QSet<QChar> cs;
+  for (int i=0; i<_chars.size(); i++) { cs.insert(_chars[i]); }
+  return cs;
+}
+
+void
+EndlessRandomTutor::setChars(const QSet<QChar> &chars) {
+  QSet<QChar>::const_iterator c = chars.begin();
+  _chars.clear(); _chars.reserve(chars.size());
+  for (; c != chars.end(); c++) {
+    _chars.push_back(*c);
+  }
+}
+
+
+/* ********************************************************************************************* *
  * QSOTrainer
  * ********************************************************************************************* */
 QSOTutor::QSOTutor(QObject *parent)
