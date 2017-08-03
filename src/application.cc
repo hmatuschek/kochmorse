@@ -26,11 +26,13 @@ Application::Application(int &argc, char *argv[])
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
-                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
+                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
+                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(),
-                             settings.randomMinGroupSize(), settings.randomMaxGroupSize(), this);
+                             settings.randomMinGroupSize(), settings.randomMaxGroupSize(),
+                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
     break;
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);
@@ -118,14 +120,17 @@ Application::applySettings()
 
   // Reconfigure tutor
   if (_tutor) { delete _tutor; }
+
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
-                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(), this);
+                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
+                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
-                             settings.randomMaxGroupSize(), this);
+                             settings.randomMaxGroupSize(),
+                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
     break;
   case Settings::TUTOR_QSO:
     _tutor = new QSOTutor(this);

@@ -100,6 +100,7 @@ bool
 Settings::kochPrefLastChars() const {
   return this->value("koch/prefLastChars", false).toBool();
 }
+
 void
 Settings::setKochPrefLastChars(bool pref) {
   this->setValue("koch/prefLastChars", pref);
@@ -109,6 +110,7 @@ int
 Settings::kochMinGroupSize() const {
   return this->value("koch/minGroupSize", 5).toInt();
 }
+
 void
 Settings::setKochMinGroupSize(int size) {
   this->setValue("koch/minGroupSize", size);
@@ -118,9 +120,29 @@ int
 Settings::kochMaxGroupSize() const {
   return this->value("koch/maxGroupSize", 5).toInt();
 }
+
 void
 Settings::setKochMaxGroupSize(int size) {
   this->setValue("koch/maxGroupSize", size);
+}
+
+bool
+Settings::kochInfiniteLineCount() const {
+  return this->value("koch/infinite", false).toBool();
+}
+
+void
+Settings::setKochInifiniteLineCount(bool enable) {
+  this->setValue("koch/infinite", enable);
+}
+
+int
+Settings::kochLineCount() const {
+  return this->value("koch/linecount", 5).toInt();
+}
+void
+Settings::setKochLineCount(int lines) {
+  this->setValue("koch/linecount", lines);
 }
 
 QSet<QChar>
@@ -166,6 +188,26 @@ Settings::setRandomMaxGroupSize(int size) {
 int
 Settings::randomMaxGroupSize() const {
   return this->value("random/maxGroupSize", 5).toInt();
+}
+
+bool
+Settings::randomInfiniteLineCount() const {
+  return this->value("random/infinite", false).toBool();
+}
+
+void
+Settings::setRandomInifiniteLineCount(bool enable) {
+  this->setValue("random/infinite", enable);
+}
+
+int
+Settings::randomLineCount() const {
+  return this->value("random/linecount", 5).toInt();
+}
+
+void
+Settings::setRandomLineCount(int lines) {
+  this->setValue("random/linecount", lines);
 }
 
 bool
@@ -409,16 +451,29 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   _maxGroupSize->setMinimum(settings.kochMinGroupSize());
   _maxGroupSize->setMaximum(20);
 
+  _infinite = new QCheckBox();
+  _infinite->setChecked(settings.kochInfiniteLineCount());
+
+  _lineCount = new QSpinBox();
+  _lineCount->setMinimum(1);
+  _lineCount->setValue(settings.kochLineCount());
+  if (settings.kochInfiniteLineCount())
+    _lineCount->setEnabled(false);
+
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
+  connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
   layout->addRow(tr("Prefer last chars"), _prefLastChars);
   layout->addRow(tr("Min. group size"), _minGroupSize);
   layout->addRow(tr("Max. group size"), _maxGroupSize);
+  layout->addRow(tr("Infinite lines"), _infinite);
+  layout->addRow(tr("Line count"), _lineCount);
+
   this->setLayout(layout);
 }
 
@@ -429,6 +484,8 @@ KochTutorSettingsView::save() {
   settings.setKochPrefLastChars(_prefLastChars->isChecked());
   settings.setKochMinGroupSize(_minGroupSize->value());
   settings.setKochMaxGroupSize(_maxGroupSize->value());
+  settings.setKochInifiniteLineCount(_infinite->isChecked());
+  settings.setKochLineCount(_lineCount->value());
 }
 
 void
@@ -439,6 +496,11 @@ KochTutorSettingsView::onMinSet(int value) {
 void
 KochTutorSettingsView::onMaxSet(int value) {
   _minGroupSize->setMaximum(value);
+}
+
+void
+KochTutorSettingsView::onInfiniteToggled(bool enabled) {
+  _lineCount->setEnabled(! enabled);
 }
 
 
@@ -500,16 +562,29 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   _maxGroupSize->setMinimum(settings.randomMinGroupSize());
   _maxGroupSize->setMaximum(20);
 
+  _infinite = new QCheckBox();
+  _infinite->setChecked(settings.randomInfiniteLineCount());
+
+  _lineCount = new QSpinBox();
+  _lineCount->setMinimum(1);
+  _lineCount->setValue(settings.randomLineCount());
+  if (settings.randomInfiniteLineCount())
+    _lineCount->setEnabled(false);
+
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
+  connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
 
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(tabs);
   QFormLayout *box = new QFormLayout();
   box->addRow(tr("Min. group size"), _minGroupSize);
   box->addRow(tr("Max. group size"), _maxGroupSize);
+  box->addRow(tr("Infinite lines"), _infinite);
+  box->addRow(tr("Line count"), _lineCount);
+
   layout->addLayout(box);
   setLayout(layout);
 }
@@ -541,6 +616,8 @@ RandomTutorSettingsView::save() {
   Settings().setRandomChars(enabled_chars);
   Settings().setRandomMinGroupSize(_minGroupSize->value());
   Settings().setRandomMaxGroupSize(_maxGroupSize->value());
+  Settings().setRandomInifiniteLineCount(_infinite->isChecked());
+  Settings().setRandomLineCount(_lineCount->value());
 }
 
 void
@@ -551,6 +628,11 @@ RandomTutorSettingsView::onMinSet(int value) {
 void
 RandomTutorSettingsView::onMaxSet(int value) {
   _minGroupSize->setMaximum(value);
+}
+
+void
+RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
+  _lineCount->setEnabled(! enabled);
 }
 
 

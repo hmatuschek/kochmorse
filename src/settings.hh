@@ -81,14 +81,25 @@ public:
   int kochMaxGroupSize() const;
   void setKochMaxGroupSize(int size);
 
+  bool kochInfiniteLineCount() const;
+  void setKochInifiniteLineCount(bool enable);
+  int kochLineCount() const;
+  void setKochLineCount(int lines);
+
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
   /** Random tutor: Sets the character set. */
   void setRandomChars(const QSet<QChar> &chars);
+
   int randomMinGroupSize() const;
   void setRandomMinGroupSize(int size);
   int randomMaxGroupSize() const;
   void setRandomMaxGroupSize(int size);
+
+  bool randomInfiniteLineCount() const;
+  void setRandomInifiniteLineCount(bool enable);
+  int randomLineCount() const;
+  void setRandomLineCount(int lines);
 
   /** Noise effect: Enabled. */
   bool noiseEnabled() const;
@@ -151,12 +162,15 @@ public:
 protected slots:
   void onMinSet(int value);
   void onMaxSet(int value);
+  void onInfiniteToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
   QCheckBox *_prefLastChars;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;
+  QCheckBox *_infinite;
+  QSpinBox *_lineCount;
 };
 
 
@@ -174,6 +188,7 @@ public:
 protected slots:
   void onMinSet(int value);
   void onMaxSet(int value);
+  void onInfiniteToggled(bool enabled);
 
 protected:
   ListWidget *_alpha;
@@ -182,6 +197,8 @@ protected:
   ListWidget *_prosign;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;
+  QCheckBox *_infinite;
+  QSpinBox *_lineCount;
 };
 
 

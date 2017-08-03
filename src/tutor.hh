@@ -40,7 +40,8 @@ public:
    * @param prefLastChars If @c true, specifies the if the symbols of the more recent lessons
    *        should be samples more likely by the tutor.
    * @param parent Specifies the QObject parent. */
-  KochTutor(int lesson=2, bool prefLastChars=false, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
+  KochTutor(int lesson=2, bool prefLastChars=false, size_t minGroupSize=5, size_t maxGroupSize=5,
+            int lines=5, QObject *parent=0);
   /** Destructor. */
   virtual ~KochTutor();
 
@@ -59,6 +60,14 @@ public:
   bool prefLastChars() const;
   /** Enable preferred sampling of recent symbols. */
   void setPrefLastChars(bool pref);
+  /** Returns the number of lines to send. */
+  int lines() const;
+  /** Sets the number of lines to send. */
+  void setLines(int lines);
+
+protected:
+  /** Samples the next line of text. */
+  void _nextline();
 
 protected:
   /** The current lesson. */
@@ -67,6 +76,8 @@ protected:
   bool _prefLastChars;
   size_t _minGroupSize;
   size_t _maxGroupSize;
+  int _lines;
+  size_t _linecount;
   /** The list of chars of the current session. */
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */
@@ -81,9 +92,10 @@ class RandomTutor: public Tutor
 
 public:
   /** Constructor. Uses all symbols for practicing. */
-  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
+  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5, QObject *parent=0);
   /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
-  explicit RandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
+  explicit RandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5,
+                       int lines=5, QObject *parent=0);
   /** Destructor. */
   virtual ~RandomTutor();
 
@@ -98,55 +110,26 @@ public:
   QSet<QChar> chars() const;
   /** Resets the set of characters to practice. */
   void setChars(const QSet<QChar> &chars);
+  /** Returns the number of lines to send. */
+  int lines() const;
+  /** Sets the number of lines to send. */
+  void setLines(int lines);
+
+protected:
+  /** Samples a new line of text. */
+  void _nextline();
 
 protected:
   /** Minimum group size. */
   size_t _minGroupSize;
   /** Maximum group size. */
   size_t _maxGroupSize;
+  /** Number of lines to send. */
+  int _lines;
+  /** Number of lines send. */
+  size_t _linecount;
   /** Text for the current session. */
   QList<QChar> _text;
-  /** Vector of chars to choose from. */
-  QVector<QChar> _chars;
-};
-
-
-/** A simple tutor for random chars. */
-class EndlessRandomTutor: public Tutor
-{
-  Q_OBJECT
-
-public:
-  /** Constructor. Uses all symbols for practicing. */
-  explicit EndlessRandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
-  /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
-  explicit EndlessRandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5, QObject *parent=0);
-  /** Destructor. */
-  virtual ~EndlessRandomTutor();
-
-  /** Samples the next symbol. */
-  QChar next();
-  /** If @c true, the current session is at the end. */
-  bool atEnd();
-  /** Reset/restarts a session. */
-  void reset();
-
-  /** Returns the set of characters to practice. */
-  QSet<QChar> chars() const;
-  /** Resets the set of characters to practice. */
-  void setChars(const QSet<QChar> &chars);
-
-protected:
-  /** Adds a line to the queue. */
-  void _addLine();
-
-protected:
-  /** Minimum group size. */
-  size_t _minGroupSize;
-  /** Maximum group size. */
-  size_t _maxGroupSize;
-  /** Text for the current session. */
-  QList<QChar> _line;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
 };

@@ -33,10 +33,12 @@ inline QVector<QChar> _initKochLessons() {
 QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTutor::KochTutor(int lesson, bool prefLastChars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
+KochTutor::KochTutor(int lesson, bool prefLastChars, size_t minGroupSize, size_t maxGroupSize,
+                     int lines, QObject *parent)
   : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars),
-    _minGroupSize(std::min(minGroupSize, maxGroupSize)), _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
-    _text()
+    _minGroupSize(std::min(minGroupSize, maxGroupSize)),
+    _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
+    _lines(lines), _linecount(0), _text()
 {
   // Init random number generator
   srand(time(0));
@@ -48,14 +50,18 @@ KochTutor::~KochTutor() {
 
 QChar
 KochTutor::next() {
-  if (0 == _text.size()) { reset(); }
+  if ((0 == _text.size()) && (_lines == _linecount))
+    reset();
+  else if (0 == _text.size())
+    _nextline();
+
   QChar ch = _text.first(); _text.pop_front();
   return ch;
 }
 
 bool
 KochTutor::atEnd() {
-  return 0 == _text.size();
+  return ((0 == _text.size()) && (_lines == _linecount));
 }
 
 int
@@ -74,7 +80,17 @@ KochTutor::prefLastChars() const {
 
 void
 KochTutor::setPrefLastChars(bool pref) {
-  _prefLastChars=pref;
+  _prefLastChars = pref;
+}
+
+int
+KochTutor::lines() const {
+  return _lines;
+}
+
+void
+KochTutor::setLines(int lines) {
+  _lines = lines;
 }
 
 void
@@ -82,43 +98,49 @@ KochTutor::reset()
 {
   // Empty current session
   _text.clear();
+  // Reset line count
+  _linecount = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
-
-  // for each of the 5 lines
-  for (size_t l=0; l<5; l++) {
-    for (size_t i=0; i<25;) {
-      // Sample group size
-      size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
-      for (size_t j=0; j<n; j++) {
-        // Sample char from lesson
-        size_t idx = 0;
-        if (_prefLastChars) {
-          double v = -1;
-          while ((v < 0) || (v >= _lesson)) {
-            v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
-          }
-          idx = v;
-        } else {
-          idx = _lesson*double(rand())/RAND_MAX;
-        }
-        _text.push_back(_lessons[idx]);
-      }
-      i += n;
-      _text.push_back(' ');
-    }
-    _text.push_back('=');
-    _text.push_back('\n');
-  }
+  // sample a line of text.
+  _nextline();
 }
 
+void
+KochTutor::_nextline() {
+  // for each of the 5 lines
+  for (size_t i=0; i<25;) {
+    // Sample group size
+    size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
+    for (size_t j=0; j<n; j++) {
+      // Sample char from lesson
+      size_t idx = 0;
+      if (_prefLastChars) {
+        double v = -1;
+        while ((v < 0) || (v >= _lesson)) {
+          v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
+        }
+        idx = v;
+      } else {
+        idx = _lesson*double(rand())/RAND_MAX;
+      }
+      _text.push_back(_lessons[idx]);
+    }
+    i += n;
+    _text.push_back(' ');
+  }
+  _text.push_back('=');
+  _text.push_back('\n');
+  _linecount++;
+}
 
 
 /* ********************************************************************************************* *
  * RandomTutor
  * ********************************************************************************************* */
-RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _text(), _chars()
+RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
+    _lines(lines), _linecount(0), _text(), _chars()
 {
   // Init random number generator
   srand(time(0));
@@ -130,8 +152,9 @@ RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, QObject *pare
          << QChar(0x2406) /* SN */;
 }
 
-RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _text(), _chars()
+RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, QObject *parent)
+  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
+    _text(), _chars()
 {
   // Init random number generator
   srand(time(0));
@@ -147,14 +170,19 @@ RandomTutor::~RandomTutor() {
 QChar
 RandomTutor::next() {
   if (0 == _chars.size()) { return '\0'; }
-  if (0 == _text.size()) { reset(); }
+
+  if ((0 == _text.size()) && (_linecount == _lines))
+    reset();
+  else if (0 == _text.size())
+    _nextline();
+
   QChar ch = _text.first(); _text.pop_front();
   return ch;
 }
 
 bool
 RandomTutor::atEnd() {
-  return (0 == _text.size()) || (0 == _chars.size());
+  return ((0 == _text.size()) && (_lines == _linecount)) || (0 == _chars.size());
 }
 
 void
@@ -164,25 +192,30 @@ RandomTutor::reset()
   _text.clear();
   // If empty char set -> done.
   if (0 == _chars.size()) { return; }
+  // Reset linecount
+  _linecount = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
+  // sample a line
+  _nextline();
+}
 
-  // for each of the 5 lines
-  for (size_t l=0; l<5; l++) {
-    for (size_t i=0; i<25;) {
-      // Sample group size
-      size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
-      for (size_t j=0; j<n; j++) {
-        // Sample char from chars
-        size_t idx = _chars.size()*double(rand())/RAND_MAX;
-        _text.push_back(_chars[idx]);
-      }
-      i += n;
-      _text.push_back(' ');
+void
+RandomTutor::_nextline() {
+  for (size_t i=0; i<25;) {
+    // Sample group size
+    size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
+    for (size_t j=0; j<n; j++) {
+      // Sample char from chars
+      size_t idx = _chars.size()*double(rand())/RAND_MAX;
+      _text.push_back(_chars[idx]);
     }
-    _text.push_back('=');
-    _text.push_back('\n');
+    i += n;
+    _text.push_back(' ');
   }
+  _text.push_back('=');
+  _text.push_back('\n');
+  _linecount++;
 }
 
 QSet<QChar>
@@ -201,98 +234,19 @@ RandomTutor::setChars(const QSet<QChar> &chars) {
   }
 }
 
-
-/* ********************************************************************************************* *
- * EndlessRandomTutor
- * ********************************************************************************************* */
-EndlessRandomTutor::EndlessRandomTutor(size_t minGroupSize, size_t maxGroupSize, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _line(), _chars()
-{
-  // Init random number generator
-  srand(time(0));
-  _chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
-         << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
-         << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
-         << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
-         << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
-         << QChar(0x2406) /* SN */;
-}
-
-EndlessRandomTutor::EndlessRandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _line(), _chars()
-{
-  // Init random number generator
-  srand(time(0));
-  _chars.reserve(chars.size());
-  QSet<QChar>::const_iterator c = chars.begin();
-  for (; c != chars.end(); c++) { _chars.push_back(*c); }
-}
-
-EndlessRandomTutor::~EndlessRandomTutor() {
-  // pass...
-}
-
-QChar
-EndlessRandomTutor::next() {
-  if (0 == _chars.size()) { return '\0'; }
-  if (0 == _line.size())
-    _addLine();
-  QChar ch = _line.first(); _line.pop_front();
-  return ch;
-}
-
-bool
-EndlessRandomTutor::atEnd() {
-  return (0 == _chars.size());
+int
+RandomTutor::lines() const {
+  return _lines;
 }
 
 void
-EndlessRandomTutor::reset()
-{
-  // Empty current session
-  _line.clear();
-  // If empty char set -> done.
-  if (0 == _chars.size()) { return; }
-  // Insert "vvv\n"
-  _line.push_back('v'); _line.push_back('v'); _line.push_back('v'); _line.push_back('\n');
-  _addLine();
-}
-
-void
-EndlessRandomTutor::_addLine() {
-  for (size_t i=0; i<25;) {
-    // Sample group size
-    size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
-    for (size_t j=0; j<n; j++) {
-      // Sample char from chars
-      size_t idx = _chars.size()*double(rand())/RAND_MAX;
-      _line.push_back(_chars[idx]);
-     }
-     i += n;
-     _line.push_back(' ');
-   }
-   _line.push_back('=');
-}
-
-QSet<QChar>
-EndlessRandomTutor::chars() const {
-  QSet<QChar> cs;
-  for (int i=0; i<_chars.size(); i++) { cs.insert(_chars[i]); }
-  return cs;
-}
-
-void
-EndlessRandomTutor::setChars(const QSet<QChar> &chars) {
-  QSet<QChar>::const_iterator c = chars.begin();
-  _chars.clear(); _chars.reserve(chars.size());
-  for (; c != chars.end(); c++) {
-    _chars.push_back(*c);
-  }
+RandomTutor::setLines(int lines) {
+  _lines = lines;
 }
 
 
 /* ********************************************************************************************* *
- * QSOTrainer
+ * QSOTutor
  * ********************************************************************************************* */
 QSOTutor::QSOTutor(QObject *parent)
   : Tutor(parent)
