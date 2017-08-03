@@ -40,7 +40,8 @@ public:
    * @param prefLastChars If @c true, specifies the if the symbols of the more recent lessons
    *        should be samples more likely by the tutor.
    * @param parent Specifies the QObject parent. */
-  KochTutor(int lesson=2, bool prefLastChars=false, size_t minGroupSize=5, size_t maxGroupSize=5,
+  KochTutor(int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
+            size_t minGroupSize=5, size_t maxGroupSize=5,
             int lines=5, QObject *parent=0);
   /** Destructor. */
   virtual ~KochTutor();
@@ -60,6 +61,10 @@ public:
   bool prefLastChars() const;
   /** Enable preferred sampling of recent symbols. */
   void setPrefLastChars(bool pref);
+  /** Repetition of last added char at the beginning of a session. */
+  bool repeatLastChar() const;
+  /** Enable repetition of last added char at the beginning of a session. */
+  void setRepeatLastChar(bool enable);
   /** Returns the number of lines to send. */
   int lines() const;
   /** Sets the number of lines to send. */
@@ -74,9 +79,16 @@ protected:
   int _lesson;
   /** The "prefer last chars" flag. */
   bool _prefLastChars;
+  /** The "repeat last char" flag. */
+  bool _repeatLastChar;
+  /** The minimum group size. */
   size_t _minGroupSize;
+  /** The maximum group size. If identical to _minGroupSize, the tutor will send a fixed group
+   * size. */
   size_t _maxGroupSize;
+  /** The number of lines to send, if negative send an infinite number of lines. */
   int _lines;
+  /** The number of lines send. */
   size_t _linecount;
   /** The list of chars of the current session. */
   QList<QChar> _text;

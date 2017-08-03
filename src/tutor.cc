@@ -33,9 +33,10 @@ inline QVector<QChar> _initKochLessons() {
 QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTutor::KochTutor(int lesson, bool prefLastChars, size_t minGroupSize, size_t maxGroupSize,
+KochTutor::KochTutor(int lesson, bool prefLastChars, bool repeatLastChar,
+                     size_t minGroupSize, size_t maxGroupSize,
                      int lines, QObject *parent)
-  : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars),
+  : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars), _repeatLastChar(repeatLastChar),
     _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
     _lines(lines), _linecount(0), _text()
@@ -83,6 +84,16 @@ KochTutor::setPrefLastChars(bool pref) {
   _prefLastChars = pref;
 }
 
+bool
+KochTutor::repeatLastChar() const {
+  return _repeatLastChar;
+}
+
+void
+KochTutor::setRepeatLastChar(bool enable) {
+  _repeatLastChar = enable;
+}
+
 int
 KochTutor::lines() const {
   return _lines;
@@ -102,6 +113,13 @@ KochTutor::reset()
   _linecount = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
+  // Insert newest char if "repeat last char" is enabled
+  if (_repeatLastChar) {
+    for (int i=0; i<5; i++) {
+      _text.push_back(_lessons[_lesson-1]); _text.push_back(' ');
+    }
+    _text.push_back('\n');
+  }
   // sample a line of text.
   _nextline();
 }

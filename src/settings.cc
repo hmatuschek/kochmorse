@@ -106,6 +106,16 @@ Settings::setKochPrefLastChars(bool pref) {
   this->setValue("koch/prefLastChars", pref);
 }
 
+bool
+Settings::kochRepeatLastChar() const {
+  return this->value("koch/repeatLastChar", false).toBool();
+}
+
+void
+Settings::setKochRepeatLastChar(bool enable) {
+  this->setValue("koch/repeatLastChar", enable);
+}
+
 int
 Settings::kochMinGroupSize() const {
   return this->value("koch/minGroupSize", 5).toInt();
@@ -441,6 +451,9 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   _prefLastChars = new QCheckBox();
   _prefLastChars->setChecked(settings.kochPrefLastChars());
 
+  _repLastChar = new QCheckBox();
+  _repLastChar->setChecked(settings.kochRepeatLastChar());
+
   _minGroupSize = new QSpinBox();
   _minGroupSize->setValue(settings.kochMinGroupSize());
   _minGroupSize->setMinimum(1);
@@ -469,6 +482,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
   layout->addRow(tr("Prefer last chars"), _prefLastChars);
+  layout->addRow(tr("Repeat last char"), _repLastChar);
   layout->addRow(tr("Min. group size"), _minGroupSize);
   layout->addRow(tr("Max. group size"), _maxGroupSize);
   layout->addRow(tr("Infinite lines"), _infinite);
@@ -482,6 +496,7 @@ KochTutorSettingsView::save() {
   Settings settings;
   settings.setKochLesson(_lesson->value());
   settings.setKochPrefLastChars(_prefLastChars->isChecked());
+  settings.setKochRepeatLastChar(_repLastChar->isChecked());
   settings.setKochMinGroupSize(_minGroupSize->value());
   settings.setKochMaxGroupSize(_maxGroupSize->value());
   settings.setKochInifiniteLineCount(_infinite->isChecked());

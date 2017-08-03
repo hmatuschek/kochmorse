@@ -25,7 +25,7 @@ Application::Application(int &argc, char *argv[])
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                            (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;
@@ -123,7 +123,7 @@ Application::applySettings()
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(),
+    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                            (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;

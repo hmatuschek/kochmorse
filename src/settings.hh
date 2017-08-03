@@ -76,6 +76,9 @@ public:
   /** Koch totor: Sets if "new" chars are more likely to be picked by the tutor. */
   void setKochPrefLastChars(bool pref);
 
+  bool kochRepeatLastChar() const;
+  void setKochRepeatLastChar(bool enable);
+
   int kochMinGroupSize() const;
   void setKochMinGroupSize(int size);
   int kochMaxGroupSize() const;
@@ -167,6 +170,7 @@ protected slots:
 protected:
   QSpinBox *_lesson;
   QCheckBox *_prefLastChars;
+  QCheckBox *_repLastChar;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
