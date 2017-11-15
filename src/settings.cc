@@ -373,17 +373,20 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->addItem(tr("Random"));
   _tutor->addItem(tr("QSO"));
   _tutor->addItem(tr("Transmit"));
+  _tutor->addItem(tr("Chat"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
   _qsoSettings  = new QSOTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
+  _chatSettings = new ChatTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
   _tutorSettings->addWidget(_qsoSettings);
   _tutorSettings->addWidget(_txSettings);
+  _tutorSettings->addWidget(_chatSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
@@ -398,6 +401,9 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_TX == settings.tutor()) {
     _tutor->setCurrentIndex(3);
     _tutorSettings->setCurrentIndex(3);
+  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
+    _tutor->setCurrentIndex(4);
+    _tutorSettings->setCurrentIndex(4);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -432,6 +438,8 @@ TutorSettingsView::save() {
     settings.setTutor(Settings::TUTOR_QSO);
   } else if (3 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_TX);
+  } else if (4 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_CHAT);
   }
 }
 
@@ -683,6 +691,24 @@ TXTutorSettingsView::TXTutorSettingsView(QWidget *parent)
 
 void
 TXTutorSettingsView::save() {
+  // pass...
+}
+
+
+/* ********************************************************************************************* *
+ * Chat Tutor Settings Widget
+ * ********************************************************************************************* */
+ChatTutorSettingsView::ChatTutorSettingsView(QWidget *parent)
+  : QGroupBox(parent)
+{
+  QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  QVBoxLayout *layout = new QVBoxLayout();
+  layout->addWidget(label);
+  setLayout(layout);
+}
+
+void
+ChatTutorSettingsView::save() {
   // pass...
 }
 

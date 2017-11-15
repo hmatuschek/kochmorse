@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="call-prefix-gm">
+  <one-of>
+   <t w="50">gm</t>
+   <t w="40">mm</t>
+   <t w="10">gs</t>
+  </one-of>
+ </rule>
+
+ <rule id="name-gm">
+  <one-of>
+   <t>jack</t> <t>james</t> <t>oliver</t> <t>lewis</t> <t>logan</t> <t>harry</t> <t>noah</t>
+   <t>leo</t> <t>charlie</t> <t>alexander</t> <t>olivia</t> <t>emily</t> <t>sophie</t> <t>isla</t>
+   <t>ava</t> <t>amelia</t> <t>jessica</t> <t>ella</t> <t>lucy</t> <t>charlotte</t>
+  </one-of>
+ </rule>
+
+ <rule id="city-gm">
+  <one-of>
+   <t>glasgow</t> <t>edinburgh</t> <t>aberdeen</t> <t>dundee</t> <t>inverness</t> <t>perth</t>
+  </one-of>
+ </rule>
+</rules>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<rules>
+ <!-- Rules to assemble valid RST rapports -->
+ <rule id="rst-q">
+  <one-of><t w="10">good</t><t w="7">fair</t><t w="5">bad</t></one-of>
+ </rule>
+ <rule id="rst-r">
+  <if var="rst-q" matches="good"><one-of><t w="10">5</t><t w="5">4</t></one-of></if>
+  <if var="rst-q" matches="fair"><one-of><t w="10">4</t><t w="5">3</t></one-of></if>
+  <if var="rst-q" matches="bad"><one-of><t w="10">2</t><t w="5">1</t></one-of></if>
+ </rule>
+ <rule id="rst-s">
+  <if var="rst-q" matches="good"><one-of><t w="10">9</t><t w="5">8</t><t w="2">7</t></one-of></if>
+  <if var="rst-q" matches="fair"><one-of><t w="10">6</t><t w="5">5</t><t w="2">4</t></one-of></if>
+  <if var="rst-q" matches="bad"><one-of><t w="10">3</t><t w="5">2</t><t w="2">1</t></one-of></if>
+ </rule>
+
+ <rule id="rst">
+  <one-of>
+   <i w="60"><apply rule="rst-r"/><apply rule="rst-s"/><apply rule="rst-s"/></i>
+   <t w="10">599</t>
+   <t w="30">5nn</t>
+  </one-of>
+ </rule>
+</rules>

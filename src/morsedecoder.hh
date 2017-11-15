@@ -5,49 +5,67 @@
 #include <QHash>
 
 
-/** An annoyingly strict morse decoder. */
+/** An annoyingly strict morse decoder.
+ * This class implements a simple but relatively strict morse decoder as an @c AudioSink and
+ * decodes received samples assuming a specified speed in terms of WPM. */
 class MorseDecoder : public AudioSink
 {
   Q_OBJECT
 
 public:
-  explicit MorseDecoder(double speed, QObject *parent = 0);
+  /** Constructs a Morse decoder for the specified speed.
+   * The speed can be reset by a call @c setSpeed.
+   * @param speed Specifies the expected speed in WPM.
+   * @param threshold Specifies the signal detection threshold in RMS. */
+  explicit MorseDecoder(double speed, float threshold=1e-5, QObject *parent = 0);
+  /** Destructor. */
   virtual ~MorseDecoder();
-
+  /** Reset the speed of the decoder in WPM. */
   void setSpeed(double wpm);
+  /** Resets the theshold of the detector in RMS. */
   void setThreshold(double threshold);
-
+  /** Implements the @c AudioSink interface. */
   void process(const QByteArray &data);
 
 signals:
-  void detectedSignal(int sig);
+  /** Gets emitted once an unknown char is received. */
   void unknownCharReceived(const QString &pattern);
+  /** Gets emitted once a known char is received. */
   void charReceived(QChar ch);
 
 protected:
+  /** Reconfigures the decoder. */
   void _updateConfig();
+  /** Returns true if the sample buffer contains a "dot". */
   bool _isDot() const;
+  /** Returns true if the sample buffer contains a "dash". */
   bool _isDash() const;
+  /** Returns true if the sample buffer contains a "pause". */
   bool _isPause() const;
 
+  /** Decodes symbols (dot, dash & pause) into chars. */
   void _processSymbol(char sym);
 
 protected:
+  /** Holds the expected speed in WPM. */
   double _speed;
-
+  /** Holds the unit length (1/4 of dit-length) in samples. */
   size_t _unitLength;
-
+  /** The number of samples in the sample buffer. */
   size_t _Nsamples;
+  /** The sample buffer. */
   int16_t *_buffer;
-
+  /** Holds the detection threshold  in RMS. */
   float _threshold;
-
+  /** The number of signal detections (1/4 dit-length) in the delay line. */
   size_t _delaySize;
-  bool _delayLine[8];
-
+  /** The delay line. */
+  bool _delayLine[16];
+  /** The number inter-char pauses received. */
   size_t _pauseCount;
+  /** The decoded symbols ('-','.',' '). */
   QString _symbols;
-
+  /** The last received char. */
   QChar _lastChar;
 };
 

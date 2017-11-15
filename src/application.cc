@@ -20,7 +20,7 @@ Application::Application(int &argc, char *argv[])
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), settings.sound(), true, this);
 
-  _decoder = new MorseDecoder(settings.speed(), this);
+  _decoder = new MorseDecoder(settings.speed(), 1e-5, this);
   _audio_src = new PortAudioSource(_decoder, this);
 
   switch (settings.tutor()) {
@@ -29,16 +29,23 @@ Application::Application(int &argc, char *argv[])
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                            (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;
+
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(),
                              settings.randomMinGroupSize(), settings.randomMaxGroupSize(),
                              (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
     break;
+
   case Settings::TUTOR_QSO:
-    _tutor = new QSOTutor(this);
+    _tutor = new GenQSOTutor(this);
     break;
+
   case Settings::TUTOR_TX:
-    _tutor = 0;
+    _tutor = new TXTutor(this);
+    break;
+
+  case Settings::TUTOR_CHAT:
+    _tutor = new ChatTutor(this);
     break;
   }
 
@@ -65,23 +72,19 @@ Application::setVolume(double factor) {
 
 void
 Application::startSession() {
-  if (_tutor) {
-    _tutor->reset();
-    _encoder->start();
-    _encoder->send(_tutor->next());
-  } else {
+  _tutor->reset();
+  _encoder->start();
+  _encoder->send(_tutor->next());
+  if (_tutor->needsDecoder())
     _audio_src->start();
-  }
 }
 
 void
 Application::stopSession() {
-  if (_tutor) {
-    _encoder->stop();
-    _tutor->reset();
-  } else {
+  _encoder->stop();
+  _tutor->reset();
+  if (_tutor->needsDecoder())
     _audio_src->stop();
-  }
 }
 
 void
@@ -127,25 +130,36 @@ Application::applySettings()
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                            (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
     break;
+
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
                              settings.randomMaxGroupSize(),
                              (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
     break;
+
   case Settings::TUTOR_QSO:
-    _tutor = new QSOTutor(this);
+    _tutor = new GenQSOTutor(this);
     break;
+
   case Settings::TUTOR_TX:
-    _tutor = 0;
+    _tutor = new TXTutor(this);
+    break;
+
+  case Settings::TUTOR_CHAT:
+    _tutor = new ChatTutor(this);
     break;
   }
 }
 
 void
 Application::onCharsSend() {
+  if (0 == _tutor)
+    return;
+
   if (_tutor->atEnd()) {
     emit sessionFinished(); return;
   }
+
   _encoder->send(_tutor->next());
 }
 
@@ -156,6 +170,8 @@ Application::onCharSend(QChar ch) {
 
 void
 Application::onCharReceived(QChar ch) {
+  _tutor->handle(ch);
+  _encoder->send(_tutor->next());
   emit charSend(Globals::mapProsign(ch));
 }
 

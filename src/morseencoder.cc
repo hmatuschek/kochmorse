@@ -96,6 +96,9 @@ MorseEncoder::send(const QString &text) {
 
 void
 MorseEncoder::send(QChar ch) {
+  if (QChar(0) == ch)
+    return;
+
   if (_parallel) {
     // If parallel put char in queue
     _queueLock.lock();

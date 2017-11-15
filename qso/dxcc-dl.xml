@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-dl">
+  <one-of>
+   <t w="50">dl</t>
+   <t w="10">do</t>
+   <t w="5">dn</t>
+  </one-of>
+ </rule>
+
+ <rule id="name-dl">
+  <one-of>
+   <t>ben</t> <t>jonas</t> <t>leon</t> <t>elias</t> <t>finn</t> <t>noah</t> <t>paul</t> <t>luis</t>
+   <t>lukas</t> <t>mia</t> <t>emma</t> <t>hannah</t> <t>sofia</t> <t>anna</t> <t>emilia</t>
+   <t>lina</t> <t>marie</t> <t>lena</t> <t>mila</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc DE-->
+ <rule id="city-dl">
+  <one-of>
+   <t>berlin</t> <t>hamburg</t> <t>munich</t> <t>colongne</t> <t>frankfurt</t>
+   <t>stuttgart</t> <t>duesseldorf</t> <t>dortmund</t> <t>essen</t> <t>leipzig</t>
+   <t>bremen</t> <t>dresden</t> <t>hannover</t> <t>ulm</t>
+  </one-of>
+ </rule>
+</rules>

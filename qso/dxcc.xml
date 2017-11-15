@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<rules>
+ <!-- Defines all implemented DXCC records -->
+ <rule id="dxcc">
+  <one-of>
+	 <t w="100">dl</t>
+	 <t w="50">g</t><t w="30">gm</t><t w="15">gw</t><t w="5">gi</t>
+	 <t w="100">f</t>
+	</one-of>
+ </rule>
+
+ <load file="dxcc-dl.xml"/>
+ <load file="dxcc-g.xml"/>
+ <load file="dxcc-gm.xml"/>
+ <load file="dxcc-gw.xml"/>
+ <load file="dxcc-gi.xml"/>
+ <load file="dxcc-f.xml"/>
+
+ <!-- Rule to assemble valid call suffixes -->
+ <rule id="call-suffix">
+  <one-of>
+   <i w="10"><any-letter/></i>
+   <i w="30"><any-letter/><any-letter/></i>
+   <i w="60"><any-letter/><any-letter/><any-letter/></i>
+  </one-of>
+  <one-of>
+   <t w="85"></t>
+   <t w="1">/1</t>
+   <t w="1">/2</t>
+   <t w="5">/p</t>
+   <t w="1">/m</t>
+   <t w="1">/mm</t>
+   <t w="1">/a</t>
+   <t w="5">/qrp</t>
+  </one-of>
+ </rule>
+
+ <rule id="call">
+  <if var="dxcc" matches="dl"><apply rule="call-prefix-dl"/></if>
+  <if var="dxcc" matches="g"><apply rule="call-prefix-g"/></if>
+  <if var="dxcc" matches="gm"><apply rule="call-prefix-gm"/></if>
+  <if var="dxcc" matches="gw"><apply rule="call-prefix-gw"/></if>
+  <if var="dxcc" matches="gi"><apply rule="call-prefix-gi"/></if>
+  <if var="dxcc" matches="f"><apply rule="call-prefix-f"/></if>
+  <any-number/>
+  <apply rule="call-suffix"/>
+ </rule>
+
+ <rule id="name">
+  <if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
+  <if var="dxcc" matches="g"><apply rule="name-g"/></if>
+  <if var="dxcc" matches="gm"><apply rule="name-gm"/></if>
+  <if var="dxcc" matches="gw"><apply rule="name-gw"/></if>
+  <if var="dxcc" matches="gi"><apply rule="name-gi"/></if>
+  <if var="dxcc" matches="f"><apply rule="name-f"/></if>
+ </rule>
+
+ <rule id="city">
+  <if var="dxcc" matches="dl"><apply rule="city-dl"/></if>
+  <if var="dxcc" matches="g"><apply rule="city-g"/></if>
+  <if var="dxcc" matches="gm"><apply rule="city-gm"/></if>
+  <if var="dxcc" matches="gw"><apply rule="city-gw"/></if>
+  <if var="dxcc" matches="gi"><apply rule="city-gi"/></if>
+  <if var="dxcc" matches="f"><apply rule="city-f"/></if>
+ </rule>
+
+
+
+</rules>

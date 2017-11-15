@@ -15,7 +15,7 @@ toWords(const QString text, QStringList &words) {
   if (0 == text.size()) { return; }
 
   words = text.split(QRegExp("\\b"));
-  if (words.last() != ".") { words.append("."); }
+  //if (words.last() != ".") { words.append("."); }
   return;
 }
 

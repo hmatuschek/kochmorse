@@ -2,6 +2,7 @@
 #include <cmath>
 #include <QFile>
 #include <time.h>
+#include <QDebug>
 
 
 /* ********************************************************************************************* *
@@ -14,6 +15,11 @@ Tutor::Tutor(QObject *parent)
 }
 
 Tutor::~Tutor() {
+  // pass...
+}
+
+void
+Tutor::handle(const QChar &ch) {
   // pass...
 }
 
@@ -124,6 +130,11 @@ KochTutor::reset()
   _nextline();
 }
 
+bool
+KochTutor::needsDecoder() const {
+  return false;
+}
+
 void
 KochTutor::_nextline() {
   // for each of the 5 lines
@@ -216,6 +227,11 @@ RandomTutor::reset()
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
   // sample a line
   _nextline();
+}
+
+bool
+RandomTutor::needsDecoder() const {
+  return false;
 }
 
 void
@@ -319,4 +335,150 @@ QSOTutor::atEnd() {
 void
 QSOTutor::reset() {
   _currentQSO.clear();
+}
+
+bool
+QSOTutor::needsDecoder() const {
+  return false;
+}
+
+
+/* ********************************************************************************************* *
+ * GenQSOTutor
+ * ********************************************************************************************* */
+GenQSOTutor::GenQSOTutor(QObject *parent)
+  : Tutor(parent), _generator(":/qso/qsogen.xml")
+{
+  // pass...
+}
+
+GenQSOTutor::~GenQSOTutor() {
+  // pass...
+}
+
+QChar
+GenQSOTutor::next() {
+  // If no QSO is selected yet
+  if (0 == _currentQSO.size()) {
+    // Sample next QSO
+    QTextStream buffer(&_currentQSO);
+    QHash<QString, QString> ctx;
+    _generator.generate(buffer, ctx);
+  }
+  // Get char from QSO
+  QChar c = _currentQSO[0];
+  // Update remaining text
+  _currentQSO = _currentQSO.remove(0, 1);
+  return c;
+}
+
+bool
+GenQSOTutor::atEnd() {
+  return 0 == _currentQSO.size();
+}
+
+void
+GenQSOTutor::reset() {
+  _currentQSO.clear();
+}
+
+bool
+GenQSOTutor::needsDecoder() const {
+  return false;
+}
+
+
+/* ********************************************************************************************* *
+ * TxTutor placeholder tutor
+ * ********************************************************************************************* */
+TXTutor::TXTutor(QObject *parent)
+  : Tutor(parent)
+{
+  // pass...
+}
+
+TXTutor::~TXTutor() {
+  // pass...
+}
+
+QChar
+TXTutor::next() {
+  return 0;
+}
+
+bool
+TXTutor::atEnd() {
+  return false;
+}
+
+void
+TXTutor::reset() {
+  // pass...
+}
+
+bool
+TXTutor::needsDecoder() const {
+  return true;
+}
+
+
+/* ********************************************************************************************* *
+ * ChatTutor
+ * ********************************************************************************************* */
+ChatTutor::ChatTutor(QObject *parent)
+  : Tutor(parent), _qhal(), _inputbuffer(), _outputbuffer()
+{
+  QString buffer, line;
+  QTextStream txt;
+  TextGen generator(":/qso/qsogen.xml");
+  QHash<QString, QString> ctx;
+
+  // Teach QHal:
+  for (int i=0; i<5000; i++) {
+    buffer.clear();
+    txt.setString(&buffer);
+    generator.generate(txt, ctx);
+    while (txt.readLineInto(&line)) {
+      _qhal.learn(line.simplified());
+    }
+  }
+}
+
+ChatTutor::~ChatTutor() {
+  // pass...
+}
+
+QChar
+ChatTutor::next() {
+  QChar c = 0;
+  if (_outputbuffer.size()) {
+    c = _outputbuffer.at(0);
+    _outputbuffer.remove(0,1);
+  }
+  return c;
+}
+
+bool
+ChatTutor::atEnd() {
+  return false;
+}
+
+void
+ChatTutor::reset() {
+  _outputbuffer.clear();
+  _inputbuffer.clear();
+}
+
+bool
+ChatTutor::needsDecoder() const {
+  return true;
+}
+
+void
+ChatTutor::handle(const QChar &ch) {
+  _inputbuffer.push_back(ch);
+  if (_inputbuffer.endsWith(" k ")) {
+    _outputbuffer.append(_qhal.reply(_inputbuffer.simplified()));
+    _inputbuffer.clear();
+  }
 }

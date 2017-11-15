@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<rules>
+ <load file="dxcc.xml"/>
+ <load file="rst.xml"/>
+
+ <var id="dxcc"><apply rule="dxcc"/></var>
+ <var id="mycall"><apply rule="call"/></var>
+ <var id="myname"><apply rule="name"/></var>
+ <var id="myqth"><apply rule="city"/></var>
+
+ <var id="rst-q"><apply rule="rst-q"/></var>
+ <var id="dxrst"><apply rule="rst"/></var>
+</rules>

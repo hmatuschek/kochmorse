@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<rules>
+ <load file="dxcc.xml"/>
+ <load file="rst.xml"/>
+
+ <rule id="end-call">
+  <one-of>
+	 <t w="90">k</t>
+	 <t w="10">+</t>
+	</one-of>
+	<stop/>
+ </rule>
+
+ <!-- sample qso quality -->
+ <var id="rst-q"><apply rule="rst-q"/></var>
+
+ <!-- Define call, name, qth, etc OP A -->
+ <var id="dxcc"><apply rule="dxcc"/></var>
+ <var id="CallA"><apply rule="call"/></var>
+ <var id="NameA"><apply rule="name"/></var>
+ <var id="CityA"><apply rule="city"/></var>
+ <var id="RSTA"><apply rule="rst"/></var>
+
+ <!-- Define call, name, qth, etc OP B -->
+ <var id="dxcc"><apply rule="dxcc"/></var>
+ <var id="CallB"><apply rule="call"/></var>
+ <var id="NameB"><apply rule="name"/></var>
+ <var id="CityB"><apply rule="city"/></var>
+ <var id="RSTB"><apply rule="rst"/></var>
+
+
+ <!-- First CQ by OP A -->
+ <t>cq cq cq de <ref var="CallA"/> <ref var="CallA"/> <ref var="CallA"/> k<stop/></t>
+
+ <!-- Reply by OP B to A -->
+ <one-of>
+  <t w="40"><ref var="CallA"/> de <ref var="CallB"/> <apply rule="end-call"/></t>
+	<t w="60"><ref var="CallB"/> <stop/></t>
+ </one-of>
+
+ <!-- Reply by OP A to B -->
+ <t><ref var="CallB"/> de <ref var="CallA"/> <opt p="0.7">tnx fer call </opt><bt/> </t>
+ <t>ur <ref var="RSTB"/> <ref var="RSTB"/> hr qth <ref var="CityA"/> <ref var="CityA"/> <bt/> </t>
+ <t>name <ref var="NameA"/> <ref var="NameA"/> <one-of><t>hw cpy?</t><t><bt/></t></one-of> </t>
+ <t><ref var="CallB"/> de <ref var="CallA"/> k<stop/></t>
+
+ <!-- Reply by OP B to A -->
+ <opt><ref var="CallA"/> de <ref var="CallB"/> <opt p="0.9">tnx fer rpt </opt><ref var="NameA"/> <bt/> </opt>
+ <t>ur <ref var="RSTA"/> <ref var="RSTA"/> <bt/> </t>
+ <t>name <ref var="NameB"/> <ref var="NameB"/> <bt/> qth <ref var="CityB"/> <ref var="CityB"/> <bt/> </t>
+ <t>hw cpy? <ref var="CallA"/> de <ref var="CallB"/> k<stop/></t>
+
+ <!-- Closing by OP A -->
+ <t><ref var="CallB"/> de <ref var="CallA"/> <opt p="0.9">tnx fer qso </opt><ref var="NameB"/> <bt/> </t>
+ <t>hp cu agn <bt/> </t>
+ <t>vy 73 to u es urs <bt/> <ref var="CallB"/> de <ref var="CallA"/><stop/></t>
+
+ <!-- Closing by OP A -->
+ <t>tnx es 73<opt> ese</opt><stop/></t>
+
+ <!-- final op B -->
+ <t>ee<stop/></t>
+</rules>

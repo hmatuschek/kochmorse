@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-f">
+  <t>f</t>
+ </rule>
+
+ <rule id="name-f">
+  <one-of>
+   <t>gabriel</t> <t>adam</t> <t>raphael</t> <t>louis</t> <t>arthur</t> <t>paul</t> <t>alexandre</t>
+   <t>mohamed</t> <t>joseph</t> <t>victor</t> <t>louise</t> <t>emma</t> <t>alice</t> <t>chloe</t>
+   <t>jeanne</t> <t>ines</t> <t>sarah</t> <t>lea</t> <t>charlotte</t> <t>anna</t>
+  </one-of>
+ </rule>
+
+ <rule id="city-f">
+  <one-of>
+   <t>paris</t> <t>marseille</t> <t>lyon</t> <t>toulouse</t> <t>nice</t> <t>nantes</t>
+   <t>strasbourg</t> <t>montpellier</t> <t>bordeaux</t> <t>lille</t> <t>rennes</t> <t>reims</t>
+   <t>le havre</t> <t>saint-etienne</t>
+  </one-of>
+ </rule>
+</rules>

@@ -5,6 +5,8 @@
 #include <QList>
 #include <QVector>
 #include <QSet>
+#include "qhal.hh"
+#include "textgen.hh"
 
 
 /** Abstract base class of all tutor classes. */
@@ -26,6 +28,10 @@ public:
   virtual bool atEnd() = 0;
   /** Reset the tutor (start a new session). */
   virtual void reset() = 0;
+  /** Returns true if the tutor requires a decoder (has user input). */
+  virtual bool needsDecoder() const = 0;
+  /** Handles the received char. */
+  virtual void handle(const QChar &ch);
 };
 
 
@@ -52,6 +58,8 @@ public:
   bool atEnd();
   /** Reset/restarts a session. */
   void reset();
+  /** Returns @c false. */
+  bool needsDecoder() const;
 
   /** Returns the current lesson. */
   int lesson() const;
@@ -117,6 +125,8 @@ public:
   bool atEnd();
   /** Reset/restarts a session. */
   void reset();
+  /** Returns @c false. */
+  bool needsDecoder() const;
 
   /** Returns the set of characters to practice. */
   QSet<QChar> chars() const;
@@ -159,10 +169,67 @@ public:
   QChar next();
   bool atEnd();
   void reset();
+  bool needsDecoder() const;
 
 protected:
   QVector<QString> _qso;
   QString _currentQSO;
+};
+
+
+/** A generated QSO tutor. */
+class GenQSOTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  explicit GenQSOTutor(QObject *parent=0);
+  virtual ~GenQSOTutor();
+
+  QChar next();
+  bool atEnd();
+  void reset();
+  bool needsDecoder() const;
+
+protected:
+  TextGen _generator;
+  QString _currentQSO;
+};
+
+
+class TXTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  explicit TXTutor(QObject *parent=0);
+  virtual ~TXTutor();
+
+  QChar next();
+  bool atEnd();
+  void reset();
+  bool needsDecoder() const;
+};
+
+
+class ChatTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  explicit ChatTutor(QObject *parent=0);
+  virtual ~ChatTutor();
+
+  QChar next();
+  bool atEnd();
+  void reset();
+  bool needsDecoder() const;
+  void handle(const QChar &ch);
+
+protected:
+  QHalModel _qhal;
+  QString _inputbuffer;
+  QString _outputbuffer;
 };
 
 #endif // __KOCHMORSE_TRAINER_HH__

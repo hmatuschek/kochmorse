@@ -7,5 +7,17 @@
         <file>text/about.html</file>
         <file>icons/kochmorse.svg</file>
         <file>qso/qso.txt</file>
+        <file>qso/qsogen.xml</file>
+        <file>qso/dxcc-dl.xml</file>
+        <file>qso/dxcc-f.xml</file>
+        <file>qso/dxcc-g.xml</file>
+        <file>qso/dxcc-gi.xml</file>
+        <file>qso/dxcc-gm.xml</file>
+        <file>qso/dxcc-gw.xml</file>
+        <file>qso/dxcc.xml</file>
+        <file>qso/rst.xml</file>
+        <file>qso/chat-init.xml</file>
+        <file>qso/chat-cq-response.xml</file>
+        <file>qso/chat-response.xml</file>
     </qresource>
 </RCC>
