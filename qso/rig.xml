@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="rig-type">
+  <one-of>
+	 <t w="90">qro</t>
+	 <t w="10">qrp</t>
+	</one-of>
+ </rule>
+
+ <rule id="rig">
+  <if var="rig-type" matches="qro">
+	 <one-of>
+	  <t>FT 450</t> <t>FT 991</t> <t>FT 891</t> <t>FT 857</t> <t>TS 590</t> <t>TS 2000</t>
+	  <t>TS 990</t> <t>TS 480</t> <t>IC 718</t> <t>IC 7300</t> <t>IC 7700</t> <t>K 2</t> <t>K 3</t>
+	 </one-of>
+	</if>
+	<if var="rig-type" matches="qrp">
+	 <one-of>
+	  <t>FT 817</t> <t>KX 2</t> <t>K 2</t> <t>Homemade</t> <t>BITX</t>
+   </one-of>
+	</if>
+ </rule>
+
+ <rule id="pwr">
+  <if var="rig-type" matches="qro">
+	 <one-of>
+    <t w="60">100W</t>
+		<t w="20">50W</t>
+		<t w="15">20W</t>
+		<t w="5">10W</t>
+	 </one-of>
+	</if>
+  <if var="rig-type" matches="qrp">
+	 <one-of>
+	  <t w="80">5W</t>
+	  <t w="15">2W</t>
+	  <t w="5">1W</t>
+	 </one-of>
+	</if>
+ </rule>
+
+ <rule id="ant">
+  <one-of>
+	 <t>dipole</t> <t>inv vee</t> <t>vertical</t> <t>G5RV</t> <t>windom</t> <t>long wire</t>
+	 <t>random wire</t> <t>beam</t>
+	</one-of>
+ </rule>
+</rules>

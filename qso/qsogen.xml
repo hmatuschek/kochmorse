@@ -3,6 +3,8 @@
 <rules>
  <load file="dxcc.xml"/>
  <load file="rst.xml"/>
+ <load file="rig.xml"/>
+ <load file="wx.xml"/>
 
  <rule id="end-call">
   <one-of>
@@ -21,6 +23,10 @@
  <var id="NameA"><apply rule="name"/></var>
  <var id="CityA"><apply rule="city"/></var>
  <var id="RSTA"><apply rule="rst"/></var>
+ <var id="rig-type"><apply rule="rig-type"/></var>
+ <var id="RigA"><apply rule="rig"/></var>
+ <var id="PwrA"><apply rule="pwr"/></var>
+ <var id="AntA"><apply rule="ant"/></var>
 
  <!-- Define call, name, qth, etc OP B -->
  <var id="dxcc"><apply rule="dxcc"/></var>
@@ -28,36 +34,60 @@
  <var id="NameB"><apply rule="name"/></var>
  <var id="CityB"><apply rule="city"/></var>
  <var id="RSTB"><apply rule="rst"/></var>
+ <var id="rig-type"><apply rule="rig-type"/></var>
+ <var id="RigB"><apply rule="rig"/></var>
+ <var id="PwrB"><apply rule="pwr"/></var>
+ <var id="AntB"><apply rule="ant"/></var>
 
 
  <!-- First CQ by OP A -->
  <t>cq cq cq de <ref var="CallA"/> <ref var="CallA"/> <ref var="CallA"/> k<stop/></t>
 
  <!-- Reply by OP B to A -->
- <one-of>
-  <t w="40"><ref var="CallA"/> de <ref var="CallB"/> <apply rule="end-call"/></t>
-	<t w="60"><ref var="CallB"/> <stop/></t>
- </one-of>
+ <t><ref var="CallA"/> de <ref var="CallB"/> <ref var="CallB"/> <apply rule="end-call"/></t>
 
  <!-- Reply by OP A to B -->
- <t><ref var="CallB"/> de <ref var="CallA"/> <opt p="0.7">tnx fer call </opt><bt/> </t>
- <t>ur <ref var="RSTB"/> <ref var="RSTB"/> hr qth <ref var="CityA"/> <ref var="CityA"/> <bt/> </t>
+ <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> </t>
+ <t><opt p="0.7">tnx fer call <bt/> </opt></t>
+ <t>ur <opt p="0.3">rst </opt><ref var="RSTB"/> <ref var="RSTB"/> </t>
+ <one-of>
+  <t>hr in <ref var="CityA"/> <ref var="CityA"/> <bt/> </t>
+	<t><bt/> qth <ref var="CityA"/> <ref var="CityA"/> <bt/> </t>
+ </one-of>
  <t>name <ref var="NameA"/> <ref var="NameA"/> <one-of><t>hw cpy?</t><t><bt/></t></one-of> </t>
  <t><ref var="CallB"/> de <ref var="CallA"/> k<stop/></t>
 
  <!-- Reply by OP B to A -->
- <opt><ref var="CallA"/> de <ref var="CallB"/> <opt p="0.9">tnx fer rpt </opt><ref var="NameA"/> <bt/> </opt>
- <t>ur <ref var="RSTA"/> <ref var="RSTA"/> <bt/> </t>
- <t>name <ref var="NameB"/> <ref var="NameB"/> <bt/> qth <ref var="CityB"/> <ref var="CityB"/> <bt/> </t>
- <t>hw cpy? <ref var="CallA"/> de <ref var="CallB"/> k<stop/></t>
+ <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> rrr <bt/> </t>
+ <t><opt p="0.9">tnx fer rpt <ref var="NameA"/> <bt/> </opt></t>
+ <t>ur <opt p="0.5">rst </opt><ref var="RSTA"/> <ref var="RSTA"/> <bt/> </t>
+ <t>name <ref var="NameB"/> <ref var="NameB"/> <bt/> </t>
+ <t>qth <ref var="CityB"/> <ref var="CityB"/> <bt/> </t>
+ <t><ref var="CallA"/> de <ref var="CallB"/> k<stop/></t>
+
+ <!-- Optional chat part about RIG and WX //-->
+ <one-of>
+  <i w="80">
+   <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> rrr <opt p="0.7">fb <ref var="NameB"/> </opt><bt/> </t>
+	 <t>rig <ref var="RigA"/> <ref var="RigA"/> <bt/> </t>
+	 <t>pwr <ref var="PwrA"/> <ref var="PwrA"/> es ant <ref var="AntA"/> <ref var="AntA"/> <bt/> </t>
+	 <t><ref var="CallB"/> de <ref var="CallA"/> k<stop/></t>
+
+   <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> rrr <opt p="0.7">fb <ref var="NameA"/> </opt><bt/> </t>
+   <t>rig <ref var="RigB"/> <ref var="RigB"/> <bt/> </t>
+   <t>pwr <ref var="PwrB"/> <ref var="PwrB"/> es ant <ref var="AntB"/> <ref var="AntB"/> <bt/> </t>
+   <t><ref var="CallA"/> de <ref var="CallB"/> k<stop/></t>
+	</i>
+	<i w="20"/>
+ </one-of>
 
  <!-- Closing by OP A -->
- <t><ref var="CallB"/> de <ref var="CallA"/> <opt p="0.9">tnx fer qso </opt><ref var="NameB"/> <bt/> </t>
+ <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt p="0.9">tnx fer qso </opt><ref var="NameB"/> <bt/> </t>
  <t>hp cu agn <bt/> </t>
  <t>vy 73 to u es urs <bt/> <ref var="CallB"/> de <ref var="CallA"/><stop/></t>
 
  <!-- Closing by OP A -->
- <t>tnx es 73<opt> ese</opt><stop/></t>
+ <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> tnx es 73 ese<stop/></t>
 
  <!-- final op B -->
  <t>ee<stop/></t>

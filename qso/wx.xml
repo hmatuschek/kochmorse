@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="wx">
+  <one-of>
+	 <t>clear</t>
+	 <t>sunny</t>
+	 <t>rain</t>
+	 <t>fog</t>
+	 <t>snow</t>
+	</one-of>
+ </rule>
+</rules>

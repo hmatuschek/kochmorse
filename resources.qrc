@@ -19,5 +19,7 @@
         <file>qso/chat-init.xml</file>
         <file>qso/chat-cq-response.xml</file>
         <file>qso/chat-response.xml</file>
+        <file>qso/rig.xml</file>
+        <file>qso/wx.xml</file>
     </qresource>
 </RCC>

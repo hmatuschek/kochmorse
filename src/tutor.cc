@@ -32,7 +32,7 @@ inline QVector<QChar> _initKochLessons() {
   chars << 'k' << 'm' << 'r' << 's' << 'u' << 'a' << 'p' << 't' << 'l' << 'o' << 'w'
         << 'i' << '.' << 'n' << 'j' << 'e' << 'f' << '0' << 'y' << ',' << 'v' << 'g'
         << '5' << '/' << 'q' << '9' << 'z' << 'h' << '3' << '8' << 'b' << '?' << '4'
-        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=' << QChar(0x2403) << '+';
+        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=' << '+' << QChar(0x2403) ;
   return chars;
 }
 // The vector of all chars ordered by lesson
