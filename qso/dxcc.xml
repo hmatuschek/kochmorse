@@ -4,18 +4,28 @@
  <!-- Defines all implemented DXCC records -->
  <rule id="dxcc">
   <one-of>
-	 <t w="100">dl</t>
-	 <t w="50">g</t><t w="30">gm</t><t w="15">gw</t><t w="5">gi</t>
+	 <t w="100">ct</t>
+	 <t w="80">ea</t><t w="10">ea8</t><t w="10">ea9</t>
 	 <t w="100">f</t>
+	 <t w="100">ie</t>
+	 <t w="50">g</t><t w="30">gm</t><t w="15">gw</t><t w="5">gi</t>
+	 <t w="100">dl</t>
+	 <t w="90">i</t> <t w="10">is0</t>
 	</one-of>
  </rule>
 
- <load file="dxcc-dl.xml"/>
+ <load file="dxcc-ct.xml"/>
+ <load file="dxcc-ea.xml"/>
+ <load file="dxcc-f.xml"/>
+ <load file="dxcc-ie.xml"/>
  <load file="dxcc-g.xml"/>
  <load file="dxcc-gm.xml"/>
  <load file="dxcc-gw.xml"/>
  <load file="dxcc-gi.xml"/>
- <load file="dxcc-f.xml"/>
+ <load file="dxcc-dl.xml"/>
+ <load file="dxcc-i.xml"/>
+ <load file="dxcc-is0.xml"/>
+
 
  <!-- Rule to assemble valid call suffixes -->
  <rule id="call-suffix">
@@ -24,45 +34,53 @@
    <i w="30"><any-letter/><any-letter/></i>
    <i w="60"><any-letter/><any-letter/><any-letter/></i>
   </one-of>
-  <one-of>
-   <t w="85"></t>
-   <t w="1">/1</t>
-   <t w="1">/2</t>
-   <t w="5">/p</t>
-   <t w="1">/m</t>
-   <t w="1">/mm</t>
-   <t w="1">/a</t>
-   <t w="5">/qrp</t>
-  </one-of>
  </rule>
 
  <rule id="call">
-  <if var="dxcc" matches="dl"><apply rule="call-prefix-dl"/></if>
+  <if var="dxcc" matches="ct"><apply rule="call-prefix-ct"/></if>
+	<if var="dxcc" matches="ea"><apply rule="call-prefix-ea"/></if>
+	<if var="dxcc" matches="ea8"><apply rule="call-prefix-ea8"/></if>
+	<if var="dxcc" matches="ea9"><apply rule="call-prefix-ea9"/></if>
+	<if var="dxcc" matches="f"><apply rule="call-prefix-f"/></if>
+	<if var="dxcc" matches="ie"><apply rule="call-prefix-ie"/></if>
   <if var="dxcc" matches="g"><apply rule="call-prefix-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="call-prefix-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="call-prefix-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="call-prefix-gi"/></if>
-  <if var="dxcc" matches="f"><apply rule="call-prefix-f"/></if>
-  <any-number/>
+	<if var="dxcc" matches="dl"><apply rule="call-prefix-dl"/></if>
+	<if var="dxcc" matches="i"><apply rule="call-prefix-i"/></if>
+	<if var="dxcc" matches="is0"><apply rule="call-prefix-is0"/></if>
   <apply rule="call-suffix"/>
  </rule>
 
  <rule id="name">
-  <if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
+  <if var="dxcc" matches="ct"><apply rule="name-ct"/></if>
+	<if var="dxcc" matches="ea"><apply rule="name-ea"/></if>
+	<if var="dxcc" matches="f"><apply rule="name-f"/></if>
+	<if var="dxcc" matches="ie"><apply rule="name-ie"/></if>
   <if var="dxcc" matches="g"><apply rule="name-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="name-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="name-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="name-gi"/></if>
-  <if var="dxcc" matches="f"><apply rule="name-f"/></if>
+	<if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
+	<if var="dxcc" matches="i"><apply rule="name-i"/></if>
+	<if var="dxcc" matches="is0"><apply rule="name-is0"/></if>
  </rule>
 
  <rule id="city">
-  <if var="dxcc" matches="dl"><apply rule="city-dl"/></if>
+  <if var="dxcc" matches="ct"><apply rule="city-ct"/></if>
+	<if var="dxcc" matches="ea"><apply rule="city-ea"/></if>
+	<if var="dxcc" matches="ea8"><apply rule="city-ea8"/></if>
+	<if var="dxcc" matches="ea9"><apply rule="city-ea9"/></if>
+	<if var="dxcc" matches="f"><apply rule="city-f"/></if>
+	<if var="dxcc" matches="ie"><apply rule="city-ie"/></if>
   <if var="dxcc" matches="g"><apply rule="city-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="city-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="city-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="city-gi"/></if>
-  <if var="dxcc" matches="f"><apply rule="city-f"/></if>
+	<if var="dxcc" matches="dl"><apply rule="city-dl"/></if>
+	<if var="dxcc" matches="i"><apply rule="city-i"/></if>
+	<if var="dxcc" matches="is0"><apply rule="city-is0"/></if>
  </rule>
 
 

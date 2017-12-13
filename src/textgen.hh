@@ -102,6 +102,22 @@ protected:
 };
 
 
+class TextGenRepeatRule: public TextGenRule
+{
+  Q_OBJECT
+
+public:
+  TextGenRepeatRule(size_t nmin, size_t nmax, TextGenRule *rule, QObject *parent=0);
+
+  virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
+
+protected:
+  size_t _nmin;
+  size_t _nmax;
+  TextGenRule *_rule;
+};
+
+
 /** A variable definition "rule".
  * This rule does not generate any text itself but applies the associated sub-rule and assigns its
  * result to a variable. */
@@ -225,6 +241,8 @@ protected:
   void parseOneOfItem(QXmlStreamReader &reader, TextGenOneOfRule *rule);
   /** Parses a "one-of" rule text-item. */
   void parseOneOfText(QXmlStreamReader &reader, TextGenOneOfRule *rule);
+  /** Parses a "rep" rule item. */
+  void parseRep(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "any-letter" rule. */
   void parseAnyLetter(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "any-number" rule. */

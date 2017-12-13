@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-i">
+  <t>i</t>
+	<any-number/>
+ </rule>
+
+ <rule id="name-i">
+  <one-of>
+	 <t>andrea</t> <t>lorenzo</t> <t>simone</t> <t>tommaso</t> <t>mattia</t> <t>paolo</t>
+	 <t>samuele</t> <t>francesco</t> <t>edoardo</t> <t>federico</t> <t>alessia</t>
+	 <t>alice</t> <t>giulia</t> <t>gaia</t> <t>ilaria</t> <t>allegra</t> <t>claudia</t>
+	 <t>rebecca</t> <t>beatrice</t> <t>ginevra</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc I weighted by population -->
+ <rule id="city-i">
+  <one-of>
+	 <t w="2873">rome</t> <t w="1351">milan</t> <t w="970">naples</t> <t w="886">turin</t>
+	 <t w="673">palermo</t> <t w="583">genoa</t> <t w="388">bologna</t> <t w="382">florence</t>
+	 <t w="324">bari</t> <t w="313">catania</t> <t w="261">venice</t> <t w="257">verona</t>
+  </one-of>
+ </rule>
+</rules>

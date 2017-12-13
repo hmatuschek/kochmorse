@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-ie">
+  <one-of>
+	 <t w="90">ie</t> <t w="ej"/>
+	</one-of>
+	<any-number/>
+ </rule>
+
+ <rule id="name-ie">
+  <one-of>
+	 <t>john</t> <t>michael</t> <t>patrick</t> <t>william</t> <t>thomas</t> <t>james</t> <t>joseph</t>
+	 <t>daniel</t> <t>peter</t> <t>andrew</t>
+	 <t>mary</t> <t>magaret</t> <t>bridget</t> <t>elizabeth</t> <t>anne</t> <t>catherine</t>
+	 <t>ellen</t> <t>annie</t> <t>maria</t> <t>kate</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc I weighted by population -->
+ <rule id="city-ie">
+  <one-of>
+	 <t w="1173">Dublin</t> <t w="208">cork</t> <t w="94">limerick</t> <t w="79">galway</t>
+	 <t w="53">waterford</t> <t w="40">drogheda</t> <t w="39">swords</t> <t w="39">dundalk</t>
+	 <t w="32">bray</t> <t w="30">navan</t> <t w="26">kilkenny</t>
+  </one-of>
+ </rule>
+</rules>

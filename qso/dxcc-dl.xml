@@ -3,17 +3,22 @@
 <rules>
  <rule id="call-prefix-dl">
   <one-of>
+	 <t w="30">da</t>
+	 <t w="40">df</t>
    <t w="50">dl</t>
-   <t w="10">do</t>
-   <t w="5">dn</t>
+	 <t w="30">dm</t>
+	 <t w="5">dn</t>
+   <t w="20">do</t>
   </one-of>
+	<any-number/>
  </rule>
 
  <rule id="name-dl">
   <one-of>
-   <t>ben</t> <t>jonas</t> <t>leon</t> <t>elias</t> <t>finn</t> <t>noah</t> <t>paul</t> <t>luis</t>
-   <t>lukas</t> <t>mia</t> <t>emma</t> <t>hannah</t> <t>sofia</t> <t>anna</t> <t>emilia</t>
-   <t>lina</t> <t>marie</t> <t>lena</t> <t>mila</t>
+   <t>peter</t> <t>michael</t> <t>thomas</t> <t>andreas</t> <t>wolfgang</t> <t>klaus</t>
+	 <t>paul</t> <t>juergen</t> <t>guenther</t>
+	 <t>ursula</t> <t>karin</t> <t>helga</t> <t>sabine</t> <t>ingrid</t> <t>renate</t> <t>monika</t>
+	 <t>susanne</t> <t>gisela</t> <t>petra</t>
   </one-of>
  </rule>
 

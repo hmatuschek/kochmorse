@@ -37,7 +37,11 @@ Application::Application(int &argc, char *argv[])
     break;
 
   case Settings::TUTOR_QSO:
-    _tutor = new GenQSOTutor(this);
+    _tutor = new GenTextTutor(":/qso/qsogen.xml", this);
+    break;
+
+  case Settings::TUTOR_QCODE:
+    _tutor = new GenTextTutor(":/qso/qcodes.xml", this);
     break;
 
   case Settings::TUTOR_TX:
@@ -138,7 +142,11 @@ Application::applySettings()
     break;
 
   case Settings::TUTOR_QSO:
-    _tutor = new GenQSOTutor(this);
+    _tutor = new GenTextTutor(":/qso/qsogen.xml",this);
+    break;
+
+  case Settings::TUTOR_QCODE:
+    _tutor = new GenTextTutor(":/qso/qcodes.xml",this);
     break;
 
   case Settings::TUTOR_TX:

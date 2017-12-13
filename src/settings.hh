@@ -24,8 +24,9 @@ public:
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
     TUTOR_QSO = 2,    ///< QSO Tutor.
-    TUTOR_TX  = 3,    ///< The TX tutor.
-    TUTOR_CHAT  = 4   ///< The Chat tutor.
+    TUTOR_QCODE = 3,  ///< Q-code tutor.
+    TUTOR_TX  = 4,    ///< The TX tutor.
+    TUTOR_CHAT  = 5   ///< The Chat tutor.
   } Tutor;
 
 public:
@@ -237,6 +238,7 @@ protected:
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
   QSOTutorSettingsView *_qsoSettings;
+  QSOTutorSettingsView *_qcodeSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;
 };

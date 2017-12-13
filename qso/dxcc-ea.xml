@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-ea">
+	<one-of>
+	 <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+	</one-of>
+	<one-of>
+	 <t>0</t><t>1</t><t>2</t><t>3</t><t>4</t><t>5</t><t>6</t><t>7</t>
+	</one-of>
+ </rule>
+
+ <rule id="call-prefix-ea8">
+  <one-of>
+   <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+  </one-of>
+  <t>8</t>
+ </rule>
+
+ <rule id="call-prefix-ea9">
+  <one-of>
+   <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+  </one-of>
+  <t>9</t>
+ </rule>
+
+ <rule id="name-ea">
+  <one-of>
+   <t>jose</t> <t>antonio</t> <t>juan</t> <t>manuel</t> <t>francisco</t> <t>luis</t> <t>javier</t>
+	 <t>miguel</t> <t>angel</t> <t>carlos</t> <t>maria</t> <t>carmen</t> <t>ana</t> <t>isabel</t>
+	 <t>dolores</t> <t>pilar</t> <t>josefa</t> <t>teresa</t> <t>rosa</t> <t>cristina</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc EA-->
+ <rule id="city-ea">
+  <one-of>
+	 <t>madrid</t> <t>barcelona</t> <t>valencia</t> <t>seville</t> <t>bilbao</t> <t>malaga</t>
+	 <t>las palmas</t> <t>zaragoza</t> <t>granada</t> <t>palma</t> <t>vigo</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc EA8-->
+ <rule id="city-ea8">
+  <one-of>
+	 <t>madrid</t> <t>barcelona</t> <t>valencia</t> <t>seville</t> <t>bilbao</t> <t>malaga</t>
+	 <t>las palmas</t> <t>zaragoza</t> <t>granada</t> <t>palma</t> <t>vigo</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc EA9-->
+ <rule id="city-ea9">
+  <one-of>
+   <t>madrid</t> <t>barcelona</t> <t>valencia</t> <t>seville</t> <t>bilbao</t> <t>malaga</t>
+   <t>las palmas</t> <t>zaragoza</t> <t>granada</t> <t>palma</t> <t>vigo</t>
+  </one-of>
+ </rule>
+</rules>

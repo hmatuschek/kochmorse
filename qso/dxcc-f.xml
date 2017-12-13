@@ -3,6 +3,7 @@
 <rules>
  <rule id="call-prefix-f">
   <t>f</t>
+	<any-number/>
  </rule>
 
  <rule id="name-f">
