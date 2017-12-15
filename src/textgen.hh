@@ -253,6 +253,8 @@ protected:
   void parseBK(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "AR" prosign rule. */
   void parseAR(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
+  /** Parses a "SK" prosign rule. */
+  void parseSK(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "pause" rule. */
   void parsePause(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "stop" rule. */

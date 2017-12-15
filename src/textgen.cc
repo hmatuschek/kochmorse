@@ -325,6 +325,8 @@ TextGen::parseRules(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseBK(reader, rules);
       } else if ("ar" == reader.name()) {
         this->parseAR(reader, rules);
+      } else if ("sk" == reader.name()) {
+        this->parseSK(reader, rules);
       } else if ("t" == reader.name()) {
         this->parseText(reader, rules);
       } else if ("p" == reader.name()) {
@@ -584,6 +586,22 @@ TextGen::parseAR(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
 }
 
 void
+TextGen::parseSK(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
+  rules.append(new TextGenTextRule(QChar(0x2403), this));
+  // Verify that element is empty:
+  while (! reader.atEnd()) {
+    reader.readNext();
+    if (reader.isEndElement())
+      return;
+    else if (reader.isStartElement()) {
+      // Handle error
+      reader.raiseError(tr("Unexpected element '%2'").arg(reader.name().toString()));
+      return;
+    }
+  }
+}
+
+void
 TextGen::parsePause(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
   rules.append(new TextGenTextRule(" ", this));
   while (! reader.atEnd()) {
@@ -636,6 +654,8 @@ TextGen::parseText(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseBK(reader, rules);
       } else if ("ar" == reader.name()) {
         this->parseAR(reader, rules);
+      } else if ("sk" == reader.name()) {
+        this->parseSK(reader, rules);
       } else if ("p" == reader.name()) {
         this->parsePause(reader, rules);
       } else if ("stop" == reader.name()) {

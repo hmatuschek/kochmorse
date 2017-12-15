@@ -24,14 +24,11 @@
  <load file="dxcc-gi.xml"/>
  <load file="dxcc-dl.xml"/>
  <load file="dxcc-i.xml"/>
- <load file="dxcc-is0.xml"/>
-
 
  <!-- Rule to assemble valid call suffixes -->
  <rule id="call-suffix">
   <one-of>
-   <i w="10"><any-letter/></i>
-   <i w="30"><any-letter/><any-letter/></i>
+   <i w="40"><any-letter/><any-letter/></i>
    <i w="60"><any-letter/><any-letter/><any-letter/></i>
   </one-of>
  </rule>
@@ -64,7 +61,7 @@
   <if var="dxcc" matches="gi"><apply rule="name-gi"/></if>
 	<if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
 	<if var="dxcc" matches="i"><apply rule="name-i"/></if>
-	<if var="dxcc" matches="is0"><apply rule="name-is0"/></if>
+	<if var="dxcc" matches="is0"><apply rule="name-i"/></if>
  </rule>
 
  <rule id="city">

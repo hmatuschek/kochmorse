@@ -6,6 +6,10 @@
 	<any-number/>
  </rule>
 
+ <rule id="call-prefix-is0">
+  <t>is0</t>
+ </rule>
+
  <rule id="name-i">
   <one-of>
 	 <t>andrea</t> <t>lorenzo</t> <t>simone</t> <t>tommaso</t> <t>mattia</t> <t>paolo</t>
@@ -21,6 +25,18 @@
 	 <t w="2873">rome</t> <t w="1351">milan</t> <t w="970">naples</t> <t w="886">turin</t>
 	 <t w="673">palermo</t> <t w="583">genoa</t> <t w="388">bologna</t> <t w="382">florence</t>
 	 <t w="324">bari</t> <t w="313">catania</t> <t w="261">venice</t> <t w="257">verona</t>
+	 <t w="222">trieste</t> <t w="213">padua</t> <t w="212">taranto</t> <t w="190">brescia</t>
+	 <t w="174">modena</t> <t w="163">prato</t> <t w="167">parma</t> <t w="164">leghorn</t>
+	 <t w="156">foggia</t> <t w="152">perugia</t> <t w="143">salerno</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc IS0 weighted by population. -->
+ <rule id="city-is0">
+  <one-of>
+   <t w="150">cagliari</t> <t w="125">sassari</t> <t w="69">quartu</t> <t w="55">olbia</t>
+   <t w="40">alghero</t> <t w="36">nuoro</t> <t w="32">oristano</t> <t w="29">selargius</t>
+   <t w="28">carbonia</t> <t w="27">iglesias</t>
   </one-of>
  </rule>
 </rules>

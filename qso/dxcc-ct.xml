@@ -3,11 +3,11 @@
 <rules>
  <rule id="call-prefix-ct">
   <one-of>
-	 <t w="50">ct</t>
-	 <t w="40">cs</t>
-	 <t w="30">cr</t>
-	 <t w="10">cq</t>
-	 <t w="10">xx</t>
+	 <t w="70">ct</t>
+	 <t w="10">cs</t>
+	 <t w="10">cr</t>
+	 <t w="5">cq</t>
+	 <t w="5">xx</t>
 	</one-of>
 	<any-number/>
  </rule>

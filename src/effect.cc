@@ -35,7 +35,11 @@ NoiseEffect::gaussRNG(float &a, float &b) {
 void
 NoiseEffect::process(const QByteArray &data) {
   // If disabled -> skip
-  if (! _enabled) { _sink->process(data); return; }
+  if (! _enabled) {
+    _sink->process(data);
+    return;
+  }
+
   // Number of frames
   size_t n = (data.size()/2);
 
