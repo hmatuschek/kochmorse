@@ -121,6 +121,34 @@ TextGenOneOfRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
 
 
 /* ********************************************************************************************* *
+ * Implementation of TextGenRepeatRule
+ * ********************************************************************************************* */
+TextGenRepeatRule::TextGenRepeatRule(size_t nmin, size_t nmax, TextGenRule *rule, QObject *parent)
+  : TextGenRule(parent), _nmin(nmin), _nmax(nmax), _rule(rule)
+{
+  if (_rule)
+    _rule->setParent(this);
+}
+
+void
+TextGenRepeatRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
+  if (0 == _rule)
+    return;
+
+  // Pick a random number in [min, max]
+  // Seed with a real random value, if available
+  std::random_device r;
+  // Choose a random mean between 1 and 6
+  std::default_random_engine entr(r());
+  std::uniform_int_distribution<int> rnd(_nmin, _nmax);
+  size_t n = rnd(entr);
+  for (size_t i=0; i<n; i++) {
+    _rule->generate(buffer, ctx);
+  }
+}
+
+
+/* ********************************************************************************************* *
  * Implementation of TextGenVariable
  * ********************************************************************************************* */
 TextGenVariable::TextGenVariable(const QString &id, TextGenRule *rule, QObject *parent)
@@ -285,6 +313,8 @@ TextGen::parseRules(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseOptRule(reader, rules);
       } else if ("one-of" == reader.name()) {
         this->parseOneOf(reader, rules);
+      } else if ("rep" == reader.name()) {
+        this->parseRep(reader, rules);
       } else if ("any-letter" == reader.name()) {
         this->parseAnyLetter(reader, rules);
       } else if ("any-number" == reader.name()) {
@@ -295,6 +325,8 @@ TextGen::parseRules(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseBK(reader, rules);
       } else if ("ar" == reader.name()) {
         this->parseAR(reader, rules);
+      } else if ("sk" == reader.name()) {
+        this->parseSK(reader, rules);
       } else if ("t" == reader.name()) {
         this->parseText(reader, rules);
       } else if ("p" == reader.name()) {
@@ -456,6 +488,26 @@ TextGen::parseOneOfText(QXmlStreamReader &reader, TextGenOneOfRule *rule) {
 }
 
 void
+TextGen::parseRep(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
+  // Get min
+  if (! reader.attributes().hasAttribute("min")) {
+    reader.raiseError(tr("<rep> has no 'min' attribute"));
+    return;
+  }
+  size_t min = reader.attributes().value("min").toUInt();
+  size_t max = min;
+  if (reader.attributes().hasAttribute("max"))
+    max = reader.attributes().value("max").toUInt();
+
+  // Parse sub rules
+  QList<TextGenRule *> subrules;
+  this->parseRules(reader, subrules);
+
+  // Append condition
+  rules.append(new TextGenRepeatRule(min, max, new TextGenListRule(subrules, this), this));
+}
+
+void
 TextGen::parseAnyNumber(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
   rules.append(new TextGenAnyNumberRule(this));
   while (! reader.atEnd()) {
@@ -534,6 +586,22 @@ TextGen::parseAR(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
 }
 
 void
+TextGen::parseSK(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
+  rules.append(new TextGenTextRule(QChar(0x2403), this));
+  // Verify that element is empty:
+  while (! reader.atEnd()) {
+    reader.readNext();
+    if (reader.isEndElement())
+      return;
+    else if (reader.isStartElement()) {
+      // Handle error
+      reader.raiseError(tr("Unexpected element '%2'").arg(reader.name().toString()));
+      return;
+    }
+  }
+}
+
+void
 TextGen::parsePause(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
   rules.append(new TextGenTextRule(" ", this));
   while (! reader.atEnd()) {
@@ -586,6 +654,8 @@ TextGen::parseText(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseBK(reader, rules);
       } else if ("ar" == reader.name()) {
         this->parseAR(reader, rules);
+      } else if ("sk" == reader.name()) {
+        this->parseSK(reader, rules);
       } else if ("p" == reader.name()) {
         this->parsePause(reader, rules);
       } else if ("stop" == reader.name()) {

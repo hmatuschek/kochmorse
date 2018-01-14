@@ -40,6 +40,8 @@ protected:
   bool _isDot() const;
   /** Returns true if the sample buffer contains a "dash". */
   bool _isDash() const;
+  /** Returns true if the sample buffer contains an invalid symbol. */
+  bool _isInvalid() const;
   /** Returns true if the sample buffer contains a "pause". */
   bool _isPause() const;
 
@@ -57,10 +59,10 @@ protected:
   int16_t *_buffer;
   /** Holds the detection threshold  in RMS. */
   float _threshold;
-  /** The number of signal detections (1/4 dit-length) in the delay line. */
-  size_t _delaySize;
-  /** The delay line. */
-  bool _delayLine[16];
+  /** The number of continous signal detections (1/4 dit-length). */
+  size_t _highCount;
+  /** The number of continous silence detections (1/4 dit-length). */
+  size_t _lowCount;
   /** The number inter-char pauses received. */
   size_t _pauseCount;
   /** The decoded symbols ('-','.',' '). */

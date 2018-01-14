@@ -3,6 +3,7 @@
 <rules>
  <rule id="call-prefix-f">
   <t>f</t>
+	<any-number/>
  </rule>
 
  <rule id="name-f">
@@ -17,7 +18,7 @@
   <one-of>
    <t>paris</t> <t>marseille</t> <t>lyon</t> <t>toulouse</t> <t>nice</t> <t>nantes</t>
    <t>strasbourg</t> <t>montpellier</t> <t>bordeaux</t> <t>lille</t> <t>rennes</t> <t>reims</t>
-   <t>le havre</t> <t>saint-etienne</t>
+   <t>le havre</t> <t>saint etienne</t>
   </one-of>
  </rule>
 </rules>

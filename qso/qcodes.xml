@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="qcode">
+  <one-of>
+	 <t>qrg</t> <t>qrl</t> <t>qrm</t> <t>qrn</t> <t>qro</t> <t>qrp</t> <t>qrq</t> <t>qrs</t> <t>qrt</t>
+	 <t>qru</t> <t>qrv</t> <t>qrx</t> <t>qrz</t> <t>qsk</t> <t>qsl</t> <t>qsx</t> <t>qsy</t> <t>qth</t>
+	</one-of>
+ </rule>
+
+ <t>vvv<stop/></t>
+ <rep min="5">
+  <rep min="10">
+	 <apply rule="qcode"/> <t> </t>
+	</rep>
+	<bt/><stop/>
+ </rep>
+</rules>

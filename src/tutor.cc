@@ -32,7 +32,7 @@ inline QVector<QChar> _initKochLessons() {
   chars << 'k' << 'm' << 'r' << 's' << 'u' << 'a' << 'p' << 't' << 'l' << 'o' << 'w'
         << 'i' << '.' << 'n' << 'j' << 'e' << 'f' << '0' << 'y' << ',' << 'v' << 'g'
         << '5' << '/' << 'q' << '9' << 'z' << 'h' << '3' << '8' << 'b' << '?' << '4'
-        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=' << QChar(0x2403) << '+';
+        << '2' << '7' << 'c' << '1' << 'd' << '6' << 'x' << '=' << '+' << QChar(0x2403) ;
   return chars;
 }
 // The vector of all chars ordered by lesson
@@ -346,44 +346,44 @@ QSOTutor::needsDecoder() const {
 /* ********************************************************************************************* *
  * GenQSOTutor
  * ********************************************************************************************* */
-GenQSOTutor::GenQSOTutor(QObject *parent)
-  : Tutor(parent), _generator(":/qso/qsogen.xml")
+GenTextTutor::GenTextTutor(const QString &filename, QObject *parent)
+  : Tutor(parent), _generator(filename)
 {
   // pass...
 }
 
-GenQSOTutor::~GenQSOTutor() {
+GenTextTutor::~GenTextTutor() {
   // pass...
 }
 
 QChar
-GenQSOTutor::next() {
-  // If no QSO is selected yet
-  if (0 == _currentQSO.size()) {
-    // Sample next QSO
-    QTextStream buffer(&_currentQSO);
+GenTextTutor::next() {
+  // If no text is selected yet
+  if (0 == _currentText.size()) {
+    // Sample next text
+    QTextStream buffer(&_currentText);
     QHash<QString, QString> ctx;
     _generator.generate(buffer, ctx);
   }
   // Get char from QSO
-  QChar c = _currentQSO[0];
+  QChar c = _currentText[0];
   // Update remaining text
-  _currentQSO = _currentQSO.remove(0, 1);
+  _currentText = _currentText.remove(0, 1);
   return c;
 }
 
 bool
-GenQSOTutor::atEnd() {
-  return 0 == _currentQSO.size();
+GenTextTutor::atEnd() {
+  return 0 == _currentText.size();
 }
 
 void
-GenQSOTutor::reset() {
-  _currentQSO.clear();
+GenTextTutor::reset() {
+  _currentText.clear();
 }
 
 bool
-GenQSOTutor::needsDecoder() const {
+GenTextTutor::needsDecoder() const {
   return false;
 }
 

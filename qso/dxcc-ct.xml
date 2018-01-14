@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-ct">
+  <one-of>
+	 <t w="70">ct</t>
+	 <t w="10">cs</t>
+	 <t w="10">cr</t>
+	 <t w="5">cq</t>
+	 <t w="5">xx</t>
+	</one-of>
+	<any-number/>
+ </rule>
+
+ <rule id="name-ct">
+  <one-of>
+	 <t>joao</t> <t>pedro</t> <t>andre</t> <t>tiago</t> <t>luis</t> <t>nuno</t> <t>bruno</t>
+	 <t>miguel</t> <t>rui</t> <t>diogo</t>
+	 <t>ana</t> <t>joana</t> <t>rita</t> <t>ines</t> <t>catarina</t> <t>marta</t> <t>sara</t>
+	 <t>maria</t> <t>raquel</t> <t>madalena</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc CT weighted by population -->
+ <rule id="city-ct">
+  <one-of>
+	 <t w="547">lisbon</t> <t w="237">porto</t> <t w="186">gaia</t> <t w="175">amadora</t>
+	 <t w="143">braga</t> <t w="143">coimbra</t> <t w="111">funchal</t> <t w="101">almada</t>
+	 <t w="90">setubal</t> <t w="81">agualva</t>
+  </one-of>
+ </rule>
+</rules>

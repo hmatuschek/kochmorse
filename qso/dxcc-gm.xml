@@ -7,6 +7,7 @@
    <t w="40">mm</t>
    <t w="10">gs</t>
   </one-of>
+	<any-number/>
  </rule>
 
  <rule id="name-gm">

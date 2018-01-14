@@ -178,13 +178,13 @@ protected:
 
 
 /** A generated QSO tutor. */
-class GenQSOTutor: public Tutor
+class GenTextTutor: public Tutor
 {
   Q_OBJECT
 
 public:
-  explicit GenQSOTutor(QObject *parent=0);
-  virtual ~GenQSOTutor();
+  explicit GenTextTutor(const QString &filename, QObject *parent=0);
+  virtual ~GenTextTutor();
 
   QChar next();
   bool atEnd();
@@ -193,7 +193,7 @@ public:
 
 protected:
   TextGen _generator;
-  QString _currentQSO;
+  QString _currentText;
 };
 
 

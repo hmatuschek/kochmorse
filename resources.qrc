@@ -19,5 +19,12 @@
         <file>qso/chat-init.xml</file>
         <file>qso/chat-cq-response.xml</file>
         <file>qso/chat-response.xml</file>
+        <file>qso/rig.xml</file>
+        <file>qso/wx.xml</file>
+        <file>qso/dxcc-ea.xml</file>
+        <file>qso/dxcc-i.xml</file>
+        <file>qso/dxcc-ct.xml</file>
+        <file>qso/dxcc-ie.xml</file>
+        <file>qso/qcodes.xml</file>
     </qresource>
 </RCC>
