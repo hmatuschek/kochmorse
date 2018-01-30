@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-oz">
+  <t>oz</t>
+	<any-number/>
+ </rule>
+
+ <rule id="name-oz">
+  <one-of>
+	 <t>mathias</t> <t>oliver</t> <t>tobias</t> <t>mads</t> <t>simon</t> <t>frederik</t>
+	 <t>lukas</t> <t>kristoffer</t> <t>daniel</t> <t>sebastian</t>
+	 <t>emma</t> <t>ida</t> <t>anna</t> <t>katrine</t> <t>sofie</t> <t>julie</t> <t>mathilde</t>
+	 <t>mille</t> <t>emilie</t> <t>line</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc OZ weighted by their population -->
+ <rule id="city-oz">
+  <one-of>
+   <t w="1295">copenhagen</t> <t w="269">aarhus</t> <t w="176">odense</t> <t w="113">aalborg</t>
+	 <t w="72">esbjerg</t> <t w="62">randers</t> <t w="60">kolding</t> <t w="58">horsens</t>
+	 <t w="55">vejle</t> <t w="50">roskilde</t> <t w="49">herning</t> <t w="47">horsholm</t>
+	 <t w="47">helsingor</t> <t w="44">silkeborg</t> <t w="43">naestved</t> <t w="40">fredericia</t>
+	 <t w="40">viborg</t> <t w="36">koge</t> <t w="35">holstebro</t> <t w="34">taastrup</t>
+  </one-of>
+ </rule>
+</rules>
