@@ -9,5 +9,13 @@
 	 <t>fog</t>
 	 <t>snow</t>
 	</one-of>
+	<one-of>
+	 <t> es windy</t>
+	 <t> es storm</t>
+	</one-of>
+ </rule>
+ <rule id="temp">
+  <one-of>
+	</one-of>
  </rule>
 </rules>

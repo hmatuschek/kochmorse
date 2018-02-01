@@ -1,33 +1,44 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-pa">
-  <one-of>
-	 <t w="85">pa</t>
-	 <t w="10">pc</t>
-	 <t w="5">pe</t>
+ <rule id="call-prefix-hb">
+  <t>hb</t>
+	<one-of>
+	 <t w="5">1</t> <t w="5">2</t> <t w="5">3</t> <t w="5">4</t> <t w="5">5</t> <t w="5">6</t>
+	 <t w="5">7</t> <t w="5">8</t> <t w="60">9</t>
 	</one-of>
-	<any-number/>
  </rule>
 
- <rule id="name-pa">
+ <rule id="call-prefix-hb0">
+  <t>hb0</t>
+ </rule>
+
+ <rule id="name-hb">
   <one-of>
-	 <t>jan</t> <t>david</t> <t>lars</t> <t>max</t> <t>jesse</t> <t>stan</t>
-	 <t>daniel</t> <t>tim</t> <t>nick</t> <t>dennis</t>
-	 <t>lisa</t> <t>anne</t> <t>julia</t> <t>emma</t> <t>laura</t> <t>sanne</t> <t>fleur</t>
-	 <t>tessa</t> <t>merel</t> <t>kirsten</t>
+	 <t>luca</t> <t>simon</t> <t>julien</t> <t>joel</t> <t>alex</t> <t>chet</t> <t>adrien</t>
+	 <t>maxime</t> <t>nicolas</t> <t>jonathan</t>
+	 <t>sarah</t> <t>laura</t> <t>amelie</t> <t>lea</t> <t>nina</t> <t>gaelle</t> <t>sophie</t>
+	 <t>anna</t> <t>marie</t> <t>jessica</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc PA weighted by their population -->
- <rule id="city-pa">
+ <!-- A list of possible cities for dxcc HB weighted by their population -->
+ <rule id="city-hb">
   <one-of>
-   <t w="848">amsterdam</t> <t w="638">rotterdam</t> <t w="524">the hague</t> <t w="343">utrecht</t>
-	 <t w="226">eindhoven</t> <t w="213">tilburg</t> <t w="201">groningen</t> <t w="200">almere</t>
-	 <t w="182">breda</t> <t w="173">nijmegen</t> <t w="160">apeldoorn</t> <t w="159">haarlem</t>
-	 <t w="158">enschede</t> <t w="155">arnhem</t> <t w="154">amersfoort</t> <t w="153">zaanstad</t>
-	 <t w="152">hertogenbosch</t> <t w="145">haarlemmermeer</t> <t w="125">zwolle</t>
-	 <t w="124">zoetermeer</t>
+	 <t w="402">zuerich</t> <t w="198">geneva</t> <t w="175">basel</t> <t w="137">lausanne</t>
+	 <t w="133">bern</t> <t w="109">winterthur</t> <t w="81">lucerne</t> <t w="75">st gallen</t>
+	 <t w="63">lugano</t> <t w="54">biel</t> <t w="43">thun</t> <t w="40">koeniz</t>
+	 <t w="38">fribourg</t> <t w="36">schaffhausen</t> <t w="34">vernier</t> <t w="34">chur</t>
+	 <t w="34">uster</t> <t w="33">sion</t> <t w="33">neuchatel</t> <t w="31">lancy</t>
   </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc HB0 weighted by their population -->
+ <rule id="city-hb0">
+  <one-of>
+	 <t w="5">schaan</t> <t w="5">vaduz</t> <t w="4">triesen</t> <t w="4">balzers</t>
+	 <t w="4">eschen</t> <t w="3">mauren</t> <t w="2">triesenberg</t> <t w="1">ruggell</t>
+	 <t w="1">gamprin</t> <t w="1">schellenberg</t>
+	</one-of>
  </rule>
 </rules>

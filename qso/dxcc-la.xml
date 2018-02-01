@@ -1,24 +1,29 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-lx">
-  <t>lx</t>
+ <rule id="call-prefix-la">
+  <t>la</t>
 	<any-number/>
  </rule>
 
- <rule id="name-lx">
+ <rule id="name-la">
   <one-of>
-	 <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t>
-	 <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t>
+	 <t>jakob</t> <t>lucas</t> <t>emil</t> <t>oskar</t> <t>oliver</t> <t>william</t> <t>philip</t>
+	 <t>noah</t> <t>elias</t> <t>isak</t>
+	 <t>sofie</t> <t>nora</t> <t>emma</t> <t>sara</t> <t>ella</t> <t>olivia</t> <t>maja</t>
+	 <t>emilie</t> <t>sofia</t> <t>ingrid</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc LX weighted by their population -->
- <rule id="city-lx">
+ <!-- A list of possible cities for dxcc LA weighted by their population -->
+ <rule id="city-la">
   <one-of>
-   <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
-	 <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
-	 <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
+   <t w="634">oslo</t> <t w="278">bergen</t> <t w="190">trondheim</t> <t w="130">stavanger</t>
+	 <t w="90">kristiansand</t> <t w="78">sandnes</t> <t w="75">fredrikstad</t>
+	 <t w="72">tromso</t> <t w="72">skien</t> <t w="64">drammen</t> <t w="50">sarpsborg</t>
+	 <t w="46">bodo</t> <t w="42">sandefjord</t> <t w="41">alesund</t> <t w="41">larvik</t>
+	 <t w="39">arendal</t> <t w="38">tonsberg</t> <t w="33">porsgrunn</t> <t w="31">haugesund</t>
+	 <t w="31">hamar</t>
   </one-of>
  </rule>
 </rules>

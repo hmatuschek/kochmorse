@@ -1,29 +1,29 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-ok">
-  <t>ok</t>
+ <rule id="call-prefix-om">
+  <t>om</t>
 	<any-number/>
  </rule>
 
- <rule id="name-ok">
+ <rule id="name-om">
   <one-of>
-	 <t>jakub</t> <t>tomas</t> <t>martin</t> <t>petr</t> <t>daniel</t> <t>michal</t> <t>ondra</t>
-	 <t>patrik</t> <t>karel</t> <t>david</t>
-	 <t>tereza</t> <t>veronika</t> <t>barbora</t> <t>michaela</t> <t>klara</t> <t>adela</t>
-	 <t>karolína</t> <t>martina</t> <t>jana</t> <t>anna</t>
+	 <t>peter</t> <t>matus</t> <t>marek</t> <t>adam</t> <t>boris</t> <t>igwarr</t> <t>andrej</t>
+	 <t>thomas</t> <t>martin</t> <t>anton</t>
+	 <t>dominika</t> <t>michaela</t> <t>lenka</t> <t>martina</t> <t>kristina</t> <t>natalia</t>
+	 <t>lucia</t> <t>petra</t> <t>katarina</t> <t>barbora</t>
   </one-of>
  </rule>
 
  <!-- A list of possible cities for dxcc OK weighted by their population -->
- <rule id="city-ok">
+ <rule id="city-om">
   <one-of>
-   <t w="1313">prague</t> <t w="377">brno</t> <t w="294">ostrava</t> <t w="169">plzen</t>
-	 <t w="102">liberec</t> <t w="100">olomouc</t> <t w="93">ustí nad labem</t>
-	 <t w="93">ceske budejovice</t> <t w="92">hradec kralove</t> <t w="89">pardubice</t>
-	 <t w="75">zlin</t> <t w="75">havirov</t> <t w="68">kladno</t> <t w="62">most</t>
-	 <t w="57">opava</t> <t w="56">frydek mistek</t> <t w="55">karvina</t> <t w="50">jihlava</t>
-	 <t w="50">teplice</t> <t w="49">decin</t>
+   <t w="425">bratislava</t> <t w="239">kosice</t> <t w="89">presov</t> <t w="81">zilina</t>
+	 <t w="78">banska bystrica</t> <t w="77">nitra</t> <t w="65">trnava</t>
+	 <t w="55">trencín</t> <t w="55">martin</t> <t w="51">poprad</t> <t w="46">prievidza</t>
+	 <t w="42">zvolen</t> <t w="40">povasska bystrica</t> <t w="39">nove zamky</t>
+	 <t w="39">michalovce</t> <t w="37">spisska nova ves</t> <t w="34">komarno</t> <t w="35">levice</t>
+	 <t w="34">humenne</t> <t w="33">bardejov</t>
   </one-of>
  </rule>
 </rules>

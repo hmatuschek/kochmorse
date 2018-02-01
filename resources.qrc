@@ -26,5 +26,17 @@
         <file>qso/dxcc-ct.xml</file>
         <file>qso/dxcc-ie.xml</file>
         <file>qso/qcodes.xml</file>
+        <file>qso/dxcc-oz.xml</file>
+        <file>qso/dxcc-pa.xml</file>
+        <file>qso/dxcc-on.xml</file>
+        <file>qso/dxcc-hb.xml</file>
+        <file>qso/dxcc-lx.xml</file>
+        <file>qso/dxcc-oe.xml</file>
+        <file>qso/dxcc-la.xml</file>
+        <file>qso/dxcc-ok.xml</file>
+        <file>qso/dxcc-sm.xml</file>
+        <file>qso/dxcc-sp.xml</file>
+        <file>qso/dxcc-om.xml</file>
+        <file>qso/dxcc-ha.xml</file>
     </qresource>
 </RCC>

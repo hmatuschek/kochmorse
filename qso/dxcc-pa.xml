@@ -1,28 +1,33 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-oz">
-  <t>oz</t>
+ <rule id="call-prefix-pa">
+  <one-of>
+	 <t w="85">pa</t>
+	 <t w="10">pc</t>
+	 <t w="5">pe</t>
+	</one-of>
 	<any-number/>
  </rule>
 
- <rule id="name-oz">
+ <rule id="name-pa">
   <one-of>
-	 <t>mathias</t> <t>oliver</t> <t>tobias</t> <t>mads</t> <t>simon</t> <t>frederik</t>
-	 <t>lukas</t> <t>kristoffer</t> <t>daniel</t> <t>sebastian</t>
-	 <t>emma</t> <t>ida</t> <t>anna</t> <t>katrine</t> <t>sofie</t> <t>julie</t> <t>mathilde</t>
-	 <t>mille</t> <t>emilie</t> <t>line</t>
+	 <t>jan</t> <t>david</t> <t>lars</t> <t>max</t> <t>jesse</t> <t>stan</t>
+	 <t>daniel</t> <t>tim</t> <t>nick</t> <t>dennis</t>
+	 <t>lisa</t> <t>anne</t> <t>julia</t> <t>emma</t> <t>laura</t> <t>sanne</t> <t>fleur</t>
+	 <t>tessa</t> <t>merel</t> <t>kirsten</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc OZ weighted by their population -->
- <rule id="city-oz">
+ <!-- A list of possible cities for dxcc PA weighted by their population -->
+ <rule id="city-pa">
   <one-of>
-   <t w="1295">copenhagen</t> <t w="269">aarhus</t> <t w="176">odense</t> <t w="113">aalborg</t>
-	 <t w="72">esbjerg</t> <t w="62">randers</t> <t w="60">kolding</t> <t w="58">horsens</t>
-	 <t w="55">vejle</t> <t w="50">roskilde</t> <t w="49">herning</t> <t w="47">horsholm</t>
-	 <t w="47">helsingor</t> <t w="44">silkeborg</t> <t w="43">naestved</t> <t w="40">fredericia</t>
-	 <t w="40">viborg</t> <t w="36">koge</t> <t w="35">holstebro</t> <t w="34">taastrup</t>
+   <t w="848">amsterdam</t> <t w="638">rotterdam</t> <t w="524">the hague</t> <t w="343">utrecht</t>
+	 <t w="226">eindhoven</t> <t w="213">tilburg</t> <t w="201">groningen</t> <t w="200">almere</t>
+	 <t w="182">breda</t> <t w="173">nijmegen</t> <t w="160">apeldoorn</t> <t w="159">haarlem</t>
+	 <t w="158">enschede</t> <t w="155">arnhem</t> <t w="154">amersfoort</t> <t w="153">zaanstad</t>
+	 <t w="152">hertogenbosch</t> <t w="145">haarlemmermeer</t> <t w="125">zwolle</t>
+	 <t w="124">zoetermeer</t>
   </one-of>
  </rule>
 </rules>

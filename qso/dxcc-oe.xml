@@ -1,24 +1,28 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-lx">
-  <t>lx</t>
+ <rule id="call-prefix-oe">
+  <t>oe</t>
 	<any-number/>
  </rule>
 
- <rule id="name-lx">
+ <rule id="name-oe">
   <one-of>
-	 <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t>
-	 <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t> <t></t>
+	 <t>michael</t> <t>manuel</t> <t>max</t> <t>david</t> <t>daniel</t> <t>christoph</t> <t>lukas</t>
+	 <t>alexander</t> <t>martin</t> <t>matthias</t>
+	 <t>julia</t> <t>lisa</t> <t>anna</t> <t>sarah</t> <t>sophie</t> <t>laura</t> <t>vanessa</t>
+	 <t>katharina</t> <t>nicole</t> <t>victoria</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc LX weighted by their population -->
- <rule id="city-lx">
+ <!-- A list of possible cities for dxcc OE weighted by their population -->
+ <rule id="city-oe">
   <one-of>
-   <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
-	 <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
-	 <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t> <t w=""></t>
+   <t w="1840">vienna</t> <t w="273">graz</t> <t w="198">linz</t> <t w="148">salzburg</t>
+	 <t w="126">innsbruck</t> <t w="97">klagenfurt</t> <t w="60">villach</t> <t w="59">wels</t>
+	 <t w="52">sankt poelten</t> <t w="47">dornbirn</t> <t w="38">steyr</t> <t w="30">feldkirch</t>
+	 <t w="28">bregenz</t> <t w="26">leonding</t> <t w="26">klosterneuburg</t> <t w="25">baden</t>
+	 <t w="25">wolfsberg</t> <t w="24">leoben</t> <t w="23">krems</t> <t w="23">traun</t>
   </one-of>
  </rule>
 </rules>

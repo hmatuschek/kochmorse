@@ -1,36 +1,28 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-dl">
-  <one-of>
-	 <t w="1">da</t>   <t w="48">db</t>  <t w="37">dc</t>  <t w="32">dd</t>  <t w="48">db</t>
-	 <t w="50">df</t>  <t w="114">dg</t> <t w="33">dh</t>  <t w="36">dj</t>  <t w="51">dk</t>
-   <t w="191">dl</t> <t w="11">dm</t>  <t w="36">dn</t>  <t w="76">do</t>  <t w="20">do</t>
-  </one-of>
+ <rule id="call-prefix-oz">
+  <t>oz</t>
 	<any-number/>
  </rule>
 
- <rule id="name-dl">
+ <rule id="name-oz">
   <one-of>
-   <t>peter</t> <t>michael</t> <t>thomas</t> <t>andreas</t> <t>wolfgang</t> <t>klaus</t>
-	 <t>paul</t> <t>juergen</t> <t>guenther</t>
-	 <t>ursula</t> <t>karin</t> <t>helga</t> <t>sabine</t> <t>ingrid</t> <t>renate</t> <t>monika</t>
-	 <t>susanne</t> <t>gisela</t> <t>petra</t>
+	 <t>mathias</t> <t>oliver</t> <t>tobias</t> <t>mads</t> <t>simon</t> <t>frederik</t>
+	 <t>lukas</t> <t>kristoffer</t> <t>daniel</t> <t>sebastian</t>
+	 <t>emma</t> <t>ida</t> <t>anna</t> <t>katrine</t> <t>sofie</t> <t>julie</t> <t>mathilde</t>
+	 <t>mille</t> <t>emilie</t> <t>line</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc DE weighted by their population -->
- <rule id="city-dl">
+ <!-- A list of possible cities for dxcc OZ weighted by their population -->
+ <rule id="city-oz">
   <one-of>
-   <t w="3520">berlin</t> <t w="1787">hamburg</t> <t w="1450">munich</t> <t w="1060">colongne</t> <t w="732">frankfurt</t>
-   <t w="623">stuttgart</t> <t w="612">duesseldorf</t> <t  w="586">dortmund</t> <t w="582">essen</t> <t w="560">leipzig</t>
-   <t w="557">bremen</t> <t w="543">dresden</t> <t w="532">hannover</t> <t w="509">nuremberg </t> <t w="491">duisburg</t>
-	 <t w="364">bochum</t> <t w="350">wuppertal</t> <t w="333">bielefeld</t> <t w="318">bonn</t> <t w="310">muenster</t>
-	 <t w="307">karlsruhe</t> <t w="305">mannheim</t> <t w="286">augsburg</t> <t w="276">wiesbaden</t> <t w="260">gelsenkirchen</t>
-	 <t w="259">moenchengladbach</t> <t w="251">braunschweig</t> <t w="248">chemnitz</t> <t w="246">kiel</t> <t w="245">aachen</t>
-	 <t w="236">halle</t> <t w="235">magdeburg</t> <t w="226">freiburg</t> <t w="225">krefeld</t> <t w="216">luebeck</t>
-	 <t w="210">oberhausen</t> <t w="210">erfurt</t> <t w="209">mainz</t> <t w="206">rostock</t> <t w="197">kassel</t>
-	 <t w="189">hagen</t> <t w="179">hamm</t> <t w="178">saarbruecken</t> <t w="169">muelheim</t> <t w="167">potsdam</t>
+   <t w="1295">copenhagen</t> <t w="269">aarhus</t> <t w="176">odense</t> <t w="113">aalborg</t>
+	 <t w="72">esbjerg</t> <t w="62">randers</t> <t w="60">kolding</t> <t w="58">horsens</t>
+	 <t w="55">vejle</t> <t w="50">roskilde</t> <t w="49">herning</t> <t w="47">horsholm</t>
+	 <t w="47">helsingor</t> <t w="44">silkeborg</t> <t w="43">naestved</t> <t w="40">fredericia</t>
+	 <t w="40">viborg</t> <t w="36">koge</t> <t w="35">holstebro</t> <t w="34">taastrup</t>
   </one-of>
  </rule>
 </rules>

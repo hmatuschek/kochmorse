@@ -1,31 +1,27 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-on">
-  <one-of>
-   <t w="80">on</t>
-	 <t w="20">ot</t>
-	</one-of>
+ <rule id="call-prefix-lx">
+  <t>lx</t>
 	<any-number/>
  </rule>
 
- <rule id="name-on">
+ <rule id="name-lx">
   <one-of>
-	 <t>thomas</t> <t>julien</t> <t>maxime</t> <t>alexandre</t> <t>nicolas</t> <t>kevin</t>
-	 <t>antoine</t> <t>robin</t> <t>martin</t> <t>simon</t>
-	 <t>laura</t> <t>marie</t> <t>manon</t> <t>sarah</t> <t>camille</t> <t>charlotte</t> <t>julie</t>
-	 <t>emilie</t> <t>chloe</t> <t>pauline</t>
+	 <t>pierre</t> <t>david</t> <t>laura</t> <t>francisco</t> <t>mich</t> <t>mauro</t>
+	 <t>christian</t> <t>radouane</t> <t>ray</t> <t>patrick</t>
+	 <t>ines</t> <t>valgerdur</t> <t>jessi</t> <t>nancy</t> <t>miangola</t> <t>caro</t> <t>ashley</t>
+	 <t>aiko</t> <t>otilia</t> <t>sabrina</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc ON weighted by their population -->
- <rule id="city-on">
+ <!-- A list of possible cities for dxcc LX weighted by their population -->
+ <rule id="city-lx">
   <one-of>
-   <t w="513">Antwerp</t> <t w="253">ghent</t> <t w="202">charleroi</t> <t w="186">liege</t>
-	 <t w="144">brussels</t> <t w="117">bruges</t> <t w="107">namur</t> <t w="91">mons</t>
-	 <t w="90">leuven</t> <t w="78">mechelen</t> <t w="77">aalst</t> <t w="77">la louviere</t>
-	 <t w="73">kortrijk</t> <t w="70">hasselt</t> <t w="69">sint niklaas</t> <t w="68">ostend</t>
-	 <t w="67">tournai</t> <t w="64">genk</t> <t w="60">seraing</t> <t w="55">roeselare</t>
+   <t w="115">luxembourg</t> <t w="33">esch sur alzette</t> <t w="24">differdange</t>
+	 <t w="20">dudelange</t> <t w="8">ettelbruck</t> <t w="6">diekirch</t> <t w="6">wiltz</t>
+	 <t w="5">rumelange</t> <t w="5">echternach</t> <t w="4">grevenmacher</t> <t w="3">remich</t>
+	 <t w="1">vianden</t>
   </one-of>
  </rule>
 </rules>

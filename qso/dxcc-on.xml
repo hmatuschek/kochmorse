@@ -1,28 +1,31 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-oz">
-  <t>oz</t>
+ <rule id="call-prefix-on">
+  <one-of>
+   <t w="80">on</t>
+	 <t w="20">ot</t>
+	</one-of>
 	<any-number/>
  </rule>
 
- <rule id="name-oz">
+ <rule id="name-on">
   <one-of>
-	 <t>mathias</t> <t>oliver</t> <t>tobias</t> <t>mads</t> <t>simon</t> <t>frederik</t>
-	 <t>lukas</t> <t>kristoffer</t> <t>daniel</t> <t>sebastian</t>
-	 <t>emma</t> <t>ida</t> <t>anna</t> <t>katrine</t> <t>sofie</t> <t>julie</t> <t>mathilde</t>
-	 <t>mille</t> <t>emilie</t> <t>line</t>
+	 <t>thomas</t> <t>julien</t> <t>maxime</t> <t>alexandre</t> <t>nicolas</t> <t>kevin</t>
+	 <t>antoine</t> <t>robin</t> <t>martin</t> <t>simon</t>
+	 <t>laura</t> <t>marie</t> <t>manon</t> <t>sarah</t> <t>camille</t> <t>charlotte</t> <t>julie</t>
+	 <t>emilie</t> <t>chloe</t> <t>pauline</t>
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc OZ weighted by their population -->
- <rule id="city-oz">
+ <!-- A list of possible cities for dxcc ON weighted by their population -->
+ <rule id="city-on">
   <one-of>
-   <t w="1295">copenhagen</t> <t w="269">aarhus</t> <t w="176">odense</t> <t w="113">aalborg</t>
-	 <t w="72">esbjerg</t> <t w="62">randers</t> <t w="60">kolding</t> <t w="58">horsens</t>
-	 <t w="55">vejle</t> <t w="50">roskilde</t> <t w="49">herning</t> <t w="47">horsholm</t>
-	 <t w="47">helsingor</t> <t w="44">silkeborg</t> <t w="43">naestved</t> <t w="40">fredericia</t>
-	 <t w="40">viborg</t> <t w="36">koge</t> <t w="35">holstebro</t> <t w="34">taastrup</t>
+   <t w="513">Antwerp</t> <t w="253">ghent</t> <t w="202">charleroi</t> <t w="186">liege</t>
+	 <t w="144">brussels</t> <t w="117">bruges</t> <t w="107">namur</t> <t w="91">mons</t>
+	 <t w="90">leuven</t> <t w="78">mechelen</t> <t w="77">aalst</t> <t w="77">la louviere</t>
+	 <t w="73">kortrijk</t> <t w="70">hasselt</t> <t w="69">sint niklaas</t> <t w="68">ostend</t>
+	 <t w="67">tournai</t> <t w="64">genk</t> <t w="60">seraing</t> <t w="55">roeselare</t>
   </one-of>
  </rule>
 </rules>
