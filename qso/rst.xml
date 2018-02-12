@@ -16,14 +16,20 @@
   <if var="rst-q" matches="bad"><one-of><t w="10">3</t><t w="5">2</t><t w="2">1</t></one-of></if>
  </rule>
  <rule id="rst-t">
-  <one-of><t w="10">9</t><t w="5">8</t><t w="2">7</t></one-of>
+  <if var="rst-q" matches="good"><t>9</t></if>
+	<if var="rst-q" matches="fair"><t>9</t></if>
+	<if var="rst-q" matches="bad"><one-of><t w="10">9</t><t w="5">8</t><t w="2">7</t></one-of></if>
  </rule>
 
  <rule id="rst">
   <one-of>
-   <i w="60"><apply rule="rst-r"/><apply rule="rst-s"/><apply rule="rst-t"/></i>
-   <t w="10">599</t>
+   <i w="70"><apply rule="rst-r"/><apply rule="rst-s"/><apply rule="rst-t"/></i>
    <t w="30">5nn</t>
   </one-of>
+	<one-of>
+	 <t w="60"/>
+	 <t w="30"><opt> es</opt> qrm</t>
+	 <t w="10"><opt> es</opt> qrn</t>
+	</one-of>
  </rule>
 </rules>
