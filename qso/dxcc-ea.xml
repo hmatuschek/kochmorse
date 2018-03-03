@@ -3,7 +3,8 @@
 <rules>
  <rule id="call-prefix-ea">
 	<one-of>
-	 <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+	 <t w="65">ea</t><t w="5">eb</t><t w="5">ec</t><t w="5">ed</t><t w="5">ee</t><t w="5">ef</t>
+	 <t w="5">eg</t><t w="5">eh</t>
 	</one-of>
 	<one-of>
 	 <t>0</t><t>1</t><t>2</t><t>3</t><t>4</t><t>5</t><t>6</t><t>7</t>
@@ -12,14 +13,16 @@
 
  <rule id="call-prefix-ea8">
   <one-of>
-   <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+   <t w="65">ea</t><t w="5">eb</t><t w="5">ec</t><t w="5">ed</t><t w="5">ee</t><t w="5">ef</t>
+   <t w="5">eg</t><t w="5">eh</t>
   </one-of>
   <t>8</t>
  </rule>
 
  <rule id="call-prefix-ea9">
   <one-of>
-   <t>ea</t><t>eb</t><t>ec</t><t>ed</t><t>ee</t><t>ef</t><t>eg</t><t>eh</t>
+   <t w="65">ea</t><t w="5">eb</t><t w="5">ec</t><t w="5">ed</t><t w="5">ee</t><t w="5">ef</t>
+   <t w="5">eg</t><t w="5">eh</t>
   </one-of>
   <t>9</t>
  </rule>

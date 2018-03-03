@@ -5,7 +5,7 @@
 
 
 MorseDecoder::MorseDecoder(double speed, float threshold, QObject *parent)
-  : AudioSink(parent), _speed(speed), _unitLength(0),
+  : AudioSink(parent), _speed(speed), _ditLength(0), _unitLength(0),
     _Nsamples(0), _buffer(0), _threshold(threshold), _highCount(0), _lowCount(0),
     _lastChar('\0')
 {
@@ -32,8 +32,8 @@ MorseDecoder::_updateConfig() {
   if (0 != _buffer) { delete _buffer; }
 
   // Compute dit length in samples from speed and sample rate
-  size_t ditLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
-  _unitLength = std::max(size_t(1), ditLength/4);
+  _ditLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
+  _unitLength = std::max(size_t(1), _ditLength/4);
   _Nsamples = 0;
   _pauseCount = 0;
   _lastChar = '\0';
@@ -57,7 +57,7 @@ MorseDecoder::process(const QByteArray &data) {
   for (size_t i=0; i<Nframes; i++) {
     // Append frame to buffer
     _buffer[_Nsamples] = data_ptr[i]; _Nsamples++;
-    // if a unit length (1/4 dot) has been read
+    // if a unit length (1/4 dit) has been read
     if (_unitLength == _Nsamples) {
       _Nsamples = 0;
       // Compute 2-norm
@@ -105,16 +105,16 @@ MorseDecoder::_isDot() const {
 
 bool
 MorseDecoder::_isDash() const {
-  return (8 <= _highCount) && (11 >= _highCount);
+  return (8 <= _highCount) && (24 >= _highCount);
 }
 
 bool MorseDecoder::_isInvalid() const {
-  return 11 < _highCount;
+  return 24 < _highCount;
 }
 
 bool
 MorseDecoder::_isPause() const {
-  return _lowCount >= 11;
+  return _lowCount >= 12;
 }
 
 void

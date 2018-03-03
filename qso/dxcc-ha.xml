@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-ha">
+  <t>ha</t>
+	<any-number/>
+ </rule>
+
+ <rule id="name-ha">
+  <one-of>
+	 <t>adam</t> <t>david</t> <t>daniel</t> <t>tamas</t> <t>peter</t> <t>marton</t> <t>balint</t>
+	 <t>attila</t> <t>laszlo</t> <t>roland</t>
+	 <t>eszter</t> <t>anna</t> <t>reka</t> <t>fanni</t> <t>dora</t> <t>laura</t> <t>dori</t>
+	 <t>petra</t> <t>dorka</t> <t>lilla</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc HA weighted by their population -->
+ <rule id="city-ha">
+  <one-of>
+   <t w="1752">budapest</t> <t w="201">debrecen</t> <t w="161">szeged</t> <t w="157">miskolc</t>
+	 <t w="144">pecs</t> <t w="129">gyoer</t> <t w="117">nyiregyhaza</t> <t w="110">kecskemet</t>
+	 <t w="97">szekesfehervar</t> <t w="78">szombathely</t> <t w="71">szolnok</t> <t w="65">erd</t>
+	 <t w="65">tatabanya</t> <t w="62">kaposvar</t> <t w="62">sopron</t> <t w="59">veszprem</t>
+	 <t w="59">bekescsaba</t> <t w="58">zalaegerszeg</t> <t w="53">eger</t> <t w="47">nagykanizsa</t>
+  </one-of>
+ </rule>
+</rules>

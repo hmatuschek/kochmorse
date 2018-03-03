@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-lx">
+  <t>lx</t>
+	<any-number/>
+ </rule>
+
+ <rule id="name-lx">
+  <one-of>
+	 <t>pierre</t> <t>david</t> <t>laura</t> <t>francisco</t> <t>mich</t> <t>mauro</t>
+	 <t>christian</t> <t>radouane</t> <t>ray</t> <t>patrick</t>
+	 <t>ines</t> <t>valgerdur</t> <t>jessi</t> <t>nancy</t> <t>miangola</t> <t>caro</t> <t>ashley</t>
+	 <t>aiko</t> <t>otilia</t> <t>sabrina</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc LX weighted by their population -->
+ <rule id="city-lx">
+  <one-of>
+   <t w="115">luxembourg</t> <t w="33">esch sur alzette</t> <t w="24">differdange</t>
+	 <t w="20">dudelange</t> <t w="8">ettelbruck</t> <t w="6">diekirch</t> <t w="6">wiltz</t>
+	 <t w="5">rumelange</t> <t w="5">echternach</t> <t w="4">grevenmacher</t> <t w="3">remich</t>
+	 <t w="1">vianden</t>
+  </one-of>
+ </rule>
+</rules>

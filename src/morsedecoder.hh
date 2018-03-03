@@ -51,6 +51,8 @@ protected:
 protected:
   /** Holds the expected speed in WPM. */
   double _speed;
+  /** Holds the dit length in samples. */
+  size_t _ditLength;
   /** Holds the unit length (1/4 of dit-length) in samples. */
   size_t _unitLength;
   /** The number of samples in the sample buffer. */

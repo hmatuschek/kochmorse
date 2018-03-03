@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-hb">
+  <t>hb</t>
+	<one-of>
+	 <t w="5">1</t> <t w="5">2</t> <t w="5">3</t> <t w="5">4</t> <t w="5">5</t> <t w="5">6</t>
+	 <t w="5">7</t> <t w="5">8</t> <t w="60">9</t>
+	</one-of>
+ </rule>
+
+ <rule id="call-prefix-hb0">
+  <t>hb0</t>
+ </rule>
+
+ <rule id="name-hb">
+  <one-of>
+	 <t>luca</t> <t>simon</t> <t>julien</t> <t>joel</t> <t>alex</t> <t>chet</t> <t>adrien</t>
+	 <t>maxime</t> <t>nicolas</t> <t>jonathan</t>
+	 <t>sarah</t> <t>laura</t> <t>amelie</t> <t>lea</t> <t>nina</t> <t>gaelle</t> <t>sophie</t>
+	 <t>anna</t> <t>marie</t> <t>jessica</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc HB weighted by their population -->
+ <rule id="city-hb">
+  <one-of>
+	 <t w="402">zuerich</t> <t w="198">geneva</t> <t w="175">basel</t> <t w="137">lausanne</t>
+	 <t w="133">bern</t> <t w="109">winterthur</t> <t w="81">lucerne</t> <t w="75">st gallen</t>
+	 <t w="63">lugano</t> <t w="54">biel</t> <t w="43">thun</t> <t w="40">koeniz</t>
+	 <t w="38">fribourg</t> <t w="36">schaffhausen</t> <t w="34">vernier</t> <t w="34">chur</t>
+	 <t w="34">uster</t> <t w="33">sion</t> <t w="33">neuchatel</t> <t w="31">lancy</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc HB0 weighted by their population -->
+ <rule id="city-hb0">
+  <one-of>
+	 <t w="5">schaan</t> <t w="5">vaduz</t> <t w="4">triesen</t> <t w="4">balzers</t>
+	 <t w="4">eschen</t> <t w="3">mauren</t> <t w="2">triesenberg</t> <t w="1">ruggell</t>
+	 <t w="1">gamprin</t> <t w="1">schellenberg</t>
+	</one-of>
+ </rule>
+</rules>

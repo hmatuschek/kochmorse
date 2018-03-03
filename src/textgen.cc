@@ -163,6 +163,7 @@ TextGenVariable::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
   if (_rule)
     _rule->generate(stream, ctx);
   ctx[_id] = tmp;
+  qDebug() << "TextGen: set var" << _id << "to" << tmp;
 }
 
 
