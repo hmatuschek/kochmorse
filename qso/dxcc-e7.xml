@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-e7">
+  <t>e7</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-e7">
+  <one-of>
+   <t>amar</t> <t>vedad</t> <t>ahmed</t> <t>adin</t> <t>emir</t> <t>davud</t> <t>imran</t>
+   <t>tarik</t> <t>harun</t> <t>ajdin</t>
+   <t>amina</t> <t>lamija</t> <t>sara</t> <t>asja</t> <t>emina</t> <t>lejla</t> <t>merjem</t>
+   <t>esma</t> <t>ajla</t> <t>nejla</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc E7 weighted by their population -->
+ <rule id="city-e7">
+  <one-of>
+   <t w="475">sarajevo</t> <t w="185">banja luka</t> <t w="110">tuzla</t> <t w="110">zenica</t>
+   <t w="107">bijeljina</t> <t w="105">mostar</t> <t w="89">prijedor</t> <t w="83">brcko</t>
+   <t w="71">doboj</t> <t w="66">cazin</t> <t w="58">zvornik</t> <t w="57">zivinice</t>
+   <t w="57">bihac</t> <t w="53">travnik</t> <t w="51">gradiska</t> <t w="55">gracanica</t>
+   <t w="55">lukavac</t> <t w="43">tesanj</t> <t w="41">sanski most</t> <t w="40">velika kladusa</t>
+  </one-of>
+ </rule>
+</rules>

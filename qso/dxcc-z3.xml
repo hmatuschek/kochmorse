@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-z3">
+  <t>z3</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-z3">
+  <one-of>
+   <t>suad</t> <t>mario</t> <t>stefan</t> <t>jeti</t> <t>alen</t> <t>bogevsky</t> <t>dimitrij</t>
+   <t>davor</t> <t>ivica</t> <t>jasmin</t>
+   <t>elena</t> <t>angela</t> <t>sofi</t> <t>nihal</t> <t>ivana</t> <t>alina</t> <t>nafiye</t>
+   <t>dance</t> <t>gresa</t> <t>ninna</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc Z3 weighted by their population -->
+ <rule id="city-z3">
+  <one-of>
+   <t w="467">skopje</t> <t w="74">bitola</t> <t w="70">kumanovo</t> <t w="66">prilep</t>
+   <t w="52">tetovo</t> <t w="73">veles</t> <t w="43">stip</t> <t w="42">ohrid</t>
+   <t w="35">gostivar</t> <t w="35">strumica</t> <t w="29">kavadarci</t> <t w="28">kocani</t>
+   <t w="27">kicevo</t> <t w="16">struga</t> <t w="16">radovis</t> <t w="15">gevgelija</t>
+   <t w="14">debar</t> <t w="14">kriva palanka</t> <t w="13">sveti nikole</t> <t w="13">negotino</t>
+  </one-of>
+ </rule>
+</rules>

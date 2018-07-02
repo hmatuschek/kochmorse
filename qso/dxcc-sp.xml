@@ -18,11 +18,11 @@
  <!-- A list of possible cities for dxcc SP weighted by their population -->
  <rule id="city-sp">
   <one-of>
-   <t w="1753">warsaw</t> <t w="765">Krakow</t> <t w="696">lodz</t> <t w="637">wroclaw</t>
-	 <t w="540">poznan</t> <t w="463">gdansk</t> <t w="404">szczecin</t> <t w="353">bydgoszcz</t>
-	 <t w="340">lublin</t> <t w="298">katowice</t> <t w="296">bialystok</t> <t w="246">gdynia</t>
-	 <t w="226">czestochowa</t> <t w="215">radom</t> <t w="205">sosnowiec</t> <t w="202">torun</t>
-	 <t w="197">kielce</t> <t w="187">rzeszow</t> <t w="182">gliwice</t> <t w="175">zabrze</t>
+   <t w="1753">warsaw</t> <t w="765">krakow</t> <t w="696">lodz</t> <t w="637">wroclaw</t>
+   <t w="540">poznan</t> <t w="463">gdansk</t> <t w="404">szczecin</t> <t w="353">bydgoszcz</t>
+   <t w="340">lublin</t> <t w="298">katowice</t> <t w="296">bialystok</t> <t w="246">gdynia</t>
+   <t w="226">czestochowa</t> <t w="215">radom</t> <t w="205">sosnowiec</t> <t w="202">torun</t>
+   <t w="197">kielce</t> <t w="187">rzeszow</t> <t w="182">gliwice</t> <t w="175">zabrze</t>
   </one-of>
  </rule>
 </rules>

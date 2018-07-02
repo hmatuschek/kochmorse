@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-z6">
+  <t>z6</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-z6">
+  <one-of>
+   <t>behar</t> <t>klajdi</t> <t>thomas</t> <t>hoohi</t> <t>fatjon</t> <t>arti</t> <t>richard</t>
+   <t>vinski</t> <t>zygmund</t> <t>ari</t>
+   <t>ersi</t> <t>sara</t> <t>megan</t> <t>klea</t> <t>megumi</t> <t>edith</t> <t>zia</t>
+   <t>ann</t> <t>arlinda</t> <t>nihada</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc Z6 weighted by their population -->
+ <rule id="city-z6">
+  <one-of>
+   <t w="145">pristina</t> <t w="85">prizren</t> <t w="54">gjilan</t> <t w="48">pec</t>
+   <t w="46">mitrovica</t> <t w="42">feriza</t> <t w="40">gjakova</t>
+  </one-of>
+ </rule>
+</rules>

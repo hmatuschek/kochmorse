@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-4o">
+  <t>4o</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-4o">
+  <one-of>
+   <t>stefan</t> <t>jovan</t> <t>nikola</t> <t>gertrude</t> <t>john</t> <t>aleksandar</t> <t>vukasin</t>
+   <t>lazar</t> <t>nenad</t> <t>sava</t>
+   <t>mina</t> <t>ana</t> <t>ivana</t> <t>jana</t> <t>nina</t> <t>nevena</t> <t>marija</t>
+   <t>jelena</t> <t>angela</t> <t>marina</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc 4O weighted by their population -->
+ <rule id="city-4o">
+  <one-of>
+   <t w="150">podgorica</t> <t w="56">niksic</t> <t w="19">herceg novi</t> <t w="19">pljevlja</t>
+   <t w="17">bar</t> <t w="15">bijelo polje</t> <t w="13">cetinje</t> <t w="13">budva</t>
+   <t w="11">berane</t> <t w="10">ulcinj</t> <t w="10">tivat</t> <t w="9">rozaje</t>
+   <t w="5">kotor</t>
+  </one-of>
+ </rule>
+</rules>

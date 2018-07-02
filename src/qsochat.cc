@@ -30,10 +30,13 @@ Lexer::Lexer(const QString &text)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(cq)\\b", Qt::CaseInsensitive), Token::T_CQ)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(rst)\\b", Qt::CaseInsensitive), Token::T_RST)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(name)\\b", Qt::CaseInsensitive), Token::T_NAME)
+      << QPair<QRegExp, Token::Type>(QRegExp("\\b(op)\\b", Qt::CaseInsensitive), Token::T_NAME)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(qth)\\b", Qt::CaseInsensitive), Token::T_QTH)
+      << QPair<QRegExp, Token::Type>(QRegExp("\\b(is)\\b", Qt::CaseInsensitive), Token::T_IS)
+      << QPair<QRegExp, Token::Type>(QRegExp("\\b(hr)\\b", Qt::CaseInsensitive), Token::T_HERE)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b([k=])\\b", Qt::CaseInsensitive), Token::T_BREAK)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b([a-z]+)\\b", Qt::CaseInsensitive), Token::T_WORD)
-      << QPair<QRegExp, Token::Type>(QRegExp("\\b([0-9])\\b", Qt::CaseInsensitive), Token::T_NUMBER);
+      << QPair<QRegExp, Token::Type>(QRegExp("\\b([0-9]+)\\b", Qt::CaseInsensitive), Token::T_NUMBER);
 }
 
 Token
@@ -155,6 +158,9 @@ void Parser::parse(const QString &text) {
 
       case S_NAME:
         switch (tok.type()) {
+          case Token::T_IS:
+          case Token::T_HERE:
+            break;
           case Token::T_WORD:
             _state = S_RESPONSE;
             _context["dxname"] = tok.value();
@@ -167,6 +173,8 @@ void Parser::parse(const QString &text) {
 
       case S_RST:
         switch (tok.type()) {
+          case Token::T_IS:
+            break;
           case Token::T_NUMBER:
             _context["myrst"] = tok.value();
             _state = S_RESPONSE;
@@ -179,6 +187,9 @@ void Parser::parse(const QString &text) {
 
       case S_QTH:
         switch (tok.type()) {
+          case Token::T_IS:
+          case Token::T_HERE:
+            break;
           case Token::T_WORD:
             _context["dxqth"] = tok.value();
             _state = S_RESPONSE;

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="skcc">
+  <any-number/><any-number/><any-number/><any-number/>
+  <one-of>
+   <i><any-number/></i>
+   <i/>
+  </one-of>
+ </rule>
+</rules>

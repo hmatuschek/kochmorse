@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-s5">
+  <t>s5</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-s5">
+  <one-of>
+   <t>franc</t> <t>janez</t> <t>anton</t> <t>ivan</t> <t>jozef</t>
+   <t>marija</t> <t>ana</t> <t>maja</t> <t>irena</t> <t>mojca</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc S5 weighted by their population -->
+ <rule id="city-s5">
+  <one-of>
+   <t w="280">ljubljana</t> <t w="94">maribor</t> <t w="38">celje</t> <t w="37">kranj</t>
+   <t w="25">koper</t> <t w="24">velenje</t> <t w="23">novo mesto</t> <t w="17">ptuj</t>
+   <t w="13">trbovlje</t> <t w="13">kamnik</t> <t w="13">nova gorica</t> <t w="12">jesenice</t>
+   <t w="12">domzale</t> <t w="11">skofja loka</t> <t w="11">izola</t> <t w="11">murska sobota</t>
+  </one-of>
+ </rule>
+</rules>

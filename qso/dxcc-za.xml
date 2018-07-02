@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-za">
+  <t>za</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-za">
+  <one-of>
+   <t>behar</t> <t>klajdi</t> <t>thomas</t> <t>hoohi</t> <t>fatjon</t> <t>arti</t> <t>richard</t>
+   <t>vinski</t> <t>zygmund</t> <t>ari</t>
+   <t>ersi</t> <t>sara</t> <t>megan</t> <t>klea</t> <t>megumi</t> <t>edith</t> <t>zia</t>
+   <t>ann</t> <t>arlinda</t> <t>nihada</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc ZA weighted by their population -->
+ <rule id="city-za">
+  <one-of>
+   <t w="858">tirane</t> <t w="201">durres</t> <t w="141">vlore</t> <t w="126">elbasan</t>
+   <t w="102">shkoder</t> <t w="85">fier</t> <t w="66">kamez</t> <t w="51">korce</t>
+   <t w="32">berat</t> <t w="31">lushnje</t> <t w="20">pogradec</t> <t w="20">kavaje</t>
+   <t w="19">gjirokaster</t> <t w="18">fushe kruje</t> <t w="17">sarande</t> <t w="17">lac</t>
+   <t w="16">kukes</t> <t w="15">sukth</t> <t w="15">patos</t> <t w="15">lezhe</t>
+  </one-of>
+ </rule>
+</rules>

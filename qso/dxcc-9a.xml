@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-9a">
+  <t>9a</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-9a">
+  <one-of>
+   <t>luka</t> <t>ivan</t> <t>marko</t> <t>david</t> <t>filip</t> <t>josip</t> <t>petar</t>
+   <t>karlo</t> <t>matej</t> <t>ivano</t>
+   <t>lana</t> <t>petra</t> <t>ana</t> <t>ema</t> <t>lucija</t> <t>sara</t> <t>mia</t>
+   <t>nika</t> <t>marija</t> <t>iva</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc 9A weighted by their population -->
+ <rule id="city-9a">
+  <one-of>
+   <t w="802">zagreb</t> <t w="178">split</t> <t w="128">rijeka</t> <t w="108">osijek</t>
+   <t w="75">zadar</t> <t w="63">velika gorica</t> <t w="59">slavonski brod</t> <t w="57">pula</t>
+   <t w="55">karlovac</t> <t w="47">sisak</t> <t w="46">varazdin</t> <t w="46">sibenik</t>
+   <t w="42">dubrovnik</t> <t w="40">bjelovar</t> <t w="38">kastela</t> <t w="37">samobor</t>
+   <t w="35">vinkovci</t> <t w="30">koprivnica</t> <t w="27">dakovo</t> <t w="27">vukovar</t>
+  </one-of>
+ </rule>
+</rules>

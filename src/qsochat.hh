@@ -12,7 +12,7 @@ class Token
 {
 public:
   typedef enum {
-    T_CALL, T_DE, T_CQ, T_RST, T_NAME, T_QTH, T_WORD, T_NUMBER, T_BREAK, T_EOS
+    T_CALL, T_DE, T_CQ, T_RST, T_NAME, T_IS, T_HERE, T_QTH, T_WORD, T_NUMBER, T_BREAK, T_EOS
   } Type;
 
 public:

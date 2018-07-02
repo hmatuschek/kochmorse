@@ -76,6 +76,7 @@ Application::setVolume(double factor) {
 
 void
 Application::startSession() {
+  /// @todo Disable hybernation
   _tutor->reset();
   _encoder->start();
   _encoder->send(_tutor->next());
@@ -85,6 +86,7 @@ Application::startSession() {
 
 void
 Application::stopSession() {
+  /// @todo Reenable hybernation
   _encoder->stop();
   _tutor->reset();
   if (_tutor->needsDecoder())

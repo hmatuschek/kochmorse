@@ -23,13 +23,13 @@
 
  <rule id="rst">
   <one-of>
-   <i w="70"><apply rule="rst-r"/><apply rule="rst-s"/><apply rule="rst-t"/></i>
-   <t w="30">5nn</t>
+   <i w="80"><apply rule="rst-r"/><apply rule="rst-s"/><apply rule="rst-t"/></i>
+   <t w="20">5nn</t>
   </one-of>
-	<one-of>
-	 <t w="60"/>
-	 <t w="30"><opt> es</opt> qrm</t>
-	 <t w="10"><opt> es</opt> qrn</t>
-	</one-of>
+  <one-of>
+   <t w="60"/>
+   <t w="30"><opt> es</opt> qrm</t>
+   <t w="10"><opt> es</opt> qrn</t>
+  </one-of>
  </rule>
 </rules>
