@@ -162,7 +162,7 @@ Settings::kochSummary() const {
 
 void
 Settings::setKochSummary(bool show) {
-  this->setValue("koch/summary", true);
+  this->setValue("koch/summary", show);
 }
 
 
@@ -238,7 +238,7 @@ Settings::randomSummary() const {
 
 void
 Settings::setRandomSummary(bool show) {
-  this->setValue("random/summary", true);
+  this->setValue("random/summary", show);
 }
 
 bool

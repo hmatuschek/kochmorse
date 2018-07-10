@@ -195,9 +195,9 @@ KochTutor::_nextline() {
 /* ********************************************************************************************* *
  * RandomTutor
  * ********************************************************************************************* */
-RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, QObject *parent)
+RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
   : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
-    _lines(lines), _linecount(0), _text(), _chars()
+    _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars()
 {
   // Init random number generator
   srand(time(0));
@@ -209,9 +209,9 @@ RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, QO
          << QChar(0x2406) /* SN */;
 }
 
-RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, QObject *parent)
+RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
   : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
-    _text(), _chars()
+    _showSummary(showSummary), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(0));
@@ -224,6 +224,14 @@ RandomTutor::~RandomTutor() {
   // pass...
 }
 
+QString
+RandomTutor::summary() const {
+  if (! _showSummary)
+    return "";
+  return tr("\n\nSent %1 chars in %2 words and %3 lines.")
+      .arg(_chars_send).arg(_words_send).arg(_lines_send);
+}
+
 QChar
 RandomTutor::next() {
   if (0 == _chars.size()) { return '\0'; }
@@ -234,6 +242,12 @@ RandomTutor::next() {
     _nextline();
 
   QChar ch = _text.first(); _text.pop_front();
+  if ('\n' == ch)
+    _lines_send++;
+  else if (' ' == ch)
+    _words_send++;
+  else
+    _chars_send++;
   return ch;
 }
 
@@ -251,6 +265,8 @@ RandomTutor::reset()
   if (0 == _chars.size()) { return; }
   // Reset linecount
   _linecount = 0;
+  //
+  _chars_send = _words_send = _lines_send = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
   // sample a line

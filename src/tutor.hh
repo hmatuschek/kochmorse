@@ -120,12 +120,15 @@ class RandomTutor: public Tutor
 
 public:
   /** Constructor. Uses all symbols for practicing. */
-  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5, QObject *parent=0);
+  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5,
+                       bool showSummary=false, QObject *parent=0);
   /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
   explicit RandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5,
-                       int lines=5, QObject *parent=0);
+                       int lines=5, bool showSummary=false, QObject *parent=0);
   /** Destructor. */
   virtual ~RandomTutor();
+
+  QString summary() const;
 
   /** Samples the next symbol. */
   QChar next();
@@ -158,10 +161,14 @@ protected:
   int _lines;
   /** Number of lines send. */
   size_t _linecount;
+  bool _showSummary;
   /** Text for the current session. */
   QList<QChar> _text;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
+  size_t _chars_send;
+  size_t _words_send;
+  size_t _lines_send;
 };
 
 

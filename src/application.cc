@@ -34,7 +34,8 @@ Application::Application(int &argc, char *argv[])
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(),
                              settings.randomMinGroupSize(), settings.randomMaxGroupSize(),
-                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
+                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
+                             settings.randomSummary(), this);
     break;
 
   case Settings::TUTOR_QSO:
@@ -149,7 +150,8 @@ Application::applySettings()
   case Settings::TUTOR_RANDOM:
     _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
                              settings.randomMaxGroupSize(),
-                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()), this);
+                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
+                             settings.randomSummary(), this);
     break;
 
   case Settings::TUTOR_QSO:
