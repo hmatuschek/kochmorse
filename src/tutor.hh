@@ -101,7 +101,7 @@ protected:
   /** The number of lines to send, if negative send an infinite number of lines. */
   int _lines;
   /** The number of lines send. */
-  size_t _linecount;
+  int _linecount;
   bool _showSummary;
   /** The list of chars of the current session. */
   QList<QChar> _text;
@@ -160,7 +160,7 @@ protected:
   /** Number of lines to send. */
   int _lines;
   /** Number of lines send. */
-  size_t _linecount;
+  int _linecount;
   bool _showSummary;
   /** Text for the current session. */
   QList<QChar> _text;

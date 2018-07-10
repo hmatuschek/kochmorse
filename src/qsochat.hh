@@ -36,7 +36,7 @@ public:
   Token next();
 
 protected:
-  quint64 _offset;
+  int _offset;
   const QString &_text;
   QVector< QPair<QRegExp, Token::Type> > _pattern;
 };
