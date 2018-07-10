@@ -53,6 +53,10 @@ Application::Application(int &argc, char *argv[])
   case Settings::TUTOR_CHAT:
     _tutor = new ChatTutor(this);
     break;
+
+  case Settings::TUTOR_TEXTGEN:
+    _tutor = new GenTextTutor(settings.textGenFilename());
+    break;
   }
 
   // Connect singals
@@ -168,6 +172,10 @@ Application::applySettings()
 
   case Settings::TUTOR_CHAT:
     _tutor = new ChatTutor(this);
+    break;
+
+  case Settings::TUTOR_TEXTGEN:
+    _tutor = new GenTextTutor(settings.textGenFilename());
     break;
   }
 }

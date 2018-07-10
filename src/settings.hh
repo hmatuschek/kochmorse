@@ -26,7 +26,8 @@ public:
     TUTOR_QSO = 2,    ///< QSO Tutor.
     TUTOR_QCODE = 3,  ///< Q-code tutor.
     TUTOR_TX  = 4,    ///< The TX tutor.
-    TUTOR_CHAT  = 5   ///< The Chat tutor.
+    TUTOR_CHAT  = 5,  ///< The Chat tutor.
+    TUTOR_TEXTGEN = 6 ///< Generated text tuto.
   } Tutor;
 
 public:
@@ -110,6 +111,9 @@ public:
   bool randomSummary() const;
   void setRandomSummary(bool show);
 
+  QString textGenFilename() const;
+  void setTextGenFilename(const QString &filename);
+
   /** Noise effect: Enabled. */
   bool noiseEnabled() const;
   /** Noise effect: Enable/Disable noise effect. */
@@ -167,6 +171,7 @@ public:
   explicit QSOTutorSettingsView(QWidget *parent=0);
 
   void save();
+
 };
 
 /** A configuration panel for the Koch tutor. */
@@ -226,6 +231,24 @@ protected:
 };
 
 
+/** A configuration panel for the TextGen tutor. */
+class TextGenTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit TextGenTutorSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected slots:
+  void onSelectFile();
+
+protected:
+  QLineEdit *_filename;
+};
+
+
 /** Tutor selection, also displays the config panel of the currently selected tutor. */
 class TutorSettingsView: public QWidget
 {
@@ -247,6 +270,7 @@ protected:
   QSOTutorSettingsView *_qcodeSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;
+  TextGenTutorSettingsView *_textgetSettings;
 };
 
 

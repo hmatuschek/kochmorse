@@ -172,26 +172,6 @@ protected:
 };
 
 
-/** A simple QSO tutor. */
-class QSOTutor: public Tutor
-{
-  Q_OBJECT
-
-public:
-  explicit QSOTutor(QObject *parent=0);
-  virtual ~QSOTutor();
-
-  QChar next();
-  bool atEnd();
-  void reset();
-  bool needsDecoder() const;
-
-protected:
-  QVector<QString> _qso;
-  QString _currentQSO;
-};
-
-
 /** A generated QSO tutor. */
 class GenTextTutor: public Tutor
 {

@@ -5,8 +5,13 @@
 #include <QLabel>
 #include <QListWidgetItem>
 #include <QGroupBox>
+#include <QPushButton>
+#include <QFileInfo>
+#include <QFileDialog>
 #include "morseencoder.hh"
 #include "globals.hh"
+#include <QDebug>
+
 
 
 /* ********************************************************************************************* *
@@ -241,6 +246,16 @@ Settings::setRandomSummary(bool show) {
   this->setValue("random/summary", show);
 }
 
+QString
+Settings::textGenFilename() const {
+  return this->value("textgen/filename").toString();
+}
+
+void
+Settings::setTextGenFilename(const QString &filename) {
+  this->setValue("textgen/filename", filename);
+}
+
 bool
 Settings::noiseEnabled() const {
   return value("noise/enabled", false).toBool();
@@ -396,6 +411,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->addItem(tr("Q-Codes"));
   _tutor->addItem(tr("Transmit"));
   _tutor->addItem(tr("Chat"));
+  _tutor->addItem(tr("Text generator"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
@@ -403,6 +419,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _qcodeSettings  = new QSOTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
   _chatSettings = new ChatTutorSettingsView();
+  _textgetSettings = new TextGenTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
@@ -411,6 +428,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutorSettings->addWidget(_qcodeSettings);
   _tutorSettings->addWidget(_txSettings);
   _tutorSettings->addWidget(_chatSettings);
+  _tutorSettings->addWidget(_textgetSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
@@ -431,6 +449,9 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_CHAT == settings.tutor()) {
     _tutor->setCurrentIndex(5);
     _tutorSettings->setCurrentIndex(5);
+  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
+    _tutor->setCurrentIndex(6);
+    _tutorSettings->setCurrentIndex(6);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -454,6 +475,7 @@ TutorSettingsView::save() {
   // Save all tutors
   _kochSettings->save();
   _randSettings->save();
+  _textgetSettings->save();
 
   // Get tutor by index
   Settings settings;
@@ -469,6 +491,8 @@ TutorSettingsView::save() {
     settings.setTutor(Settings::TUTOR_TX);
   } else if (5 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_CHAT);
+  } else if (6 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_TEXTGEN);
   }
 }
 
@@ -718,6 +742,47 @@ QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
 void
 QSOTutorSettingsView::save() {
   // pass...
+}
+
+
+/* ********************************************************************************************* *
+ * TextGen Tutor Settings Widget
+ * ********************************************************************************************* */
+TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
+  : QGroupBox(parent)
+{
+  Settings settings;
+
+  _filename = new QLineEdit();
+  _filename->setText(settings.textGenFilename());
+
+  QPushButton *select = new QPushButton("...");
+
+  QHBoxLayout *llayout = new QHBoxLayout();
+  llayout->addWidget(_filename, 1);
+  llayout->addWidget(select);
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Rules"), llayout);
+  setLayout(layout);
+
+  connect(select, SIGNAL(clicked(bool)), this, SLOT(onSelectFile()));
+}
+
+void
+TextGenTutorSettingsView::save() {
+  qDebug() << "Got" << _filename->text();
+  QFileInfo info(_filename->text());
+  if (info.exists())
+    Settings().setTextGenFilename(info.absoluteFilePath());
+}
+
+void
+TextGenTutorSettingsView::onSelectFile() {
+  QFileInfo info(_filename->text());
+  QString filename = QFileDialog::getOpenFileName(this, tr("Select rules."), info.absoluteDir().path());
+  if (! filename.isEmpty())
+    _filename->setText(filename);
 }
 
 
