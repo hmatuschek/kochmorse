@@ -27,7 +27,8 @@ Application::Application(int &argc, char *argv[])
   case Settings::TUTOR_KOCH:
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
-                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
+                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
+                           settings.kochSummary(), this);
     break;
 
   case Settings::TUTOR_RANDOM:
@@ -72,6 +73,13 @@ Application::setVolume(double factor) {
   // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
   double db = -60 + 60*(1-factor/2);
   _decoder->setThreshold(std::pow(10, db/10));
+}
+
+QString
+Application::summary() const {
+  if (0 == _tutor)
+    return "";
+  return _tutor->summary();
 }
 
 void
@@ -134,7 +142,8 @@ Application::applySettings()
   case Settings::TUTOR_KOCH:
     _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
-                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()), this);
+                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
+                           settings.kochSummary(), this);
     break;
 
   case Settings::TUTOR_RANDOM:

@@ -90,6 +90,8 @@ public:
   void setKochInifiniteLineCount(bool enable);
   int kochLineCount() const;
   void setKochLineCount(int lines);
+  bool kochSummary() const;
+  void setKochSummary(bool show);
 
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
@@ -105,6 +107,8 @@ public:
   void setRandomInifiniteLineCount(bool enable);
   int randomLineCount() const;
   void setRandomLineCount(int lines);
+  bool randomSummary() const;
+  void setRandomSummary(bool show);
 
   /** Noise effect: Enabled. */
   bool noiseEnabled() const;
@@ -189,6 +193,7 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_summary;
 };
 
 
@@ -217,6 +222,7 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_summary;
 };
 
 

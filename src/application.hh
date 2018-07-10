@@ -22,6 +22,8 @@ public:
   /** Sets the output volume. */
   void setVolume(double factor);
 
+  QString summary() const;
+
 public slots:
   /** Starts a session. */
   void startSession();

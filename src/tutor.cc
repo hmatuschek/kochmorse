@@ -18,6 +18,11 @@ Tutor::~Tutor() {
   // pass...
 }
 
+QString
+Tutor::summary() const {
+  return "";
+}
+
 void
 Tutor::handle(const QChar &ch) {
   // pass...
@@ -41,11 +46,12 @@ QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 KochTutor::KochTutor(int lesson, bool prefLastChars, bool repeatLastChar,
                      size_t minGroupSize, size_t maxGroupSize,
-                     int lines, QObject *parent)
+                     int lines, bool showSummary, QObject *parent)
   : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars), _repeatLastChar(repeatLastChar),
     _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
-    _lines(lines), _linecount(0), _text()
+    _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars_send(0),
+    _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(0));
@@ -63,6 +69,12 @@ KochTutor::next() {
     _nextline();
 
   QChar ch = _text.first(); _text.pop_front();
+  if ('\n' == ch)
+    _lines_send++;
+  else if (' ' == ch)
+    _words_send++;
+  else
+    _chars_send++;
   return ch;
 }
 
@@ -110,6 +122,19 @@ KochTutor::setLines(int lines) {
   _lines = lines;
 }
 
+QString
+KochTutor::summary() const {
+  if (! _showSummary)
+    return "";
+  return tr("\n\nSent %1 chars in %2 words and %3 lines.")
+      .arg(_chars_send).arg(_words_send).arg(_lines_send);
+}
+
+void
+KochTutor::setShowSummary(bool show) {
+  _showSummary = show;
+}
+
 void
 KochTutor::reset()
 {
@@ -128,6 +153,9 @@ KochTutor::reset()
   }
   // sample a line of text.
   _nextline();
+  _chars_send = 0;
+  _words_send = 0;
+  _lines_send = 0;
 }
 
 bool

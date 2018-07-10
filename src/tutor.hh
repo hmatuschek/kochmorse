@@ -30,6 +30,8 @@ public:
   virtual void reset() = 0;
   /** Returns true if the tutor requires a decoder (has user input). */
   virtual bool needsDecoder() const = 0;
+  /** Returns a summary of the lesson. */
+  virtual QString summary() const;
   /** Handles the received char. */
   virtual void handle(const QChar &ch);
 };
@@ -48,7 +50,7 @@ public:
    * @param parent Specifies the QObject parent. */
   KochTutor(int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
             size_t minGroupSize=5, size_t maxGroupSize=5,
-            int lines=5, QObject *parent=0);
+            int lines=5, bool showSummary=false, QObject *parent=0);
   /** Destructor. */
   virtual ~KochTutor();
 
@@ -58,6 +60,7 @@ public:
   bool atEnd();
   /** Reset/restarts a session. */
   void reset();
+  QString summary() const;
   /** Returns @c false. */
   bool needsDecoder() const;
 
@@ -77,6 +80,7 @@ public:
   int lines() const;
   /** Sets the number of lines to send. */
   void setLines(int lines);
+  void setShowSummary(bool show);
 
 protected:
   /** Samples the next line of text. */
@@ -98,10 +102,14 @@ protected:
   int _lines;
   /** The number of lines send. */
   size_t _linecount;
+  bool _showSummary;
   /** The list of chars of the current session. */
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */
   static QVector<QChar> _lessons;
+  size_t _chars_send;
+  size_t _words_send;
+  size_t _lines_send;
 };
 
 

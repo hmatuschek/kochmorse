@@ -95,6 +95,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
 void
 MainWindow::onSessionFinished() {
+  _text->insertPlainText(_app.summary());
   _play->setChecked(false);
 }
 
