@@ -64,6 +64,15 @@ public:
   /** Sets the sound. */
   void setSound(MorseEncoder::Sound sound);
 
+  double decoderLevel() const;
+  void setDecoderLevel(double level);
+
+  QAudioDeviceInfo outputDevice() const;
+  void setOutputDevice(const QString &devicename);
+
+  QAudioDeviceInfo inputDevice() const;
+  void setInputDevice(const QString &devicename);
+
   /** Returns the current tutor. */
   Tutor tutor() const;
   /** Sets the tutor. */
@@ -311,6 +320,21 @@ protected:
 };
 
 
+class DeviceSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit DeviceSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QComboBox *_inputDevices;
+  QComboBox *_outputDevices;
+  QSpinBox  *_decoderLevel;
+};
+
 /** The preferences dialog. */
 class SettingsDialog : public QDialog
 {
@@ -326,6 +350,7 @@ protected:
   TutorSettingsView *_tutor;
   CodeSettingsView *_code;
   EffectSettingsView *_effects;
+  DeviceSettingsView *_devices;
 };
 
 #endif // SETTINGSCTRL_HH

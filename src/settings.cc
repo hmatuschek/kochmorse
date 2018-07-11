@@ -11,7 +11,7 @@
 #include "morseencoder.hh"
 #include "globals.hh"
 #include <QDebug>
-
+#include <QAudioDeviceInfo>
 
 
 /* ********************************************************************************************* *
@@ -80,6 +80,47 @@ Settings::sound() const {
 void
 Settings::setSound(MorseEncoder::Sound sound) {
   this->setValue("sound", uint(sound));
+}
+
+double
+Settings::decoderLevel() const {
+  return this->value("decoderlevel", 0).toDouble();
+}
+void
+Settings::setDecoderLevel(double level) {
+  this->setValue("decoderlevel", level);
+}
+
+QAudioDeviceInfo
+Settings::outputDevice() const {
+  QAudioDeviceInfo def(QAudioDeviceInfo::defaultOutputDevice());
+  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
+  QString devname = this->value("output", def.deviceName()).toString();
+  foreach (auto dev, devices) {
+    if (dev.deviceName() == devname)
+      return dev;
+  }
+  return def;
+}
+void
+Settings::setOutputDevice(const QString &devicename) {
+  this->setValue("output", devicename);
+}
+
+QAudioDeviceInfo
+Settings::inputDevice() const {
+  QAudioDeviceInfo def(QAudioDeviceInfo::defaultInputDevice());
+  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioInput));
+  QString devname = this->value("input", def.deviceName()).toString();
+  foreach (auto dev, devices) {
+    if (dev.deviceName() == devname)
+      return dev;
+  }
+  return def;
+}
+void
+Settings::setInputDevice(const QString &devicename) {
+  this->setValue("input", devicename);
 }
 
 Settings::Tutor
@@ -316,11 +357,13 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
+  _devices = new DeviceSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
   _tabs->addTab(_code, tr("Morse Code"));
   _tabs->addTab(_effects, tr("Effects"));
+  _tabs->addTab(_devices, tr("Devices"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -340,6 +383,7 @@ SettingsDialog::accept() {
   _tutor->save();
   _code->save();
   _effects->save();
+  _devices->save();
   QDialog::accept();
 }
 
@@ -384,6 +428,7 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   layout->addRow(tr("Tone (Hz)"), _tone);
   layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
   layout->addRow(tr("Sound"), _sound);
+
   this->setLayout(layout);
 }
 
@@ -896,3 +941,50 @@ EffectSettingsView::save() {
   settings.setFadingMaxDamp(_fadingMaxDamp->value());
 }
 
+
+/* ********************************************************************************************* *
+ * Device Settings Widget
+ * ********************************************************************************************* */
+DeviceSettingsView::DeviceSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _outputDevices = new QComboBox();
+  QAudioDeviceInfo currentDevice = settings.outputDevice();
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+  foreach (auto device, devices) {
+    _outputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
+  }
+
+  _inputDevices = new QComboBox();
+  currentDevice = settings.inputDevice();
+  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  foreach (auto device, devices) {
+    _inputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
+  }
+
+  _decoderLevel = new QSpinBox();
+  _decoderLevel->setMinimum(-60);
+  _decoderLevel->setMaximum(0);
+  _decoderLevel->setValue(settings.decoderLevel());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Output device"), _outputDevices);
+  layout->addRow(tr("Input device"), _inputDevices);
+  layout->addRow(tr("Detector threshold"), _decoderLevel);
+  setLayout(layout);
+}
+
+void
+DeviceSettingsView::save() {
+  Settings settings;
+
+  settings.setOutputDevice(_outputDevices->currentText());
+  settings.setInputDevice(_inputDevices->currentText());
+  settings.setDecoderLevel(_decoderLevel->value());
+}
