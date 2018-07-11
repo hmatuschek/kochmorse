@@ -50,7 +50,7 @@ protected slots:
 
 protected:
   /** The audio output device. */
-  PortAudioSink *_audio_sink;
+  QAudioSink *_audio_sink;
   /** The noise effect instance. */
   NoiseEffect *_noiseEffect;
   /** The "fading" effect instance. */
@@ -61,7 +61,7 @@ protected:
   Tutor *_tutor;
 
   /** The audio source device. */
-  PortAudioSource *_audio_src;
+  QAudioSource *_audio_src;
   /** The decoder device. */
   MorseDecoder *_decoder;
 };

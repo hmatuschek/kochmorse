@@ -8,9 +8,9 @@ Application::Application(int &argc, char *argv[])
  : QApplication(argc, argv), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
 {
   Settings settings;
-  PortAudio::init();
+  //PortAudio::init();
 
-  _audio_sink = new PortAudioSink(this);
+  _audio_sink = new QAudioSink(this);
   _audio_sink->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(_audio_sink, settings.noiseEnabled(), settings.noiseSNR(), this);
@@ -21,7 +21,7 @@ Application::Application(int &argc, char *argv[])
                               settings.speed(), settings.effSpeed(), settings.sound(), true, this);
 
   _decoder = new MorseDecoder(settings.speed(), 1e-5, this);
-  _audio_src = new PortAudioSource(_decoder, this);
+  _audio_src = new QAudioSource(_decoder, this);
 
   switch (settings.tutor()) {
   case Settings::TUTOR_KOCH:

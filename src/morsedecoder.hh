@@ -8,7 +8,7 @@
 /** An annoyingly strict morse decoder.
  * This class implements a simple but relatively strict morse decoder as an @c AudioSink and
  * decodes received samples assuming a specified speed in terms of WPM. */
-class MorseDecoder : public AudioSink
+class MorseDecoder : public QObject, public AudioSink
 {
   Q_OBJECT
 
