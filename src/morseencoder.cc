@@ -5,14 +5,15 @@
 
 
 
-MorseEncoder::MorseEncoder(AudioSink *sink, double ditFreq, double daFreq,
+MorseEncoder::MorseEncoder(QIODevice *sink, double ditFreq, double daFreq,
                            double speed, double effSpeed, Sound sound, bool parallel, QObject *parent)
-  : QThread(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
+  : QObject(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
     _sound(sound), _unitLength(0), _effUnitLength(0), _ditSample(), _daSample(), _icPause(),
-    _iwPause(), _sink(sink), _parallel(parallel), _running(false), _queueLock(), _queueWait(),
-    _queue(), _played(0)
+    _iwPause(), _sink(sink),
+    _queue(), _tsend(0), _played(0)
 {
   _createSamples();
+  connect(_sink, SIGNAL(bytesWritten(qint64)), this, SLOT(onBytesWritten(qint64)));
 }
 
 
@@ -88,59 +89,39 @@ MorseEncoder::_createSamples()
 
 void
 MorseEncoder::send(const QString &text) {
+  bool empty = _queue.isEmpty();
   for (QString::const_iterator c = text.begin(); c != text.end(); c++) {
-    this->send(*c);
+    if ( (! Globals::charTable.contains(*c)) && (' ' != *c) && ('\n' != *c) )
+      continue;
+    _queue.append(*c);
+  }
+  if (empty && (! _queue.isEmpty())) {
+    _send(_queue.front());
+    _queue.pop_front();
   }
 }
 
 
 void
 MorseEncoder::send(QChar ch) {
-  if (QChar(0) == ch)
+  if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch))
     return;
-
-  if (_parallel) {
-    // If parallel put char in queue
-    _queueLock.lock();
-    _queue.append(ch);
-    _queueWait.wakeOne();
-    _queueLock.unlock();
-  } else {
-    // otherwise encode & play directly
-    this->_send(ch);
-  }
+  if (_queue.isEmpty())
+    _send(ch);
+  else
+    _queue.push_back(ch);
 }
 
 
 void
 MorseEncoder::start() {
-  if (! _parallel) { return; }
-  if (_running) { return; }
-  _running = true;
-  // Check if the thread is still running
-  if (isRunning()) { return; }
-  // Reset time lapsed
   resetTime();
-  // Start thread
-  QThread::start();
 }
 
 
 void
-MorseEncoder::stop()
-{
-  // If not parallel -> skip.
-  if (! _parallel) { return; }
-  // Otherwise signal thread to exit...
-  _running = false;
-  // ... clear queue ...
-  _queueLock.lock();
+MorseEncoder::stop() {
   _queue.clear();
-  _queueLock.unlock();
-  // ... signal all threads ...
-  _queueWait.wakeAll();
-  // ... and join threads
-  this->wait();
 }
 
 
@@ -151,6 +132,7 @@ MorseEncoder::time() const {
 
 void
 MorseEncoder::resetTime() {
+  _tsend = 0;
   _played = 0;
 }
 
@@ -183,58 +165,53 @@ MorseEncoder::setSound(Sound sound) {
 }
 
 void
-MorseEncoder::run() {
-  while (_running) {
-    _queueLock.lock();
-    // If queue is empty, wait for a char
-    if (0 == _queue.size()) { _queueWait.wait(&_queueLock); }
-    if (0 == _queue.size()) { _queueLock.unlock(); continue; }
-    // Take a char from the queue
-    QChar ch = _queue.first(); _queue.pop_front();
-    _queueLock.unlock();
-    // If queue is empty now, signal empty queue.
-    if (0 == _queue.size()) { emit charsSend(); }
-    // Encode & play char
-    this->_send(ch);
-    // Signal char send
-    emit charSend(ch);
-  }
-}
-
-
-void
 MorseEncoder::_send(QChar ch)
 {
   // ensure lower-case letter
   ch = ch.toLower();
+
   // If space -> send inter-word pause
   if ((' ' == ch) || ('\n') == ch){
     // "play" inter-word pause
-    _sink->process(_iwPause);
+    _sink->write(_iwPause);
     // Update time
-    _played += double(1000*_iwPause.size())/(2*Globals::sampleRate);
+    _tsend += double(1000*_iwPause.size())/(2*Globals::sampleRate);
+    emit charSend(ch);
     return;
   }
-  // If not in code-table skip
-  if (! Globals::charTable.contains(ch)) { return; }
+
   // Get code
   QString code = Globals::charTable[ch];
   // Send code
   for (QString::iterator sym=code.begin(); sym!=code.end(); sym++) {
     if ('.' == *sym) {
       // Play "dit"
-      _sink->process(_ditSample);
+      _sink->write(_ditSample);
       // Update time
-      _played += double(1000*_ditSample.size())/(2*Globals::sampleRate);
+      _tsend += double(1000*_ditSample.size())/(2*Globals::sampleRate);
     } else {
       // Play "da"
-      _sink->process(_daSample);
+      _sink->write(_daSample);
       // update time
-      _played += double(1000*_daSample.size())/(2*Globals::sampleRate);
+      _tsend += double(1000*_daSample.size())/(2*Globals::sampleRate);
     }
   }
   // Send inter char pause:
-  _sink->process(_icPause);
+  _sink->write(_icPause);
   // Update time elapsed
-  _played += double(1000*_icPause.size())/(2*Globals::sampleRate);
+  _tsend += double(1000*_icPause.size())/(2*Globals::sampleRate);
+  emit charSend(ch);
+}
+
+void
+MorseEncoder::onBytesWritten(qint64 n) {
+  double dt = double(1000*n)/(2*Globals::sampleRate);
+  _played += dt;
+  if ((_tsend-_played) < 100) {
+    if (_queue.isEmpty())
+      emit charsSend();
+    else {
+      _send(_queue.front()); _queue.pop_front();
+    }
+  }
 }

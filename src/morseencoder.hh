@@ -11,7 +11,7 @@
 
 /** Implements the morse-encoder either running in a separate thread or performing the encoding and
  * playback blocking. */
-class MorseEncoder : public QThread
+class MorseEncoder : public QObject
 {
   Q_OBJECT
 
@@ -33,7 +33,7 @@ public:
    * @param parallel If @c true, the encoding and playback is performed in a separate thread.
    * @param parent Specifies the @c QObject parent. */
   explicit MorseEncoder(
-      AudioSink *sink, double ditFreq, double daFreq, double speed, double effSpeed,
+      QIODevice *sink, double ditFreq, double daFreq, double speed, double effSpeed,
       Sound sound, bool parallel=true, QObject *parent= 0);
 
   /** Sends the given text. */
@@ -67,9 +67,10 @@ signals:
   /** Signals that all chars in the queue have been send. */
   void charsSend();
 
+protected slots:
+  void onBytesWritten(qint64 n);
+
 protected:
-  /** The main function of the parallel thread. */
-  virtual void run();
   /** Encodes and plays the given char (blocking). */
   void _send(QChar ch);
   /** (Re-) Creates the dit, da and pause samples. */
@@ -103,18 +104,11 @@ protected:
   QByteArray _iwPause;
 
   /** Audio backend. */
-  AudioSink *_sink;
+  QIODevice *_sink;
 
-  /** If @c true, the morse-code generation and playback will happen in a separate thread. */
-  bool _parallel;
-  /** If true, the encoding thread is running. */
-  bool _running;
-  /** The queue lock. */
-  QMutex         _queueLock;
-  /** The queue condition (empty or not). */
-  QWaitCondition _queueWait;
-  /** The character queue. */
   QList<QChar>   _queue;
+  /** The number of milliseconds send. */
+  double _tsend;
   /** The number of milliseconds played. */
   double _played;
 };

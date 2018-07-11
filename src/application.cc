@@ -69,7 +69,6 @@ Application::Application(int &argc, char *argv[])
 
 Application::~Application() {
   _audio_src->stop();
-  PortAudio::finalize();
 }
 
 void

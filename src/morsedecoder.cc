@@ -5,11 +5,12 @@
 
 
 MorseDecoder::MorseDecoder(double speed, float threshold, QObject *parent)
-  : QObject(parent), AudioSink(), _speed(speed), _ditLength(0), _unitLength(0),
+  : QIODevice(parent), _speed(speed), _ditLength(0), _unitLength(0),
     _Nsamples(0), _buffer(0), _threshold(threshold), _highCount(0), _lowCount(0),
     _lastChar('\0')
 {
   _updateConfig();
+  open(QIODevice::WriteOnly);
 }
 
 MorseDecoder::~MorseDecoder() {
@@ -48,11 +49,12 @@ MorseDecoder::_updateConfig() {
 }
 
 
-void
-MorseDecoder::process(const QByteArray &data) {
+qint64
+MorseDecoder::writeData(const char *data, qint64 len)
+{
   // Extract frames from raw data
-  size_t Nframes = data.size()/2;
-  const int16_t *data_ptr = reinterpret_cast<const int16_t *>(data.data());
+  size_t Nframes = len/2;
+  const int16_t *data_ptr = reinterpret_cast<const int16_t *>(data);
   // Process each frame
   for (size_t i=0; i<Nframes; i++) {
     // Append frame to buffer
@@ -95,8 +97,14 @@ MorseDecoder::process(const QByteArray &data) {
       }
     }
   }
+  emit bytesWritten(len);
+  return len;
 }
 
+qint64
+MorseDecoder::readData(char *data, qint64 maxlen) {
+  return 0;
+}
 
 bool
 MorseDecoder::_isDot() const {

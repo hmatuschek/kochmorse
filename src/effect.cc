@@ -7,11 +7,13 @@
 /* ******************************************************************************************** *
  * Noise effect
  * ******************************************************************************************** */
-NoiseEffect::NoiseEffect(AudioSink *sink, bool enabled, float snr, QObject *parent)
-  : QObject(parent), AudioSink(), _sink(sink), _enabled(enabled), _snr(snr)
+NoiseEffect::NoiseEffect(QIODevice *sink, bool enabled, float snr, QObject *parent)
+  : QIODevice(parent), _sink(sink), _enabled(enabled), _snr(snr)
 {
   // init RNG
   srand(time(0));
+  connect(_sink, SIGNAL(bytesWritten(qint64)), this, SIGNAL(bytesWritten(qint64)));
+  open(QIODevice::WriteOnly);
 }
 
 NoiseEffect::~NoiseEffect() {
@@ -32,16 +34,15 @@ NoiseEffect::gaussRNG(float &a, float &b) {
   b = y*std::sqrt(-2*std::log(s)/s);
 }
 
-void
-NoiseEffect::process(const QByteArray &data) {
+qint64
+NoiseEffect::writeData(const char *data, qint64 len) {
   // If disabled -> skip
   if (! _enabled) {
-    _sink->process(data);
-    return;
+    return _sink->write(data, len);
   }
 
   // Number of frames
-  size_t n = (data.size()/2);
+  size_t n = (len/2);
 
   // Copy input buffer
   QByteArray buffer(data);
@@ -66,7 +67,12 @@ NoiseEffect::process(const QByteArray &data) {
     float a, b; gaussRNG(a,b);
     in[n-1] = s_factor*in[n-1] + n_factor*a;
   }
-  _sink->process(buffer);
+  return _sink->write(buffer);
+}
+
+qint64
+NoiseEffect::readData(char *data, qint64 maxlen) {
+  return 0;
 }
 
 void
@@ -84,8 +90,8 @@ NoiseEffect::setSNR(float snr) {
 /* ******************************************************************************************** *
  * Fading effect
  * ******************************************************************************************** */
-FadingEffect::FadingEffect(AudioSink *sink, bool enabled, float maxDamp, float rate, QObject *parent)
-  : QObject(parent), AudioSink(), _sink(sink), _enabled(enabled), _maxDamp(0), _rate(rate),
+FadingEffect::FadingEffect(QIODevice *sink, bool enabled, float maxDamp, float rate, QObject *parent)
+  : QIODevice(parent), _sink(sink), _enabled(enabled), _maxDamp(0), _rate(rate),
     _dS(0), _dF(0), _factor(1)
 {
   // init RNG
@@ -97,19 +103,24 @@ FadingEffect::FadingEffect(AudioSink *sink, bool enabled, float maxDamp, float r
   _dS = -Globals::sampleRate*60*std::log(double(rand())/RAND_MAX)/_rate;
   // compute slope
   _dF = -(1-_maxDamp)/_dS;
+
+  connect(_sink, SIGNAL(bytesWritten(qint64)), this, SIGNAL(bytesWritten(qint64)));
+  open(QIODevice::WriteOnly);
 }
 
 FadingEffect::~FadingEffect() {
   // pass...
 }
 
-void
-FadingEffect::process(const QByteArray &data)
+qint64
+FadingEffect::writeData(const char *data, qint64 len)
 {
   // Skip if disabled
-  if (! _enabled) { _sink->process(data); return; }
+  if (! _enabled)
+    return _sink->write(data, len);
+
   // Copy input buffer
-  QByteArray buffer(data);
+  QByteArray buffer(data, len);
   int16_t *values = reinterpret_cast<int16_t *>(buffer.data());
   // Do!
   for (int i=0; i<(buffer.size()/2); i++) {
@@ -123,7 +134,12 @@ FadingEffect::process(const QByteArray &data)
     // Scale value
     values[i] *= _factor; _factor += _dF; _dS--;
   }
-  _sink->process(buffer);
+  return _sink->write(buffer);
+}
+
+qint64
+FadingEffect::readData(char *data, qint64 maxlen) {
+  return 0;
 }
 
 void
