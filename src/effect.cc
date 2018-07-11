@@ -37,24 +37,23 @@ NoiseEffect::gaussRNG(float &a, float &b) {
 qint64
 NoiseEffect::writeData(const char *data, qint64 len) {
   // If disabled -> skip
-  if (! _enabled) {
+  if (! _enabled)
     return _sink->write(data, len);
-  }
 
   // Number of frames
   size_t n = (len/2);
 
   // Copy input buffer
-  QByteArray buffer(data);
+  QByteArray buffer(data, 2*n);
   int16_t *in = reinterpret_cast<int16_t *>(buffer.data());
   // Get noise and signal scale-factor.
   float n_factor=0, s_factor=1;
   if (0 > _snr) {
     // If SNR < 0, keep noise at level "1" == 2**12, but reduce signal
-    n_factor = (2<<12); s_factor = std::pow(10, _snr/10);
+    n_factor = ((1<<14)-1); s_factor = std::pow(10, _snr/20-6);
   } else {
     // If SNR > 0, keep signal at level "1" and scale noise down.
-    n_factor = (2<<12)*std::pow(10, -_snr/10); s_factor = 1;
+    n_factor = ((1<<14)-1)*std::pow(10, -_snr/20); s_factor = 0.5;
   }
   // For every pair of frames
   for (size_t i=0; i<n; i+=2) {

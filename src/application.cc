@@ -74,8 +74,8 @@ Application::~Application() {
 void
 Application::setVolume(double factor) {
   _audio_sink->setVolume(factor);
-  // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
-  double db = -60 + 60*(1-factor/2);
+  // factor is [0,1] -> mapped logarithmic on [-60, 0] db for decoder threshold
+  double db = -60 + 60*(1-factor);
   _decoder->setThreshold(std::pow(10, db/10));
 }
 

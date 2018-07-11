@@ -25,7 +25,6 @@ public:
   void setVolume(double factor);
 
   bool isSequential() const;
-  bool waitForBytesWritten(int msecs);
   qint64 bytesAvailable() const;
   qint64 bytesToWrite() const;
 

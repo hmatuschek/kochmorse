@@ -54,7 +54,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   // Volume slider
   _volume = new QSlider(Qt::Horizontal);
   _volume->setMinimum(0);
-  _volume->setMaximum(200);
+  _volume->setMaximum(100);
   _volume->setValue(int(100*settings.volume()));
   _volumeLabel = new QLabel(tr("Volume: %1%").arg(int(100*settings.volume())));
 
@@ -135,7 +135,7 @@ void
 MainWindow::onVolumeChanged(int value)
 {
   double factor = double(value)/100;
-  factor = std::max(0., std::min(factor, 2.));
+  factor = std::max(0., std::min(factor, 1.));
 
   _app.setVolume(factor);
 

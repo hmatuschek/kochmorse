@@ -39,24 +39,12 @@ QAudioSink::volume() const {
 
 void
 QAudioSink::setVolume(double factor) {
-  return _output->setVolume(factor);
+  return _output->setVolume(std::max(0.0, std::min(factor,1.0)));
 }
 
 bool
 QAudioSink::isSequential() const {
   return true;
-}
-
-bool
-QAudioSink::waitForBytesWritten(int msecs) {
-  QTimer timer;
-  timer.setSingleShot(true);
-  QEventLoop loop;
-  connect(this, SIGNAL(bytesWritten(qint64)), &loop, SLOT(quit()));
-  connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-  timer.start(msecs);
-  loop.exec();
-  return timer.isActive();
 }
 
 qint64
@@ -71,14 +59,12 @@ QAudioSink::bytesToWrite() const {
 
 qint64
 QAudioSink::readData(char *data, qint64 maxlen) {
-  if (0 == _buffer.size())
-    qDebug() << "underrun.";
   maxlen = std::min(int(maxlen), _buffer.size());
   if (0 >= maxlen)
     return maxlen;
 
   emit bytesWritten(maxlen);
-  memcpy(data, _buffer.data_ptr(), maxlen);
+  memcpy(data, _buffer.constData(), maxlen);
   _buffer.remove(0, maxlen);
   return maxlen;
 }
