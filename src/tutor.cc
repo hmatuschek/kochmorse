@@ -406,22 +406,9 @@ TXTutor::needsDecoder() const {
  * ChatTutor
  * ********************************************************************************************* */
 ChatTutor::ChatTutor(QObject *parent)
-  : Tutor(parent), _qhal(), _inputbuffer(), _outputbuffer()
+  : Tutor(parent), _chat(), _inputbuffer(), _outputbuffer()
 {
-  QString buffer, line;
-  QTextStream txt;
-  TextGen generator(":/qso/qsogen.xml");
-  QHash<QString, QString> ctx;
-
-  // Teach QHal:
-  for (int i=0; i<5000; i++) {
-    buffer.clear();
-    txt.setString(&buffer);
-    generator.generate(txt, ctx);
-    while (txt.readLineInto(&line)) {
-      _qhal.learn(line.simplified());
-    }
-  }
+  // pass...
 }
 
 ChatTutor::~ChatTutor() {
@@ -458,7 +445,8 @@ void
 ChatTutor::handle(const QChar &ch) {
   _inputbuffer.push_back(ch);
   if (_inputbuffer.endsWith(" k ")) {
-    _outputbuffer.append(_qhal.reply(_inputbuffer.simplified()));
+    QTextStream outstr(&_outputbuffer);
+    _chat.handle(_inputbuffer.simplified(), outstr);
     _inputbuffer.clear();
   }
 }

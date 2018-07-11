@@ -5,8 +5,8 @@
 #include <QList>
 #include <QVector>
 #include <QSet>
-#include "qhal.hh"
 #include "textgen.hh"
+#include "qsochat.hh"
 
 
 /** Abstract base class of all tutor classes. */
@@ -222,7 +222,7 @@ public:
   void handle(const QChar &ch);
 
 protected:
-  QHalModel _qhal;
+  QSOChat _chat;
   QString _inputbuffer;
   QString _outputbuffer;
 };
