@@ -119,6 +119,7 @@ QAudioSink::readData(char *data, qint64 maxlen) {
 
   memcpy(data, _buffer.data_ptr(), maxlen);
   _buffer.remove(0, maxlen);
+  emit bytesWritten(maxlen);
   return maxlen;
 }
 
@@ -128,7 +129,7 @@ QAudioSink::writeData(const char *data, qint64 len) {
 }
 
 
-/* ***************************************paInt16****************************************************** *
+/* ********************************************************************************************* *
  * PortAudioSource, recording
  * ********************************************************************************************* */
 PortAudioSource::PortAudioSource(AudioSink *sink, QObject *parent)
