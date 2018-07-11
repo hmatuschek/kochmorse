@@ -731,9 +731,10 @@ RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
  * QSO Tutor Settings Widget
  * ********************************************************************************************* */
 QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("QSO tutor settings"), parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  label->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(label);
   setLayout(layout);
@@ -749,21 +750,30 @@ QSOTutorSettingsView::save() {
  * TextGen Tutor Settings Widget
  * ********************************************************************************************* */
 TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("Generated text tutor settings"),parent)
 {
   Settings settings;
+  QString help = tr("Select a rule file (ending on .xml) "
+                    "or a plain-text file (ending on .txt) to send.");
 
   _filename = new QLineEdit();
   _filename->setText(settings.textGenFilename());
+  _filename->setToolTip(help);
+  _filename->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
 
   QPushButton *select = new QPushButton("...");
+  select->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
   QHBoxLayout *llayout = new QHBoxLayout();
   llayout->addWidget(_filename, 1);
   llayout->addWidget(select);
 
   QFormLayout *layout = new QFormLayout();
-  layout->addRow(tr("Rules"), llayout);
+  QLabel *label = new QLabel(help);
+  label->setWordWrap(true);
+  layout->addWidget(label);
+  layout->addRow(tr("Rule/text file"), llayout);
+  layout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
   setLayout(layout);
 
   connect(select, SIGNAL(clicked(bool)), this, SLOT(onSelectFile()));
@@ -780,7 +790,9 @@ TextGenTutorSettingsView::save() {
 void
 TextGenTutorSettingsView::onSelectFile() {
   QFileInfo info(_filename->text());
-  QString filename = QFileDialog::getOpenFileName(this, tr("Select rules."), info.absoluteDir().path());
+  QString filename = QFileDialog::getOpenFileName(this, tr("Select rule or text file."),
+                                                  info.absoluteDir().path(),
+                                                  tr("Rule file (*.xml);;Text file (*.txt)"));
   if (! filename.isEmpty())
     _filename->setText(filename);
 }
@@ -790,9 +802,10 @@ TextGenTutorSettingsView::onSelectFile() {
  * TX Tutor Settings Widget
  * ********************************************************************************************* */
 TXTutorSettingsView::TXTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("Transmit tutor settings"),parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  label->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(label);
   setLayout(layout);
@@ -808,9 +821,10 @@ TXTutorSettingsView::save() {
  * Chat Tutor Settings Widget
  * ********************************************************************************************* */
 ChatTutorSettingsView::ChatTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("Chat tutor settings"),parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  label->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(label);
   setLayout(layout);
