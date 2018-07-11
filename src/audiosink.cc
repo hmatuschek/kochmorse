@@ -6,8 +6,7 @@
 /* ********************************************************************************************* *
  * AudioSink, base class
  * ********************************************************************************************* */
-AudioSink::AudioSink(QObject *parent)
-  : QObject(parent)
+AudioSink::AudioSink()
 {
   // pass...
 }
@@ -35,7 +34,7 @@ PortAudio::finalize() {
  * PortAudioSink, playback
  * ********************************************************************************************* */
 PortAudioSink::PortAudioSink(QObject *parent)
-  : AudioSink(parent), _stream(0), _volumeFactor(1)
+  : QObject(parent), AudioSink(), _stream(0), _volumeFactor(1)
 {
   PaSampleFormat fmt = paInt16;
   size_t n_chanels = 1;
@@ -72,6 +71,64 @@ PortAudioSink::setVolume(double factor) {
 
 
 /* ********************************************************************************************* *
+ * QAudioSink, playback
+ * ********************************************************************************************* */
+QAudioSink::QAudioSink(QObject *parent)
+  : QIODevice(parent), AudioSink(), _output(0)
+{
+  QAudioFormat fmt;
+  fmt.setByteOrder(QAudioFormat::LittleEndian);
+  fmt.setChannelCount(1);
+  fmt.setSampleRate(int(Globals::sampleRate));
+  fmt.setSampleSize(16);
+  fmt.setSampleType(QAudioFormat::SignedInt);
+  fmt.setCodec("audio/pcm");
+
+  _output = new QAudioOutput(fmt, this);
+  this->open(QIODevice::ReadOnly);
+  _output->start(this);
+}
+
+QAudioSink::~QAudioSink() {
+  _output->stop();
+}
+
+void
+QAudioSink::process(const QByteArray &data) {
+  bool empty = _buffer.isEmpty();
+  _buffer.append(data);
+  if (empty)
+    emit readyRead();
+}
+
+double
+QAudioSink::volume() const {
+  return _output->volume();
+}
+
+void
+QAudioSink::setVolume(double factor) {
+  return _output->setVolume(factor);
+}
+
+qint64
+QAudioSink::readData(char *data, qint64 maxlen) {
+  maxlen = std::min(int(maxlen), _buffer.size());
+  if (0 >= maxlen)
+    return maxlen;
+
+  memcpy(data, _buffer.data_ptr(), maxlen);
+  _buffer.remove(0, maxlen);
+  return maxlen;
+}
+
+qint64
+QAudioSink::writeData(const char *data, qint64 len) {
+  return 0;
+}
+
+
+/* ***************************************paInt16****************************************************** *
  * PortAudioSource, recording
  * ********************************************************************************************* */
 PortAudioSource::PortAudioSource(AudioSink *sink, QObject *parent)
@@ -127,4 +184,59 @@ PortAudioSource::_pa_callback(const void *in, void *out, unsigned long Nframes,
   memcpy(data, in, Nframes*sizeof(int16_t));
   self->_sink->process(QByteArray::fromRawData(self->_buffer.data(), Nframes*sizeof(int16_t)));
   return paContinue;
+}
+
+
+
+/* ********************************************************************************************* *
+ * QAudioSource, recording
+ * ********************************************************************************************* */
+QAudioSource::QAudioSource(AudioSink *sink, QObject *parent)
+  : QIODevice(parent), _stream(0), _sink(sink)
+{
+  QAudioFormat fmt;
+  fmt.setByteOrder(QAudioFormat::LittleEndian);
+  fmt.setChannelCount(1);
+  fmt.setSampleRate(int(Globals::sampleRate));
+  fmt.setSampleType(QAudioFormat::SignedInt);
+  fmt.setSampleSize(16);
+  fmt.setCodec("audio/pcm");
+  _stream = new QAudioInput(fmt, this);
+  this->open(QIODevice::WriteOnly);
+  _buffer.reserve(2048*sizeof(int16_t));
+}
+
+QAudioSource::~QAudioSource() {
+  if (0 != _stream)
+    this->stop();
+  this->close();
+}
+
+void
+QAudioSource::start() {
+  if (QAudio::ActiveState != _stream->state())
+    _stream->start(this);
+}
+
+void
+QAudioSource::stop() {
+  _stream->stop();
+}
+
+bool
+QAudioSource::isRunning() const {
+  return QAudio::ActiveState == _stream->state();
+}
+
+qint64
+QAudioSource::readData(char *data, qint64 maxlen) {
+  return 0;
+}
+
+qint64
+QAudioSource::writeData(const char *data, qint64 len) {
+  _buffer.append(data, len);
+  _sink->process(_buffer);
+  _buffer.clear();
+  return len;
 }

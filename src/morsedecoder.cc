@@ -5,7 +5,7 @@
 
 
 MorseDecoder::MorseDecoder(double speed, float threshold, QObject *parent)
-  : AudioSink(parent), _speed(speed), _ditLength(0), _unitLength(0),
+  : QObject(parent), AudioSink(), _speed(speed), _ditLength(0), _unitLength(0),
     _Nsamples(0), _buffer(0), _threshold(threshold), _highCount(0), _lowCount(0),
     _lastChar('\0')
 {

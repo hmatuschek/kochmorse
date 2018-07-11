@@ -8,7 +8,7 @@
  * Noise effect
  * ******************************************************************************************** */
 NoiseEffect::NoiseEffect(AudioSink *sink, bool enabled, float snr, QObject *parent)
-  : AudioSink(parent), _sink(sink), _enabled(enabled), _snr(snr)
+  : QObject(parent), AudioSink(), _sink(sink), _enabled(enabled), _snr(snr)
 {
   // init RNG
   srand(time(0));
@@ -85,7 +85,7 @@ NoiseEffect::setSNR(float snr) {
  * Fading effect
  * ******************************************************************************************** */
 FadingEffect::FadingEffect(AudioSink *sink, bool enabled, float maxDamp, float rate, QObject *parent)
-  : AudioSink(parent), _sink(sink), _enabled(enabled), _maxDamp(0), _rate(rate),
+  : QObject(parent), AudioSink(), _sink(sink), _enabled(enabled), _maxDamp(0), _rate(rate),
     _dS(0), _dF(0), _factor(1)
 {
   // init RNG

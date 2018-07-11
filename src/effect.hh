@@ -5,7 +5,7 @@
 
 
 /** Samples colored (filtered) noise and adds it to the clean signal. */
-class NoiseEffect : public AudioSink
+class NoiseEffect : public QObject, public AudioSink
 {
   Q_OBJECT
 
@@ -36,7 +36,7 @@ protected:
 
 
 /** Implements an alternating fading of the signal. */
-class FadingEffect: public AudioSink
+class FadingEffect: public QObject, public AudioSink
 {
   Q_OBJECT
 
