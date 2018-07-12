@@ -4,6 +4,9 @@ project(kochmorse)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake)
 include(InstallHeadersWithDirectory)
 
+option(WITH_QSOCHAT "Enabled build of QSO chat commandline test tool." OFF)
+option(WITH_TEXTGEN "Enabled build of text generation test tool." OFF)
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Multimedia REQUIRED)
