@@ -9,13 +9,13 @@ COPY "src/kochmorse.exe" .
 COPY "%QT_BIN_PATH%/Qt5Core.dll" .
 COPY "%QT_BIN_PATH%/Qt5Gui.dll" .
 COPY "%QT_BIN_PATH%/Qt5Widgets.dll" .
+COPY "%QT_BIN_PATH%/Qt5Multimedia.dll" .
 COPY "%QT_BIN_PATH%/Qt5Svg.dll" .
 COPY "%QT_BIN_PATH%/Qt5Xml.dll" .
 COPY "%QT_BIN_PATH%/icuin52.dll" .
 COPY "%QT_BIN_PATH%/icuuc52.dll" .
 COPY "%QT_BIN_PATH%/icudt52.dll" .
 COPY "%QT_BIN_PATH%/libwinpthread-1.dll" .
-COPY "%LIB_PATH%/libportaudio-2.dll" .
 COPY "%LIB_PATH%/libgcc_s_dw2-1.dll" .
 COPY "%LIB_PATH%/libstdc++-6.dll" .
 MKDIR platforms

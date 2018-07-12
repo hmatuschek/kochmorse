@@ -5,5 +5,5 @@ SET MINGW_PATH=C:/MinGW
 SET MINGW_BIN_PATH=%MINGW_PATH%/bin
 SET PATH=%MINGW_BIN_PATH%;%QT_BIN_PATH%;%PATH%
 
-cmake ../.. -G "MinGW Makefiles" -DKOCHMORSE_LIBS="-lportaudio" -DCMAKE_CXX_FLAGS="-I%QT_INCLUDE_PATH%"
+cmake ../.. -G "MinGW Makefiles" -DCMAKE_CXX_FLAGS="-I%QT_INCLUDE_PATH%"
 mingw32-make
