@@ -11,22 +11,22 @@ KochMorse runs under Linux, MacOS X and even under Windows. See the
 
 
 ## Features
-Below, you will find a list of features of the current KochMorse release. The highlighted features
-are new features compared to the "old" python implementation.
+Below, you will find a list of features of the current KochMorse release.
 
- * *A simplified GUI* -- All settings are now accessible via the Preferences dialog.
- * A morse tutor using the Koch method (of course).
- * *A random morse tutor* -- Allows to select a set of characters and prosigns for practicing.
- * *A QSO tutor* -- Generates a random QSO text so you can practice reading typical QSOs.
- * *A transmit tutor* -- Connect your practice tone-generator to your microphone input and check your
+ * A morse tutor using the Koch method.
+ * A random morse tutor -- Allows to select a set of characters and prosigns for practicing.
+ * A QSO tutor -- Generates a random QSO text so you can practice reading typical QSOs.
+ * Customized text tutor -- This tutor allows you to listen to a plain-text file or to a text 
+   [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from a user-defined rules.
+ * A transmit tutor -- Connect your practice tone-generator to your microphone input and check your
    transmissions with KochMorse.
- * *A chat tutor* -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ
+ * A chat tutor -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ
    and KochMorse will answer.
  * Different speed of characters and pauses. This allows to practice the reading in full speed,
    while having enough time to write the character down.
- * *Different tones for dashes and dots.*
- * *Noise audio effect* -- Increases the difficulty to read the morse code for practicing.
- * *Fading audio effect* -- Periodically fades the morse signal for practicing. In conjecture with
+ * Different tones for dashes and dots.
+ * Noise audio effect -- Increases the difficulty to read the morse code for practicing.
+ * Fading audio effect -- Periodically fades the morse signal for practicing. In conjecture with
    the noise effect, it simulates the conditions on HF bands pretty well.
 
 
@@ -46,9 +46,5 @@ https://kochmorse.googlecode.com). As the "old" implementation relied on ALSA fo
 it was restricted to Linux. This reimplementation now uses PortAudio for the sound output and the
 GUI is implemented using Qt5, it is therefore more platform independent and runs under Linux,
 MacOS X and Windows.
-
-For this reimplementation, I simplified the GUI a lot. All settings are now "hidden" in a
-preferences dialog. All features of the "old" version are now present in this one and even some
-more...
 
  
