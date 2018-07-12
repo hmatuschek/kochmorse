@@ -7,6 +7,7 @@ set(kochmorse_MOC_HEADERS
 set(kochmorse_HEADERS globals.hh qhal.hh ${kochmorse_MOC_HEADERS})
 
 qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
+qt5_create_translation(kochmorse_QM ${kochmorse_SOURCES} "${CMAKE_SOURCE_DIR}/shared/kochmorse_de.ts")
 qt5_add_resources(kochmorse_RCC_SOURCES ../resources.qrc)
 
 add_executable(kochmorse WIN32 ${kochmorse_SOURCES} ${kochmorse_MOC_SOURCES} ${kochmorse_RCC_SOURCES})

@@ -23,7 +23,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   Settings settings;
 
   // Assemble text view
-  _text = new QPlainTextEdit();
+  _text = new QTextEdit();
   _text->setMinimumSize(640,230);
   QFont f = _text->document()->defaultFont();
   f.setFamily("Courier");
@@ -86,6 +86,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   QObject::connect(&_app, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
   QObject::connect(&_app, SIGNAL(charSend(QString)), this, SLOT(onCharSend(QString)));
+  QObject::connect(&_app, SIGNAL(charReceived(QString)), this, SLOT(onCharReceived(QString)));
   QObject::connect(_play, SIGNAL(triggered(bool)), this, SLOT(onPlayToggled(bool)));
   QObject::connect(_pref, SIGNAL(triggered()), this, SLOT(onPrefClicked()));
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
@@ -95,7 +96,12 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
 void
 MainWindow::onSessionFinished() {
+  QTextCharFormat old = _text->currentCharFormat();
+  QTextCharFormat fmt = old;
+  fmt.setForeground(QColor("blue"));
+  _text->setCurrentCharFormat(fmt);
   _text->insertPlainText(_app.summary());
+  _text->setCurrentCharFormat(old);
   _play->setChecked(false);
 }
 
@@ -103,6 +109,17 @@ void
 MainWindow::onCharSend(QString ch) {
   // Update text-field
   _text->insertPlainText(ch);
+}
+
+void
+MainWindow::onCharReceived(QString ch) {
+  // Update text-field
+  QTextCharFormat old = _text->currentCharFormat();
+  QTextCharFormat fmt = old;
+  fmt.setForeground(QColor("red"));
+  _text->setCurrentCharFormat(fmt);
+  _text->insertPlainText(ch);
+  _text->setCurrentCharFormat(old);
 }
 
 void

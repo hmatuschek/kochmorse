@@ -71,19 +71,22 @@ MorseEncoder::_createSamples()
     }
   }
   // append 1 "dit" pause
-  for (size_t i=(3*_unitLength); i<(4*_unitLength); i++) { daData[i] = 0; }
+  for (size_t i=(3*_unitLength); i<(4*_unitLength); i++)
+    daData[i] = 0;
 
   // Compute inter-char pause (3 x effUnit, not incl. pause after symbol (dit or da))
   size_t icPauseLength = 3*_effUnitLength-_unitLength;
   _icPause.resize(icPauseLength*sizeof(int16_t));
   int16_t *icPauseData = reinterpret_cast<int16_t *>(_icPause.data());
-  for (size_t i=0; i<icPauseLength; i++) { icPauseData[i] = 0; }
+  for (size_t i=0; i<icPauseLength; i++)
+    icPauseData[i] = 0;
 
   // Compute inter-word pause (7 x effUnit, not incl. pause after last char)
   size_t iwPauseLength = 7*_effUnitLength - icPauseLength;
   _iwPause.resize(iwPauseLength*sizeof(int16_t));
   int16_t *iwPauseData = reinterpret_cast<int16_t *>(_iwPause.data());
-  for (size_t i=0; i<iwPauseLength; i++) { iwPauseData[i] = 0; }
+  for (size_t i=0; i<iwPauseLength; i++)
+    iwPauseData[i] = 0;
 }
 
 

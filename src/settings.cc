@@ -976,7 +976,7 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Output device"), _outputDevices);
   layout->addRow(tr("Input device"), _inputDevices);
-  layout->addRow(tr("Detector threshold"), _decoderLevel);
+  layout->addRow(tr("Detector threshold (dB)"), _decoderLevel);
   setLayout(layout);
 }
 

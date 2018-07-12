@@ -37,6 +37,8 @@ signals:
   void sessionFinished();
   /** Gets emitted once for each character send. */
   void charSend(QString ch);
+  /** Gets emitted once for each character received. */
+  void charReceived(QString ch);
 
 protected slots:
   /** Gets called if the morse-encoder queue gets empty. */
@@ -49,6 +51,8 @@ protected slots:
   void onUnknownCharReceived(QString ch);
 
 protected:
+  /** If @c true a session is running. */
+  bool _running;
   /** The audio output device. */
   QAudioSink *_audio_sink;
   /** The noise effect instance. */

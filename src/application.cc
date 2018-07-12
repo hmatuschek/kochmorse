@@ -5,7 +5,7 @@
 
 
 Application::Application(int &argc, char *argv[])
- : QApplication(argc, argv), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
+ : QApplication(argc, argv), _running(false), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
 {
   Settings settings;
   //PortAudio::init();
@@ -20,7 +20,7 @@ Application::Application(int &argc, char *argv[])
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
                               settings.speed(), settings.effSpeed(), settings.sound(), true, this);
 
-  _decoder = new MorseDecoder(settings.speed(), 1e-5, this);
+  _decoder = new MorseDecoder(settings.speed(), std::pow(10.,settings.decoderLevel()/20), this);
   _audio_src = new QAudioSource(_decoder, this);
 
   switch (settings.tutor()) {
@@ -74,9 +74,6 @@ Application::~Application() {
 void
 Application::setVolume(double factor) {
   _audio_sink->setVolume(factor);
-  // factor is [0,1] -> mapped logarithmic on [-60, 0] db for decoder threshold
-  double db = -60 + 60*(1-factor);
-  _decoder->setThreshold(std::pow(10, db/10));
 }
 
 QString
@@ -89,6 +86,7 @@ Application::summary() const {
 void
 Application::startSession() {
   /// @todo Disable hybernation
+  _running = true;
   _tutor->reset();
   _encoder->start();
   _encoder->send(_tutor->next());
@@ -99,6 +97,7 @@ Application::startSession() {
 void
 Application::stopSession() {
   /// @todo Reenable hybernation
+  _running = false;
   _encoder->stop();
   _tutor->reset();
   if (_tutor->needsDecoder())
@@ -108,10 +107,7 @@ Application::stopSession() {
 void
 Application::applySettings()
 {
-  // Stop encoder if running
-  _encoder->stop();
-  // Stop RX if running
-  _audio_src->stop();
+  stopSession();
 
   // Get settings
   Settings settings;
@@ -119,8 +115,7 @@ Application::applySettings()
   // Update audio settings
   _audio_sink->setVolume(settings.volume());
   // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
-  double db = -60 + 60*(1-settings.volume()/2);
-  _decoder->setThreshold(std::pow(10, db/10));
+  _decoder->setThreshold(std::pow(10, settings.decoderLevel()/20));
 
   // Update effects
   _noiseEffect->setEnabled(settings.noiseEnabled());
@@ -140,42 +135,43 @@ Application::applySettings()
   _decoder->setSpeed(settings.speed());
 
   // Reconfigure tutor
-  if (_tutor) { delete _tutor; }
+  if (_tutor)
+    delete _tutor;
 
   switch (settings.tutor()) {
-  case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
-                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
-                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                           settings.kochSummary(), this);
-    break;
+    case Settings::TUTOR_KOCH:
+      _tutor = new KochTutor(settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
+                             settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
+                             (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
+                             settings.kochSummary(), this);
+      break;
 
-  case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
-                             settings.randomMaxGroupSize(),
-                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
-                             settings.randomSummary(), this);
-    break;
+    case Settings::TUTOR_RANDOM:
+      _tutor = new RandomTutor(settings.randomChars(), settings.randomMinGroupSize(),
+                               settings.randomMaxGroupSize(),
+                               (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
+                               settings.randomSummary(), this);
+      break;
 
-  case Settings::TUTOR_QSO:
-    _tutor = new GenTextTutor(":/qso/qsogen.xml",this);
-    break;
+    case Settings::TUTOR_QSO:
+      _tutor = new GenTextTutor(":/qso/qsogen.xml",this);
+      break;
 
-  case Settings::TUTOR_QCODE:
-    _tutor = new GenTextTutor(":/qso/qcodes.xml",this);
-    break;
+    case Settings::TUTOR_QCODE:
+      _tutor = new GenTextTutor(":/qso/qcodes.xml",this);
+      break;
 
-  case Settings::TUTOR_TX:
-    _tutor = new TXTutor(this);
-    break;
+    case Settings::TUTOR_TX:
+      _tutor = new TXTutor(this);
+      break;
 
-  case Settings::TUTOR_CHAT:
-    _tutor = new ChatTutor(this);
-    break;
+    case Settings::TUTOR_CHAT:
+      _tutor = new ChatTutor(this);
+      break;
 
-  case Settings::TUTOR_TEXTGEN:
-    _tutor = new GenTextTutor(settings.textGenFilename());
-    break;
+    case Settings::TUTOR_TEXTGEN:
+      _tutor = new GenTextTutor(settings.textGenFilename());
+      break;
   }
 }
 
@@ -185,10 +181,11 @@ Application::onCharsSend() {
     return;
 
   if (_tutor->atEnd()) {
-    emit sessionFinished(); return;
+    emit sessionFinished();
+    return;
   }
-
-  _encoder->send(_tutor->next());
+  if (_running)
+    _encoder->send(_tutor->next());
 }
 
 void
@@ -200,10 +197,10 @@ void
 Application::onCharReceived(QChar ch) {
   _tutor->handle(ch);
   _encoder->send(_tutor->next());
-  emit charSend(Globals::mapProsign(ch));
+  emit charReceived(Globals::mapProsign(ch));
 }
 
 void
 Application::onUnknownCharReceived(QString ch) {
-  emit charSend(QString("<%1>").arg(ch));
+  emit charReceived(QString("<%1>").arg(ch));
 }
