@@ -24,7 +24,8 @@ Application::Application(int &argc, char *argv[])
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
   _encoder = new MorseEncoder(_fadingEffect, settings.tone(), settings.tone()+settings.dashPitch(),
-                              settings.speed(), settings.effSpeed(), settings.sound(), true, this);
+                              settings.speed(), settings.effSpeed(), settings.sound(),
+                              settings.jitter(), this);
 
   _decoder = new MorseDecoder(settings.speed(), std::pow(10.,settings.decoderLevel()/20), this);
   _audio_src = new QAudioSource(_decoder, this);
@@ -136,6 +137,7 @@ Application::applySettings()
   _encoder->setDotTone(settings.tone());
   _encoder->setDashTone(settings.tone()+settings.dashPitch());
   _encoder->setSound(settings.sound());
+  _encoder->setJitter(settings.jitter());
 
   // Reconfigure decoder
   _decoder->setSpeed(settings.speed());

@@ -64,6 +64,11 @@ public:
   /** Sets the sound. */
   void setSound(MorseEncoder::Sound sound);
 
+  /** Returns the currently selected jitter. */
+  MorseEncoder::Jitter jitter() const;
+  /** Sets the jitter. */
+  void setJitter(MorseEncoder::Jitter jitter);
+
   double decoderLevel() const;
   void setDecoderLevel(double level);
 
@@ -299,6 +304,7 @@ protected:
   QLineEdit *_tone;
   QLineEdit *_daPitch;
   QComboBox *_sound;
+  QComboBox *_jitter;
 };
 
 

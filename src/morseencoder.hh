@@ -6,6 +6,7 @@
 #include <QWaitCondition>
 #include <QObject>
 #include <QHash>
+#include <QVector>
 #include "audiosink.hh"
 
 
@@ -23,6 +24,14 @@ public:
     SOUND_CRACKING = 2
   } Sound;
 
+  /** Possible jitter variants. */
+  typedef enum {
+    JITTER_EXACT   = 0,
+    JITTER_BUG     = 1,
+    JITTER_STRAIGT = 2
+  } Jitter;
+
+
 public:
   /** Constructor.
    * @param sink Specifies the audio-sink for the playback.
@@ -30,11 +39,11 @@ public:
    * @param daFreq Specifies the tone frequency of a dash (da).
    * @param speed Specifies the character speed (in WPM).
    * @param effSpeed Specifies the pause speed (in WPM).
-   * @param parallel If @c true, the encoding and playback is performed in a separate thread.
+   * @param jitter Specifies the dit/da length jitter.
    * @param parent Specifies the @c QObject parent. */
   explicit MorseEncoder(
       QIODevice *sink, double ditFreq, double daFreq, double speed, double effSpeed,
-      Sound sound, bool parallel=true, QObject *parent= 0);
+      Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent= 0);
 
   /** Sends the given text. */
   void send(const QString &text);
@@ -60,6 +69,8 @@ public:
   void setDashTone(double freq);
   /** (Re-) Sets the sound. */
   void setSound(Sound sound);
+  /** (Re-) Sets the jitter. */
+  void setJitter(Jitter jitter);
 
 signals:
   /** Signals that a char was send. */
@@ -88,6 +99,8 @@ protected:
   double _effSpeed;
   /** The sound variant. */
   Sound _sound;
+  /** The jitter. */
+  Jitter _jitter;
 
   /** Length of a "dit" in samples. */
   size_t _unitLength;
@@ -95,9 +108,9 @@ protected:
   size_t _effUnitLength;
 
   /** A "dit" incl. inter-symbol pause. */
-  QByteArray _ditSample;
+  QVector<QByteArray> _ditSamples;
   /** A "da" incl. inter-symbol pause. */
-  QByteArray _daSample;
+  QVector<QByteArray> _daSamples;
   /** Pause duration between chars. */
   QByteArray _icPause;
   /** Pause duration between words. */

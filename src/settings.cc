@@ -82,6 +82,15 @@ Settings::setSound(MorseEncoder::Sound sound) {
   this->setValue("sound", uint(sound));
 }
 
+MorseEncoder::Jitter
+Settings::jitter() const {
+  return MorseEncoder::Jitter(this->value("jitter", MorseEncoder::JITTER_EXACT).toUInt());
+}
+void
+Settings::setJitter(MorseEncoder::Jitter jitter) {
+  this->setValue("jitter", uint(jitter));
+}
+
 double
 Settings::decoderLevel() const {
   return this->value("decoderlevel", 0).toDouble();
@@ -422,12 +431,23 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   case MorseEncoder::SOUND_CRACKING: _sound->setCurrentIndex(2); break;
   }
 
+  _jitter = new QComboBox();
+  _jitter->addItem(tr("Exact"), uint(MorseEncoder::JITTER_EXACT));
+  _jitter->addItem(tr("Bug"), uint(MorseEncoder::JITTER_BUG));
+  _jitter->addItem(tr("Straight"), uint(MorseEncoder::JITTER_STRAIGT));
+  switch (settings.jitter()) {
+    case MorseEncoder::JITTER_EXACT: _jitter->setCurrentIndex(0); break;
+    case MorseEncoder::JITTER_BUG: _jitter->setCurrentIndex(1); break;
+    case MorseEncoder::JITTER_STRAIGT: _jitter->setCurrentIndex(2); break;
+  }
+
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Speed (WPM)"), _speed);
   layout->addRow(tr("Eff. speed (WPM)"), _effSpeed);
   layout->addRow(tr("Tone (Hz)"), _tone);
   layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
   layout->addRow(tr("Sound"), _sound);
+  layout->addRow(tr("Jitter"), _jitter);
 
   this->setLayout(layout);
 }
@@ -440,6 +460,7 @@ CodeSettingsView::save() {
   settings.setTone(_tone->text().toInt());
   settings.setDashPitch(_daPitch->text().toInt());
   settings.setSound(MorseEncoder::Sound(_sound->currentIndex()));
+  settings.setJitter(MorseEncoder::Jitter(_jitter->currentIndex()));
 }
 
 
