@@ -13,14 +13,14 @@ KochMorse runs under Linux, MacOS X and even under Windows. See the
 ## Features
 Below, you will find a list of features of the current KochMorse release.
 
- * A morse tutor using the Koch method.
- * A random morse tutor -- Allows to select a set of characters and prosigns for practicing.
- * A QSO tutor -- Generates a random QSO text so you can practice reading typical QSOs.
- * Customized text tutor -- This tutor allows you to listen to a plain-text file or to a text 
+ * A morse tutor using the [Koch method](https://github.com/hmatuschek/kochmorse/wiki/Tutors#koch-tutor).
+ * A [random morse tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#random-tutor) -- Allows to select a set of characters and prosigns for practicing.
+ * A [QSO tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#qso-tutor) -- Generates a random QSO text so you can practice reading typical QSOs.
+ * A [customized text tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#generated-text-tutor) -- This tutor allows you to listen to a plain-text file or to a text 
    [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from a user-defined rules.
- * A transmit tutor -- Connect your practice tone-generator to your microphone input and check your
+ * A [transmit tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#transmit-tutor) -- Connect your practice tone-generator to your microphone input and check your
    transmissions with KochMorse.
- * A chat tutor -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ
+ * A [chat tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#chat-tutor) -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ
    and KochMorse will answer.
  * Different speed of characters and pauses. This allows to practice the reading in full speed,
    while having enough time to write the character down.
@@ -28,7 +28,6 @@ Below, you will find a list of features of the current KochMorse release.
  * Noise audio effect -- Increases the difficulty to read the morse code for practicing.
  * Fading audio effect -- Periodically fades the morse signal for practicing. In conjecture with
    the noise effect, it simulates the conditions on HF bands pretty well.
-
 
 ## Releases 
  * 2017-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
