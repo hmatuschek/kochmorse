@@ -40,6 +40,7 @@ section "install"
 	# Files added here should be removed by the uninstaller (see section "uninstall")
 	file "kochmorse.exe"
 	file "*.dll"
+	file /r "audio"
 	file /r "platforms"
 	file /r "imageformats"
 	file /r "iconengines"
@@ -85,12 +86,14 @@ section "uninstall"
  
 	# Remove files
 	delete $INSTDIR\kochmorse.exe
-    delete $INSTDIR\*.dll
-    delete $INSTDIR\platforms\*.dll
+    	delete $INSTDIR\*.dll
+	delete $INSTDIR\audio\*.dll
+	rmDir $INSTDIR\audio
+	delete $INSTDIR\platforms\*.dll
 	rmDir $INSTDIR\platforms
-    delete $INSTDIR\imageformats\*.dll
+    	delete $INSTDIR\imageformats\*.dll
 	rmDir $INSTDIR\imageformats
-    delete $INSTDIR\iconengines\*.dll
+    	delete $INSTDIR\iconengines\*.dll
 	rmDir $INSTDIR\iconengines
  
 	# Always delete uninstaller as the last action
