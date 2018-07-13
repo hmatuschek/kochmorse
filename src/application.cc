@@ -2,13 +2,19 @@
 #include "settings.hh"
 #include "globals.hh"
 #include <cmath>
+#include <QTranslator>
+#include <QDebug>
 
 
 Application::Application(int &argc, char *argv[])
  : QApplication(argc, argv), _running(false), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
 {
   Settings settings;
-  //PortAudio::init();
+
+  QTranslator *translator = new QTranslator(this);
+  translator->load(QLocale(), "kochmorse", "_", ":/lang/");
+  qDebug() << "UI Locales: " << QLocale().uiLanguages();
+  installTranslator(translator);
 
   _audio_sink = new QAudioSink(this);
   _audio_sink->setVolume(settings.volume());

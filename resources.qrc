@@ -44,5 +44,6 @@
         <file>qso/dxcc-za.xml</file>
         <file>qso/dxcc-z3.xml</file>
         <file>qso/dxcc-sv.xml</file>
+        <file alias="lang/kochmorse_de_DE.qm">shared/kochmorse_de.qm</file>
     </qresource>
 </RCC>
