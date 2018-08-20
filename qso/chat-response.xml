@@ -1,7 +1,21 @@
 <?xml version="1.0" ?>
 
 <rules>
- <t><ref var="dxcall"/> de <ref var="mycall"/> <opt p="0.7">tnx fer rpl <if var="dxname"><t><ref var="dxname"/> </t></if></opt><bt/> </t>
- <t>ur <opt>rst </opt><ref var="dxrst"/> <ref var="dxrst"/> hr <opt>qth </opt><ref var="myqth"/> <ref var="myqth"/> <bt/> </t>
- <t>name <ref var="myname"/> <ref var="myname"/> k</t>
+ <if var="dxname"><if var="dxqth"><t>rr </t></if></if>
+ <opt p="0.7"><ref var="dxcall"/> de <ref var="mycall"/> <bt/> </opt>
+ <opt p="0.7">tnx fer rpl <if var="dxname"><t><ref var="dxname"/> </t></if><bt/> </opt>
+ <t>ur <opt>rst </opt><ref var="dxrst"/> <ref var="dxrst"/> </t>
+ <one-of>
+  <i><t>hr <opt>in </opt><opt>qth </opt><ref var="myqth"/> <ref var="myqth"/> </t>
+     <t><bt/> name <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t></i>
+  <i><t><bt/> <one-of><t>op</t><t>name</t></one-of> <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t>
+     <t><bt/> qth <opt>hr </opt><ref var="myqth"/> <ref var="myqth"/> </t></i>
+  <i><t><bt/> qth <opt>hr </opt><ref var="myqth"/> <ref var="myqth"/> <bt/></t>
+     <t><one-of><t>op</t><t>name</t></one-of> <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t></i>
+ </one-of>
+ <opt><bt/> hw<opt> cpy</opt>? </opt>
+ <one-of>
+  <t><bk/></t>
+  <t><ar/> <ref var="dxcall"/> de <ref var="mycall"/> <opt>pse </opt> k</t>
+ </one-of>
 </rules>

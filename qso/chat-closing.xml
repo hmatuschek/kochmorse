@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 
 <rules>
- <t><ref var="dxcall"/> de <ref var="mycall"/> <opt p="0.7">tnx fer qso <if var="dxname"><t>dr <ref var="dxname"/> </t></if></opt> vy 73 73 hpe cu agn<sk/>
-    <ref var="dxcall"/> de <ref var="mycall"/></t>
+ <t><ref var="dxcall"/> de <ref var="mycall"/> <bt/> </t>
+ <opt p="0.7">tnx fer qso <if var="dxname"><t>dr <ref var="dxname"/></t></if> </opt>
+ <t>vy 73 73 <opt>hpe cu agn </opt><sk/> <ref var="dxcall"/> de <ref var="mycall"/></t>
 </rules>

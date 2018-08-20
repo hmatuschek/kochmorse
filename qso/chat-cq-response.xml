@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 
 <rules>
- <t><ref var="dxcall"/> de <ref var="mycall"/> k</t>
+ <t><ref var="dxcall"/> de <ref var="mycall"/> <opt><ref var="mycall"/> </opt>k</t>
 </rules>
