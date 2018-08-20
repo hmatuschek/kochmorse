@@ -261,6 +261,9 @@ public slots:
   void stop();
   void reset();
 
+protected slots:
+  void onCharSend(QChar ch);
+
 protected:
   QSOChat _chat;
   QString _inputbuffer;
