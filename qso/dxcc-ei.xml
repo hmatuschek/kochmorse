@@ -1,14 +1,14 @@
 <?xml version="1.0" ?>
 
 <rules>
- <rule id="call-prefix-ie">
+ <rule id="call-prefix-ei">
   <one-of>
-	 <t w="90">ie</t> <t w="10">ej</t>
+	 <t w="90">ei</t> <t w="10">ej</t>
 	</one-of>
 	<any-number/>
  </rule>
 
- <rule id="name-ie">
+ <rule id="name-ei">
   <one-of>
 	 <t>john</t> <t>michael</t> <t>patrick</t> <t>william</t> <t>thomas</t> <t>james</t> <t>joseph</t>
 	 <t>daniel</t> <t>peter</t> <t>andrew</t>
@@ -17,8 +17,8 @@
   </one-of>
  </rule>
 
- <!-- A list of possible cities for dxcc IE weighted by population -->
- <rule id="city-ie">
+ <!-- A list of possible cities for dxcc EI weighted by population -->
+ <rule id="city-ei">
   <one-of>
 	 <t w="1173">dublin</t> <t w="208">cork</t> <t w="94">limerick</t> <t w="79">galway</t>
 	 <t w="53">waterford</t> <t w="40">drogheda</t> <t w="39">swords</t> <t w="39">dundalk</t>

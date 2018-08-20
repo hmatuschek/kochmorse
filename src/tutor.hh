@@ -5,8 +5,9 @@
 #include <QList>
 #include <QVector>
 #include <QSet>
-#include "qhal.hh"
 #include "textgen.hh"
+#include "qsochat.hh"
+#include "morseencoder.hh"
 
 
 /** Abstract base class of all tutor classes. */
@@ -16,22 +17,35 @@ class Tutor : public QObject
 
 protected:
   /** Hidden constructor. */
-  explicit Tutor(QObject *parent = 0);
+  explicit Tutor(MorseEncoder *encoder, QObject *parent = 0);
 
 public:
   /** Destructor. */
   virtual ~Tutor();
 
+  /** Returns true if the tutor requires a decoder (has user input). */
+  virtual bool needsDecoder() const = 0;
+  /** Returns a summary of the lesson. */
+  virtual QString summary() const;
   /** Gets the next char from a session. */
   virtual QChar next() = 0;
   /** Returns true if the last char of a session has be taken. */
   virtual bool atEnd() = 0;
-  /** Reset the tutor (start a new session). */
-  virtual void reset() = 0;
-  /** Returns true if the tutor requires a decoder (has user input). */
-  virtual bool needsDecoder() const = 0;
+
+signals:
+  void sessionComplete();
+
+public slots:
   /** Handles the received char. */
   virtual void handle(const QChar &ch);
+  virtual void start();
+  virtual void stop();
+  /** Reset the tutor (start a new session). */
+  virtual void reset() = 0;
+
+protected:
+  MorseEncoder *_encoder;
+  bool _running;
 };
 
 
@@ -46,18 +60,13 @@ public:
    * @param prefLastChars If @c true, specifies the if the symbols of the more recent lessons
    *        should be samples more likely by the tutor.
    * @param parent Specifies the QObject parent. */
-  KochTutor(int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
+  KochTutor(MorseEncoder *encoder, int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
             size_t minGroupSize=5, size_t maxGroupSize=5,
-            int lines=5, QObject *parent=0);
+            int lines=5, bool showSummary=false, QObject *parent=0);
   /** Destructor. */
   virtual ~KochTutor();
 
-  /** Samples the next character. */
-  QChar next();
-  /** If @ctrue, the current session is at the end. */
-  bool atEnd();
-  /** Reset/restarts a session. */
-  void reset();
+  QString summary() const;
   /** Returns @c false. */
   bool needsDecoder() const;
 
@@ -77,6 +86,20 @@ public:
   int lines() const;
   /** Sets the number of lines to send. */
   void setLines(int lines);
+  void setShowSummary(bool show);
+  /** Samples the next character. */
+  QChar next();
+  /** If @ctrue, the current session is at the end. */
+  bool atEnd();
+
+public slots:
+  /** Reset/restarts a session. */
+  void reset();
+  void start();
+  void stop();
+
+protected slots:
+  void onCharSend(QChar c);
 
 protected:
   /** Samples the next line of text. */
@@ -97,11 +120,15 @@ protected:
   /** The number of lines to send, if negative send an infinite number of lines. */
   int _lines;
   /** The number of lines send. */
-  size_t _linecount;
+  int _linecount;
+  bool _showSummary;
   /** The list of chars of the current session. */
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */
   static QVector<QChar> _lessons;
+  size_t _chars_send;
+  size_t _words_send;
+  size_t _lines_send;
 };
 
 
@@ -112,19 +139,16 @@ class RandomTutor: public Tutor
 
 public:
   /** Constructor. Uses all symbols for practicing. */
-  explicit RandomTutor(size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5, QObject *parent=0);
+  explicit RandomTutor(MorseEncoder *encoder, size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5,
+                       bool showSummary=false, QObject *parent=0);
   /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
-  explicit RandomTutor(const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5,
-                       int lines=5, QObject *parent=0);
+  explicit RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5,
+                       int lines=5, bool showSummary=false, QObject *parent=0);
   /** Destructor. */
   virtual ~RandomTutor();
 
-  /** Samples the next symbol. */
-  QChar next();
-  /** If @ctrue, the current session is at the end. */
-  bool atEnd();
-  /** Reset/restarts a session. */
-  void reset();
+  QString summary() const;
+
   /** Returns @c false. */
   bool needsDecoder() const;
 
@@ -137,9 +161,23 @@ public:
   /** Sets the number of lines to send. */
   void setLines(int lines);
 
+  /** If @ctrue, the current session is at the end. */
+  bool atEnd();
+  /** Samples the next symbol. */
+  QChar next();
+
+public slots:
+  void start();
+  void stop();
+  /** Reset/restarts a session. */
+  void reset();
+
 protected:
   /** Samples a new line of text. */
   void _nextline();
+
+protected slots:
+  void onCharSend(QChar ch);
 
 protected:
   /** Minimum group size. */
@@ -149,31 +187,15 @@ protected:
   /** Number of lines to send. */
   int _lines;
   /** Number of lines send. */
-  size_t _linecount;
+  int _linecount;
+  bool _showSummary;
   /** Text for the current session. */
   QList<QChar> _text;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
-};
-
-
-/** A simple QSO tutor. */
-class QSOTutor: public Tutor
-{
-  Q_OBJECT
-
-public:
-  explicit QSOTutor(QObject *parent=0);
-  virtual ~QSOTutor();
-
-  QChar next();
-  bool atEnd();
-  void reset();
-  bool needsDecoder() const;
-
-protected:
-  QVector<QString> _qso;
-  QString _currentQSO;
+  size_t _chars_send;
+  size_t _words_send;
+  size_t _lines_send;
 };
 
 
@@ -183,13 +205,20 @@ class GenTextTutor: public Tutor
   Q_OBJECT
 
 public:
-  explicit GenTextTutor(const QString &filename, QObject *parent=0);
+  explicit GenTextTutor(MorseEncoder *encoder, const QString &filename, QObject *parent=0);
   virtual ~GenTextTutor();
 
+  bool needsDecoder() const;
   QChar next();
   bool atEnd();
+
+public slots:
+  void start();
+  void stop();
   void reset();
-  bool needsDecoder() const;
+
+protected slots:
+  void onCharSend(QChar ch);
 
 protected:
   TextGen _generator;
@@ -205,10 +234,12 @@ public:
   explicit TXTutor(QObject *parent=0);
   virtual ~TXTutor();
 
+  bool needsDecoder() const;
   QChar next();
   bool atEnd();
+
+public slots:
   void reset();
-  bool needsDecoder() const;
 };
 
 
@@ -217,17 +248,21 @@ class ChatTutor: public Tutor
   Q_OBJECT
 
 public:
-  explicit ChatTutor(QObject *parent=0);
+  explicit ChatTutor(MorseEncoder *encoder, QObject *parent=0);
   virtual ~ChatTutor();
 
-  QChar next();
-  bool atEnd();
-  void reset();
   bool needsDecoder() const;
   void handle(const QChar &ch);
+  QChar next();
+  bool atEnd();
+
+public slots:
+  void start();
+  void stop();
+  void reset();
 
 protected:
-  QHalModel _qhal;
+  QSOChat _chat;
   QString _inputbuffer;
   QString _outputbuffer;
 };

@@ -12,7 +12,7 @@ class Token
 {
 public:
   typedef enum {
-    T_CALL, T_DE, T_CQ, T_RST, T_NAME, T_QTH, T_WORD, T_NUMBER, T_BREAK, T_EOS
+    T_CALL, T_DE, T_CQ, T_RST, T_NAME, T_IS, T_HERE, T_QTH, T_WORD, T_NUMBER, T_BREAK, T_73, T_EOS
   } Type;
 
 public:
@@ -36,7 +36,7 @@ public:
   Token next();
 
 protected:
-  quint64 _offset;
+  int _offset;
   const QString &_text;
   QVector< QPair<QRegExp, Token::Type> > _pattern;
 };
@@ -46,9 +46,8 @@ class Parser
 {
 public:
   typedef enum {
-    S_START,
-    S_CQ, S_CQ_CALL,
-    S_CALL, S_NAME, S_RST, S_QTH, S_RESPONSE
+    S_START, S_RESPONSE, S_CLOSING,
+    S_CQ, S_CQ_CALL, S_CALL, S_NAME, S_RST, S_QTH
   } State;
 
 public:

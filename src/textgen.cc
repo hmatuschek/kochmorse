@@ -254,7 +254,6 @@ TextGen::load(QString filename) {
     info.setFile(filename);
   }
 
-  //qDebug() << "Load" << info.absoluteFilePath() << "...";
 
   QFile file(filename);
   _pathStack.push_back(info.dir().absolutePath());
@@ -264,12 +263,17 @@ TextGen::load(QString filename) {
     return false;
   }
 
-  QXmlStreamReader reader(&file);
-  bool success = parse(reader);
+  bool success = false;
+  if ("txt" == info.suffix()) {
+    _rules.append(new TextGenTextRule(QString::fromUtf8(file.readAll()), this));
+    success = true;
+  } else {
+    QXmlStreamReader reader(&file);
+    success = parse(reader);
+    if (reader.hasError())
+      qDebug() << "..." << reader.errorString();
+  }
   _pathStack.pop_back();
-
-  if (reader.hasError())
-    qDebug() << "..." << reader.errorString();
 
   return success;
 }

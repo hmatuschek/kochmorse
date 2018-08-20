@@ -5,8 +5,13 @@
 #include <QLabel>
 #include <QListWidgetItem>
 #include <QGroupBox>
+#include <QPushButton>
+#include <QFileInfo>
+#include <QFileDialog>
 #include "morseencoder.hh"
 #include "globals.hh"
+#include <QDebug>
+#include <QAudioDeviceInfo>
 
 
 /* ********************************************************************************************* *
@@ -75,6 +80,56 @@ Settings::sound() const {
 void
 Settings::setSound(MorseEncoder::Sound sound) {
   this->setValue("sound", uint(sound));
+}
+
+MorseEncoder::Jitter
+Settings::jitter() const {
+  return MorseEncoder::Jitter(this->value("jitter", MorseEncoder::JITTER_EXACT).toUInt());
+}
+void
+Settings::setJitter(MorseEncoder::Jitter jitter) {
+  this->setValue("jitter", uint(jitter));
+}
+
+double
+Settings::decoderLevel() const {
+  return this->value("decoderlevel", 0).toDouble();
+}
+void
+Settings::setDecoderLevel(double level) {
+  this->setValue("decoderlevel", level);
+}
+
+QAudioDeviceInfo
+Settings::outputDevice() const {
+  QAudioDeviceInfo def(QAudioDeviceInfo::defaultOutputDevice());
+  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
+  QString devname = this->value("output", def.deviceName()).toString();
+  foreach (auto dev, devices) {
+    if (dev.deviceName() == devname)
+      return dev;
+  }
+  return def;
+}
+void
+Settings::setOutputDevice(const QString &devicename) {
+  this->setValue("output", devicename);
+}
+
+QAudioDeviceInfo
+Settings::inputDevice() const {
+  QAudioDeviceInfo def(QAudioDeviceInfo::defaultInputDevice());
+  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioInput));
+  QString devname = this->value("input", def.deviceName()).toString();
+  foreach (auto dev, devices) {
+    if (dev.deviceName() == devname)
+      return dev;
+  }
+  return def;
+}
+void
+Settings::setInputDevice(const QString &devicename) {
+  this->setValue("input", devicename);
 }
 
 Settings::Tutor
@@ -155,6 +210,17 @@ Settings::setKochLineCount(int lines) {
   this->setValue("koch/linecount", lines);
 }
 
+bool
+Settings::kochSummary() const {
+  return this->value("koch/summary", false).toBool();
+}
+
+void
+Settings::setKochSummary(bool show) {
+  this->setValue("koch/summary", show);
+}
+
+
 QSet<QChar>
 Settings::randomChars() const {
   QSet<QChar> chars;
@@ -221,6 +287,26 @@ Settings::setRandomLineCount(int lines) {
 }
 
 bool
+Settings::randomSummary() const {
+  return this->value("random/summary", false).toBool();
+}
+
+void
+Settings::setRandomSummary(bool show) {
+  this->setValue("random/summary", show);
+}
+
+QString
+Settings::textGenFilename() const {
+  return this->value("textgen/filename").toString();
+}
+
+void
+Settings::setTextGenFilename(const QString &filename) {
+  this->setValue("textgen/filename", filename);
+}
+
+bool
 Settings::noiseEnabled() const {
   return value("noise/enabled", false).toBool();
 }
@@ -280,11 +366,13 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
+  _devices = new DeviceSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
   _tabs->addTab(_code, tr("Morse Code"));
   _tabs->addTab(_effects, tr("Effects"));
+  _tabs->addTab(_devices, tr("Devices"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -304,6 +392,7 @@ SettingsDialog::accept() {
   _tutor->save();
   _code->save();
   _effects->save();
+  _devices->save();
   QDialog::accept();
 }
 
@@ -342,12 +431,24 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   case MorseEncoder::SOUND_CRACKING: _sound->setCurrentIndex(2); break;
   }
 
+  _jitter = new QComboBox();
+  _jitter->addItem(tr("Exact"), uint(MorseEncoder::JITTER_EXACT));
+  _jitter->addItem(tr("Bug"), uint(MorseEncoder::JITTER_BUG));
+  _jitter->addItem(tr("Straight"), uint(MorseEncoder::JITTER_STRAIGT));
+  switch (settings.jitter()) {
+    case MorseEncoder::JITTER_EXACT: _jitter->setCurrentIndex(0); break;
+    case MorseEncoder::JITTER_BUG: _jitter->setCurrentIndex(1); break;
+    case MorseEncoder::JITTER_STRAIGT: _jitter->setCurrentIndex(2); break;
+  }
+
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Speed (WPM)"), _speed);
   layout->addRow(tr("Eff. speed (WPM)"), _effSpeed);
   layout->addRow(tr("Tone (Hz)"), _tone);
   layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
   layout->addRow(tr("Sound"), _sound);
+  layout->addRow(tr("Jitter"), _jitter);
+
   this->setLayout(layout);
 }
 
@@ -359,6 +460,7 @@ CodeSettingsView::save() {
   settings.setTone(_tone->text().toInt());
   settings.setDashPitch(_daPitch->text().toInt());
   settings.setSound(MorseEncoder::Sound(_sound->currentIndex()));
+  settings.setJitter(MorseEncoder::Jitter(_jitter->currentIndex()));
 }
 
 
@@ -371,23 +473,20 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor = new QComboBox();
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
-  _tutor->addItem(tr("QSO"));
-  _tutor->addItem(tr("Q-Codes"));
+  _tutor->addItem(tr("Rule based tutor"));
   _tutor->addItem(tr("Transmit"));
   _tutor->addItem(tr("Chat"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
-  _qsoSettings  = new QSOTutorSettingsView();
-  _qcodeSettings  = new QSOTutorSettingsView();
+  _textgetSettings = new TextGenTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
   _chatSettings = new ChatTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
-  _tutorSettings->addWidget(_qsoSettings);
-  _tutorSettings->addWidget(_qcodeSettings);
+  _tutorSettings->addWidget(_textgetSettings);
   _tutorSettings->addWidget(_txSettings);
   _tutorSettings->addWidget(_chatSettings);
 
@@ -398,18 +497,15 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
     _tutor->setCurrentIndex(1);
     _tutorSettings->setCurrentIndex(1);
-  } else if (Settings::TUTOR_QSO == settings.tutor()) {
+  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
     _tutor->setCurrentIndex(2);
     _tutorSettings->setCurrentIndex(2);
-  } else if (Settings::TUTOR_QCODE == settings.tutor()) {
+  } else if (Settings::TUTOR_TX == settings.tutor()) {
     _tutor->setCurrentIndex(3);
     _tutorSettings->setCurrentIndex(3);
-  } else if (Settings::TUTOR_TX == settings.tutor()) {
+  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
     _tutor->setCurrentIndex(4);
     _tutorSettings->setCurrentIndex(4);
-  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
-    _tutor->setCurrentIndex(5);
-    _tutorSettings->setCurrentIndex(5);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -433,6 +529,7 @@ TutorSettingsView::save() {
   // Save all tutors
   _kochSettings->save();
   _randSettings->save();
+  _textgetSettings->save();
 
   // Get tutor by index
   Settings settings;
@@ -441,12 +538,10 @@ TutorSettingsView::save() {
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
   } else if (2 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_QSO);
+    settings.setTutor(Settings::TUTOR_TEXTGEN);
   } else if (3 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_QCODE);
-  } else if (4 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_TX);
-  } else if (5 == _tutor->currentIndex()) {
+  } else if (4 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_CHAT);
   }
 }
@@ -489,6 +584,11 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   if (settings.kochInfiniteLineCount())
     _lineCount->setEnabled(false);
 
+  _summary = new QCheckBox();
+  _summary->setChecked(settings.kochSummary());
+  if (settings.kochInfiniteLineCount())
+    _summary->setEnabled(false);
+
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
@@ -503,7 +603,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   layout->addRow(tr("Max. group size"), _maxGroupSize);
   layout->addRow(tr("Infinite lines"), _infinite);
   layout->addRow(tr("Line count"), _lineCount);
-
+  layout->addRow(tr("Show summary"), _summary);
   this->setLayout(layout);
 }
 
@@ -517,6 +617,7 @@ KochTutorSettingsView::save() {
   settings.setKochMaxGroupSize(_maxGroupSize->value());
   settings.setKochInifiniteLineCount(_infinite->isChecked());
   settings.setKochLineCount(_lineCount->value());
+  settings.setKochSummary(_summary->isChecked());
 }
 
 void
@@ -532,6 +633,7 @@ KochTutorSettingsView::onMaxSet(int value) {
 void
 KochTutorSettingsView::onInfiniteToggled(bool enabled) {
   _lineCount->setEnabled(! enabled);
+  _summary->setEnabled(! enabled);
 }
 
 
@@ -602,6 +704,11 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   if (settings.randomInfiniteLineCount())
     _lineCount->setEnabled(false);
 
+  _summary = new QCheckBox();
+  _summary->setChecked(settings.randomSummary());
+  if (settings.randomInfiniteLineCount())
+    _summary->setEnabled(false);
+
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
@@ -615,6 +722,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   box->addRow(tr("Max. group size"), _maxGroupSize);
   box->addRow(tr("Infinite lines"), _infinite);
   box->addRow(tr("Line count"), _lineCount);
+  box->addRow(tr("Show summary"), _summary);
 
   layout->addLayout(box);
   setLayout(layout);
@@ -649,6 +757,7 @@ RandomTutorSettingsView::save() {
   Settings().setRandomMaxGroupSize(_maxGroupSize->value());
   Settings().setRandomInifiniteLineCount(_infinite->isChecked());
   Settings().setRandomLineCount(_lineCount->value());
+  Settings().setRandomSummary(_summary->isChecked());
 }
 
 void
@@ -664,24 +773,99 @@ RandomTutorSettingsView::onMaxSet(int value) {
 void
 RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
   _lineCount->setEnabled(! enabled);
+  _summary->setEnabled(! enabled);
 }
 
 
 /* ********************************************************************************************* *
- * QSO Tutor Settings Widget
+ * TextGen Tutor Settings Widget
  * ********************************************************************************************* */
-QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
+  : QGroupBox(tr("Rule based tutor settings"),parent)
 {
-  QLabel *label = new QLabel(tr("<No settings for this tutor>"));
-  QVBoxLayout *layout = new QVBoxLayout();
+  Settings settings;
+  QString help = tr("Select a build-in tutor or 'user defined'. The rule file (ending on .xml) or a "
+                    "plain-text file (ending on .txt) can then be selected below.");
+
+  _defined = new QComboBox();
+  _defined->addItem(tr("Generated QSO"), ":/qso/qsogen.xml");
+  _defined->addItem(tr("Q-Codes/Words"), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Call signs"), ":/qso/callsigns.xml");
+  _defined->addItem(tr("User defined ..."));
+
+  _filename = new QLineEdit();
+  _filename->setToolTip(help);
+  _filename->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+  _filename->setEnabled(false);
+
+  _selectFile = new QPushButton("...");
+  _selectFile->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  _selectFile->setEnabled(false);
+
+  QString selected = settings.textGenFilename();
+  if (":/qso/qsogen.xml" == selected) {
+    _defined->setCurrentIndex(0);
+  } else if (":/qso/qcodes.xml" == selected) {
+    _defined->setCurrentIndex(1);
+  } else if (":/qso/callsigns.xml" == selected) {
+    _defined->setCurrentIndex(2);
+  } else {
+    _defined->setCurrentIndex(3);
+    _filename->setText(selected);
+    _filename->setEnabled(true);
+    _selectFile->setEnabled(true);
+  }
+
+
+  QHBoxLayout *llayout = new QHBoxLayout();
+  llayout->addWidget(_filename, 1);
+  llayout->addWidget(_selectFile);
+
+  QFormLayout *layout = new QFormLayout();
+  QLabel *label = new QLabel(help);
+  label->setWordWrap(true);
   layout->addWidget(label);
+  layout->addRow(tr("Build-in tutor"), _defined);
+  layout->addRow(tr("Rule/text file"), llayout);
+  layout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
   setLayout(layout);
+
+  connect(_defined, SIGNAL(currentIndexChanged(int)), this, SLOT(onPreDefinedSelected(int)));
+  connect(_selectFile, SIGNAL(clicked(bool)), this, SLOT(onSelectFile()));
 }
 
 void
-QSOTutorSettingsView::save() {
-  // pass...
+TextGenTutorSettingsView::save() {
+  if (_filename->isEnabled()) {
+    QFileInfo info(_filename->text());
+    if (info.exists())
+      Settings().setTextGenFilename(info.absoluteFilePath());
+  } else {
+    QFileInfo info(_defined->currentData().toString());
+    if (info.exists())
+      Settings().setTextGenFilename(info.absoluteFilePath());
+  }
+}
+
+void
+TextGenTutorSettingsView::onSelectFile() {
+  QFileInfo info(_filename->text());
+  QString filename = QFileDialog::getOpenFileName(this, tr("Select rule or text file."),
+                                                  info.absoluteDir().path(),
+                                                  tr("Rule file (*.xml);;Text file (*.txt)"));
+  if (! filename.isEmpty())
+    _filename->setText(filename);
+}
+
+void
+TextGenTutorSettingsView::onPreDefinedSelected(int idx) {
+  if (3 == idx) {
+    _filename->setEnabled(true);
+    _selectFile->setEnabled(true);
+  } else {
+    _filename->setEnabled(false);
+    _selectFile->setEnabled(false);
+  }
 }
 
 
@@ -689,9 +873,10 @@ QSOTutorSettingsView::save() {
  * TX Tutor Settings Widget
  * ********************************************************************************************* */
 TXTutorSettingsView::TXTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("Transmit tutor settings"),parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  label->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(label);
   setLayout(layout);
@@ -707,9 +892,10 @@ TXTutorSettingsView::save() {
  * Chat Tutor Settings Widget
  * ********************************************************************************************* */
 ChatTutorSettingsView::ChatTutorSettingsView(QWidget *parent)
-  : QGroupBox(parent)
+  : QGroupBox(tr("Chat tutor settings"),parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
+  label->setAlignment(Qt::AlignCenter);
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(label);
   setLayout(layout);
@@ -781,3 +967,50 @@ EffectSettingsView::save() {
   settings.setFadingMaxDamp(_fadingMaxDamp->value());
 }
 
+
+/* ********************************************************************************************* *
+ * Device Settings Widget
+ * ********************************************************************************************* */
+DeviceSettingsView::DeviceSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _outputDevices = new QComboBox();
+  QAudioDeviceInfo currentDevice = settings.outputDevice();
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+  foreach (auto device, devices) {
+    _outputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
+  }
+
+  _inputDevices = new QComboBox();
+  currentDevice = settings.inputDevice();
+  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  foreach (auto device, devices) {
+    _inputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
+  }
+
+  _decoderLevel = new QSpinBox();
+  _decoderLevel->setMinimum(-60);
+  _decoderLevel->setMaximum(0);
+  _decoderLevel->setValue(settings.decoderLevel());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Output device"), _outputDevices);
+  layout->addRow(tr("Input device"), _inputDevices);
+  layout->addRow(tr("Detector threshold (dB)"), _decoderLevel);
+  setLayout(layout);
+}
+
+void
+DeviceSettingsView::save() {
+  Settings settings;
+
+  settings.setOutputDevice(_outputDevices->currentText());
+  settings.setInputDevice(_inputDevices->currentText());
+  settings.setDecoderLevel(_decoderLevel->value());
+}

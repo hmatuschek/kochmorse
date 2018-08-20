@@ -1,20 +1,76 @@
 <?xml version="1.0"?>
 
 <rules>
- <rule id="wx">
+ <rule id="wx-temp">
+  <one-of>
+	 <t>hot</t>
+	 <t>warm</t>
+	 <t>cold</t>
+	 <t>ice</t>
+	</one-of>
+ </rule>
+
+ <rule id="wx-hot">
   <one-of>
 	 <t>clear</t>
 	 <t>sunny</t>
-	 <t>rain</t>
-	 <t>fog</t>
 	</one-of>
 	<one-of>
-	 <t> es windy</t>
-	 <t> es storm</t>
+	 <t w="40"> es windy</t>
+	 <t w="60"/>
 	</one-of>
+	<t> <opt>es </opt>temp 3<any-number/>c</t>
  </rule>
- <rule id="temp">
+
+ <rule id="wx-warm">
   <one-of>
-	</one-of>
+   <t>sunny</t>
+	 <t>clear</t>
+	 <t>cloudy</t>
+   <t>rain</t>
+  </one-of>
+  <one-of>
+   <t w="30"> es windy</t>
+   <t w="10"> es storm</t>
+   <t w="60"/>
+  </one-of>
+  <t> <opt>es </opt>temp 2<any-number/>c</t>
+ </rule>
+
+ <rule id="wx-cold">
+  <one-of>
+   <t>clear</t>
+   <t>cloudy</t>
+   <t>rain</t>
+	 <t>fog</t>
+  </one-of>
+  <one-of>
+   <t> es windy</t>
+   <t> es storm</t>
+   <t/>
+  </one-of>
+  <t> <opt>es </opt>temp <opt>1</opt><any-number/>c</t>
+ </rule>
+
+ <rule id="wx-ice">
+  <one-of>
+   <t>clear</t>
+   <t>cloudy</t>
+   <t>snow</t>
+  </one-of>
+  <one-of>
+   <t> es windy</t>
+   <t> es storm</t>
+   <t/>
+  </one-of>
+  <t> <opt>es </opt>temp neg <any-number/>c</t>
+ </rule>
+
+ <rule id="wx">
+  <if var="wx-temp" matches="hot"><apply rule="wx-hot"/></if>
+	<if var="wx-temp" matches="warm"><apply rule="wx-warm"/></if>
+	<if var="wx-temp" matches="cold"><apply rule="wx-cold"/></if>
+	<if var="wx-temp" matches="ice"><apply rule="wx-ice"/></if>
  </rule>
 </rules>
+

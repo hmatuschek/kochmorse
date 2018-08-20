@@ -4,36 +4,42 @@
  <!-- Defines all implemented DXCC records -->
  <rule id="dxcc">
   <one-of>
-	 <t w="10291">ct</t>
-	 <t w="46397">ea</t><t w="2102">ea8</t><t w="82">ea9</t>
-	 <t w="65233">f</t>
-	 <t w="4630">ie</t>
-	 <t w="53010">g</t><t w="5295">gm</t><t w="3063">gw</t><t w="1811">gi</t>
-	 <t w="17084">pa</t>
-	 <t w="11469">on</t>
-	 <t w="570">lx</t>
-	 <t w="5745">oz</t>
-	 <t w="82293">dl</t>
-	 <t w="8544">hb</t> <t w="37">hb0</t>
-	 <t w="8751">oe</t>
-	 <t w="59320">i</t> <t w="1663">is0</t>
-	 <t w="5194">la</t>
-	 <t w="9952">sm</t>
-	 <t w="38104">sp</t>
-	 <t w="10625">ok</t>
-	 <t w="5426">om</t>
-	 <t w="9702">ha</t>
-	</one-of>
+   <t w="10291">ct</t>
+   <t w="46397">ea</t><t w="2102">ea8</t><t w="82">ea9</t>
+   <t w="65233">f</t>
+   <t w="4630">ei</t>
+   <t w="53010">g</t><t w="5295">gm</t><t w="3063">gw</t><t w="1811">gi</t>
+   <t w="17084">pa</t>
+   <t w="11469">on</t>
+   <t w="570">lx</t>
+   <t w="5745">oz</t>
+   <t w="82293">dl</t>
+   <t w="8544">hb</t> <t w="37">hb0</t>
+   <t w="8751">oe</t>
+   <t w="59320">i</t> <t w="1663">is0</t>
+   <t w="5194">la</t>
+   <t w="9952">sm</t>
+   <t w="38104">sp</t>
+   <t w="10625">ok</t>
+   <t w="5426">om</t>
+   <t w="9702">ha</t>
+   <t w="2066">s5</t>
+   <t w="4154">9a</t>
+   <t w="3531">e7</t>
+   <t w="7040">yu</t>
+   <t w="642">4o</t>
+   <t w="1920">z6</t>
+   <t w="2876">za</t>
+   <t w="2103">z3</t>
+   <t w="10768">sv</t>
+  </one-of>
  </rule>
 
  <load file="dxcc-ct.xml"/>
  <load file="dxcc-ea.xml"/>
  <load file="dxcc-f.xml"/>
- <load file="dxcc-ie.xml"/>
+ <load file="dxcc-ei.xml"/>
  <load file="dxcc-g.xml"/>
- <load file="dxcc-gm.xml"/>
- <load file="dxcc-gw.xml"/>
- <load file="dxcc-gi.xml"/>
  <load file="dxcc-pa.xml"/>
  <load file="dxcc-on.xml"/>
  <load file="dxcc-lx.xml"/>
@@ -48,6 +54,15 @@
  <load file="dxcc-ok.xml"/>
  <load file="dxcc-om.xml"/>
  <load file="dxcc-ha.xml"/>
+ <load file="dxcc-s5.xml"/>
+ <load file="dxcc-9a.xml"/>
+ <load file="dxcc-e7.xml"/>
+ <load file="dxcc-yu.xml"/>
+ <load file="dxcc-4o.xml"/>
+ <load file="dxcc-z6.xml"/>
+ <load file="dxcc-za.xml"/>
+ <load file="dxcc-z3.xml"/>
+ <load file="dxcc-sv.xml"/>
 
  <!-- Rule to assemble valid call suffixes -->
  <rule id="call-suffix">
@@ -59,89 +74,116 @@
 
  <rule id="call">
   <if var="dxcc" matches="ct"><apply rule="call-prefix-ct"/></if>
-	<if var="dxcc" matches="ea"><apply rule="call-prefix-ea"/></if>
-	<if var="dxcc" matches="ea8"><apply rule="call-prefix-ea8"/></if>
-	<if var="dxcc" matches="ea9"><apply rule="call-prefix-ea9"/></if>
-	<if var="dxcc" matches="f"><apply rule="call-prefix-f"/></if>
-	<if var="dxcc" matches="ie"><apply rule="call-prefix-ie"/></if>
+  <if var="dxcc" matches="ea"><apply rule="call-prefix-ea"/></if>
+  <if var="dxcc" matches="ea8"><apply rule="call-prefix-ea8"/></if>
+  <if var="dxcc" matches="ea9"><apply rule="call-prefix-ea9"/></if>
+  <if var="dxcc" matches="f"><apply rule="call-prefix-f"/></if>
+  <if var="dxcc" matches="ei"><apply rule="call-prefix-ei"/></if>
   <if var="dxcc" matches="g"><apply rule="call-prefix-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="call-prefix-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="call-prefix-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="call-prefix-gi"/></if>
-	<if var="dxcc" matches="pa"><apply rule="call-prefix-pa"/></if>
-	<if var="dxcc" matches="on"><apply rule="call-prefix-on"/></if>
-	<if var="dxcc" matches="lx"><apply rule="call-prefix-lx"/></if>
-	<if var="dxcc" matches="oz"><apply rule="call-prefix-oz"/></if>
-	<if var="dxcc" matches="dl"><apply rule="call-prefix-dl"/></if>
-	<if var="dxcc" matches="hb"><apply rule="call-prefix-hb"/></if>
-	<if var="dxcc" matches="hb0"><apply rule="call-prefix-hb0"/></if>
+  <if var="dxcc" matches="pa"><apply rule="call-prefix-pa"/></if>
+  <if var="dxcc" matches="on"><apply rule="call-prefix-on"/></if>
+  <if var="dxcc" matches="lx"><apply rule="call-prefix-lx"/></if>
+  <if var="dxcc" matches="oz"><apply rule="call-prefix-oz"/></if>
+  <if var="dxcc" matches="dl"><apply rule="call-prefix-dl"/></if>
+  <if var="dxcc" matches="hb"><apply rule="call-prefix-hb"/></if>
+  <if var="dxcc" matches="hb0"><apply rule="call-prefix-hb0"/></if>
   <if var="dxcc" matches="oe"><apply rule="call-prefix-oe"/></if>
-	<if var="dxcc" matches="i"><apply rule="call-prefix-i"/></if>
-	<if var="dxcc" matches="is0"><apply rule="call-prefix-is0"/></if>
-	<if var="dxcc" matches="la"><apply rule="call-prefix-la"/></if>
-	<if var="dxcc" matches="sm"><apply rule="call-prefix-sm"/></if>
-	<if var="dxcc" matches="sp"><apply rule="call-prefix-sp"/></if>
-	<if var="dxcc" matches="ok"><apply rule="call-prefix-ok"/></if>
-	<if var="dxcc" matches="om"><apply rule="call-prefix-om"/></if>
-	<if var="dxcc" matches="ha"><apply rule="call-prefix-ha"/></if>
+  <if var="dxcc" matches="i"><apply rule="call-prefix-i"/></if>
+  <if var="dxcc" matches="is0"><apply rule="call-prefix-is0"/></if>
+  <if var="dxcc" matches="la"><apply rule="call-prefix-la"/></if>
+  <if var="dxcc" matches="sm"><apply rule="call-prefix-sm"/></if>
+  <if var="dxcc" matches="sp"><apply rule="call-prefix-sp"/></if>
+  <if var="dxcc" matches="ok"><apply rule="call-prefix-ok"/></if>
+  <if var="dxcc" matches="om"><apply rule="call-prefix-om"/></if>
+  <if var="dxcc" matches="ha"><apply rule="call-prefix-ha"/></if>
+  <if var="dxcc" matches="s5"><apply rule="call-prefix-s5"/></if>
+  <if var="dxcc" matches="9a"><apply rule="call-prefix-9a"/></if>
+  <if var="dxcc" matches="e7"><apply rule="call-prefix-e7"/></if>
+  <if var="dxcc" matches="yu"><apply rule="call-prefix-yu"/></if>
+  <if var="dxcc" matches="4o"><apply rule="call-prefix-4o"/></if>
+  <if var="dxcc" matches="z6"><apply rule="call-prefix-z6"/></if>
+  <if var="dxcc" matches="za"><apply rule="call-prefix-za"/></if>
+  <if var="dxcc" matches="z3"><apply rule="call-prefix-z3"/></if>
+  <if var="dxcc" matches="sv"><apply rule="call-prefix-sv"/></if>
   <apply rule="call-suffix"/>
  </rule>
 
  <rule id="name">
   <if var="dxcc" matches="ct"><apply rule="name-ct"/></if>
-	<if var="dxcc" matches="ea"><apply rule="name-ea"/></if>
-	<if var="dxcc" matches="ea8"><apply rule="name-ea"/></if>
-	<if var="dxcc" matches="ea9"><apply rule="name-ea"/></if>
-	<if var="dxcc" matches="f"><apply rule="name-f"/></if>
-	<if var="dxcc" matches="ie"><apply rule="name-ie"/></if>
+  <if var="dxcc" matches="ea"><apply rule="name-ea"/></if>
+  <if var="dxcc" matches="ea8"><apply rule="name-ea"/></if>
+  <if var="dxcc" matches="ea9"><apply rule="name-ea"/></if>
+  <if var="dxcc" matches="f"><apply rule="name-f"/></if>
+  <if var="dxcc" matches="ei"><apply rule="name-ei"/></if>
   <if var="dxcc" matches="g"><apply rule="name-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="name-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="name-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="name-gi"/></if>
-	<if var="dxcc" matches="pa"><apply rule="name-pa"/></if>
-	<if var="dxcc" matches="on"><apply rule="name-on"/></if>
-	<if var="dxcc" matches="lx"><apply rule="name-lx"/></if>
-	<if var="dxcc" matches="oz"><apply rule="name-oz"/></if>
-	<if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
-	<if var="dxcc" matches="hb"><apply rule="name-hb"/></if>
-	<if var="dxcc" matches="hb0"><apply rule="name-hb"/></if>
-	<if var="dxcc" matches="oe"><apply rule="name-oe"/></if>
-	<if var="dxcc" matches="i"><apply rule="name-i"/></if>
-	<if var="dxcc" matches="is0"><apply rule="name-i"/></if>
-	<if var="dxcc" matches="la"><apply rule="name-la"/></if>
-	<if var="dxcc" matches="sm"><apply rule="name-sm"/></if>
-	<if var="dxcc" matches="sp"><apply rule="name-sp"/></if>
-	<if var="dxcc" matches="ok"><apply rule="name-ok"/></if>
-	<if var="dxcc" matches="om"><apply rule="name-om"/></if>
-	<if var="dxcc" matches="ha"><apply rule="name-ha"/></if>
+  <if var="dxcc" matches="pa"><apply rule="name-pa"/></if>
+  <if var="dxcc" matches="on"><apply rule="name-on"/></if>
+  <if var="dxcc" matches="lx"><apply rule="name-lx"/></if>
+  <if var="dxcc" matches="oz"><apply rule="name-oz"/></if>
+  <if var="dxcc" matches="dl"><apply rule="name-dl"/></if>
+  <if var="dxcc" matches="hb"><apply rule="name-hb"/></if>
+  <if var="dxcc" matches="hb0"><apply rule="name-hb"/></if>
+  <if var="dxcc" matches="oe"><apply rule="name-oe"/></if>
+  <if var="dxcc" matches="i"><apply rule="name-i"/></if>
+  <if var="dxcc" matches="is0"><apply rule="name-i"/></if>
+  <if var="dxcc" matches="la"><apply rule="name-la"/></if>
+  <if var="dxcc" matches="sm"><apply rule="name-sm"/></if>
+  <if var="dxcc" matches="sp"><apply rule="name-sp"/></if>
+  <if var="dxcc" matches="ok"><apply rule="name-ok"/></if>
+  <if var="dxcc" matches="om"><apply rule="name-om"/></if>
+  <if var="dxcc" matches="ha"><apply rule="name-ha"/></if>
+  <if var="dxcc" matches="s5"><apply rule="name-s5"/></if>
+  <if var="dxcc" matches="9a"><apply rule="name-9a"/></if>
+  <if var="dxcc" matches="e7"><apply rule="name-e7"/></if>
+  <if var="dxcc" matches="yu"><apply rule="name-yu"/></if>
+  <if var="dxcc" matches="4o"><apply rule="name-4o"/></if>
+  <if var="dxcc" matches="z6"><apply rule="name-z6"/></if>
+  <if var="dxcc" matches="za"><apply rule="name-za"/></if>
+  <if var="dxcc" matches="z3"><apply rule="name-z3"/></if>
+  <if var="dxcc" matches="sv"><apply rule="name-sv"/></if>
  </rule>
 
  <rule id="city">
   <if var="dxcc" matches="ct"><apply rule="city-ct"/></if>
-	<if var="dxcc" matches="ea"><apply rule="city-ea"/></if>
-	<if var="dxcc" matches="ea8"><apply rule="city-ea8"/></if>
-	<if var="dxcc" matches="ea9"><apply rule="city-ea9"/></if>
-	<if var="dxcc" matches="f"><apply rule="city-f"/></if>
-	<if var="dxcc" matches="ie"><apply rule="city-ie"/></if>
+  <if var="dxcc" matches="ea"><apply rule="city-ea"/></if>
+  <if var="dxcc" matches="ea8"><apply rule="city-ea8"/></if>
+  <if var="dxcc" matches="ea9"><apply rule="city-ea9"/></if>
+  <if var="dxcc" matches="f"><apply rule="city-f"/></if>
+  <if var="dxcc" matches="ei"><apply rule="city-ei"/></if>
   <if var="dxcc" matches="g"><apply rule="city-g"/></if>
   <if var="dxcc" matches="gm"><apply rule="city-gm"/></if>
   <if var="dxcc" matches="gw"><apply rule="city-gw"/></if>
   <if var="dxcc" matches="gi"><apply rule="city-gi"/></if>
-	<if var="dxcc" matches="pa"><apply rule="city-pa"/></if>
-	<if var="dxcc" matches="on"><apply rule="city-on"/></if>
-	<if var="dxcc" matches="lx"><apply rule="city-lx"/></if>
-	<if var="dxcc" matches="oz"><apply rule="city-oz"/></if>
-	<if var="dxcc" matches="dl"><apply rule="city-dl"/></if>
-	<if var="dxcc" matches="hb"><apply rule="city-hb"/></if>
-	<if var="dxcc" matches="hb0"><apply rule="city-hb0"/></if>
-	<if var="dxcc" matches="oe"><apply rule="city-oe"/></if>
-	<if var="dxcc" matches="i"><apply rule="city-i"/></if>
-	<if var="dxcc" matches="is0"><apply rule="city-is0"/></if>
-	<if var="dxcc" matches="la"><apply rule="city-la"/></if>
-	<if var="dxcc" matches="sm"><apply rule="city-sm"/></if>
-	<if var="dxcc" matches="sp"><apply rule="city-sp"/></if>
-	<if var="dxcc" matches="ok"><apply rule="city-ok"/></if>
-	<if var="dxcc" matches="om"><apply rule="city-om"/></if>
-	<if var="dxcc" matches="ha"><apply rule="city-ha"/></if>
+  <if var="dxcc" matches="pa"><apply rule="city-pa"/></if>
+  <if var="dxcc" matches="on"><apply rule="city-on"/></if>
+  <if var="dxcc" matches="lx"><apply rule="city-lx"/></if>
+  <if var="dxcc" matches="oz"><apply rule="city-oz"/></if>
+  <if var="dxcc" matches="dl"><apply rule="city-dl"/></if>
+  <if var="dxcc" matches="hb"><apply rule="city-hb"/></if>
+  <if var="dxcc" matches="hb0"><apply rule="city-hb0"/></if>
+  <if var="dxcc" matches="oe"><apply rule="city-oe"/></if>
+  <if var="dxcc" matches="i"><apply rule="city-i"/></if>
+  <if var="dxcc" matches="is0"><apply rule="city-is0"/></if>
+  <if var="dxcc" matches="la"><apply rule="city-la"/></if>
+  <if var="dxcc" matches="sm"><apply rule="city-sm"/></if>
+  <if var="dxcc" matches="sp"><apply rule="city-sp"/></if>
+  <if var="dxcc" matches="ok"><apply rule="city-ok"/></if>
+  <if var="dxcc" matches="om"><apply rule="city-om"/></if>
+  <if var="dxcc" matches="ha"><apply rule="city-ha"/></if>
+  <if var="dxcc" matches="s5"><apply rule="city-s5"/></if>
+  <if var="dxcc" matches="9a"><apply rule="city-9a"/></if>
+  <if var="dxcc" matches="e7"><apply rule="city-e7"/></if>
+  <if var="dxcc" matches="yu"><apply rule="city-yu"/></if>
+  <if var="dxcc" matches="4o"><apply rule="city-4o"/></if>
+  <if var="dxcc" matches="z6"><apply rule="city-z6"/></if>
+  <if var="dxcc" matches="za"><apply rule="city-za"/></if>
+  <if var="dxcc" matches="z3"><apply rule="city-z3"/></if>
+  <if var="dxcc" matches="sv"><apply rule="city-sv"/></if>
  </rule>
 </rules>

@@ -23,10 +23,9 @@ public:
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
-    TUTOR_QSO = 2,    ///< QSO Tutor.
-    TUTOR_QCODE = 3,  ///< Q-code tutor.
     TUTOR_TX  = 4,    ///< The TX tutor.
-    TUTOR_CHAT  = 5   ///< The Chat tutor.
+    TUTOR_CHAT  = 5,  ///< The Chat tutor.
+    TUTOR_TEXTGEN = 6 ///< Generated text tuto.
   } Tutor;
 
 public:
@@ -63,6 +62,20 @@ public:
   /** Sets the sound. */
   void setSound(MorseEncoder::Sound sound);
 
+  /** Returns the currently selected jitter. */
+  MorseEncoder::Jitter jitter() const;
+  /** Sets the jitter. */
+  void setJitter(MorseEncoder::Jitter jitter);
+
+  double decoderLevel() const;
+  void setDecoderLevel(double level);
+
+  QAudioDeviceInfo outputDevice() const;
+  void setOutputDevice(const QString &devicename);
+
+  QAudioDeviceInfo inputDevice() const;
+  void setInputDevice(const QString &devicename);
+
   /** Returns the current tutor. */
   Tutor tutor() const;
   /** Sets the tutor. */
@@ -90,6 +103,8 @@ public:
   void setKochInifiniteLineCount(bool enable);
   int kochLineCount() const;
   void setKochLineCount(int lines);
+  bool kochSummary() const;
+  void setKochSummary(bool show);
 
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
@@ -105,6 +120,11 @@ public:
   void setRandomInifiniteLineCount(bool enable);
   int randomLineCount() const;
   void setRandomLineCount(int lines);
+  bool randomSummary() const;
+  void setRandomSummary(bool show);
+
+  QString textGenFilename() const;
+  void setTextGenFilename(const QString &filename);
 
   /** Noise effect: Enabled. */
   bool noiseEnabled() const;
@@ -154,17 +174,6 @@ public:
 };
 
 
-/** A configuration panel for the QSO tutor. */
-class QSOTutorSettingsView: public QGroupBox
-{
-  Q_OBJECT
-
-public:
-  explicit QSOTutorSettingsView(QWidget *parent=0);
-
-  void save();
-};
-
 /** A configuration panel for the Koch tutor. */
 class KochTutorSettingsView: public QGroupBox
 {
@@ -189,6 +198,7 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_summary;
 };
 
 
@@ -217,6 +227,28 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_summary;
+};
+
+
+/** A configuration panel for the TextGen tutor. */
+class TextGenTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit TextGenTutorSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected slots:
+  void onSelectFile();
+  void onPreDefinedSelected(int idx);
+
+protected:
+  QComboBox *_defined;
+  QLineEdit *_filename;
+  QPushButton *_selectFile;
 };
 
 
@@ -237,8 +269,7 @@ protected:
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
-  QSOTutorSettingsView *_qsoSettings;
-  QSOTutorSettingsView *_qcodeSettings;
+  TextGenTutorSettingsView *_textgetSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;
 };
@@ -260,6 +291,7 @@ protected:
   QLineEdit *_tone;
   QLineEdit *_daPitch;
   QComboBox *_sound;
+  QComboBox *_jitter;
 };
 
 
@@ -281,6 +313,21 @@ protected:
 };
 
 
+class DeviceSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit DeviceSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QComboBox *_inputDevices;
+  QComboBox *_outputDevices;
+  QSpinBox  *_decoderLevel;
+};
+
 /** The preferences dialog. */
 class SettingsDialog : public QDialog
 {
@@ -296,6 +343,7 @@ protected:
   TutorSettingsView *_tutor;
   CodeSettingsView *_code;
   EffectSettingsView *_effects;
+  DeviceSettingsView *_devices;
 };
 
 #endif // SETTINGSCTRL_HH

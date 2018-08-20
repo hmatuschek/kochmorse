@@ -8,7 +8,7 @@
 /** An annoyingly strict morse decoder.
  * This class implements a simple but relatively strict morse decoder as an @c AudioSink and
  * decodes received samples assuming a specified speed in terms of WPM. */
-class MorseDecoder : public AudioSink
+class MorseDecoder : public QIODevice
 {
   Q_OBJECT
 
@@ -24,8 +24,6 @@ public:
   void setSpeed(double wpm);
   /** Resets the theshold of the detector in RMS. */
   void setThreshold(double threshold);
-  /** Implements the @c AudioSink interface. */
-  void process(const QByteArray &data);
 
 signals:
   /** Gets emitted once an unknown char is received. */
@@ -47,6 +45,9 @@ protected:
 
   /** Decodes symbols (dot, dash & pause) into chars. */
   void _processSymbol(char sym);
+
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
 
 protected:
   /** Holds the expected speed in WPM. */

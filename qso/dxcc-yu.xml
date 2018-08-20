@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-yu">
+  <t>yu</t>
+  <any-number/>
+ </rule>
+
+ <rule id="name-yu">
+  <one-of>
+   <t>david</t> <t>matija</t> <t>miloje</t> <t>miroslav</t> <t>spiridon</t> <t>rodavan</t> <t>vlado</t>
+   <t>zivko</t> <t>bogdan</t> <t>andrej</t>
+   <t>aleksandra</t> <t>teodora</t> <t>jana</t> <t>katarina</t> <t>petra</t> <t>malina</t> <t>milena</t>
+   <t>maja</t> <t>hana</t> <t>anja</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc YU weighted by their population -->
+ <rule id="city-yu">
+  <one-of>
+   <t w="1659">belgrade</t> <t w="341">novi sad</t> <t w="260">nis</t> <t w="179">kragujevac</t>
+   <t w="144">leskovac</t> <t w="141">subotica</t> <t w="128">krusevac</t> <t w="125">kraljevo</t>
+   <t w="123">pancevo</t> <t w="123">zrenjanin</t> <t w="115">sabac</t> <t w="115">cacak</t>
+   <t w="108">smederevo</t> <t w="100">novi pazar</t> <t w="90">valjevo</t> <t w="85">sombor</t>
+   <t w="83">vranje</t> <t w="79">sremska mitrovica</t> <t w="79">loznica</t> <t w="78">uzice</t>
+  </one-of>
+ </rule>
+</rules>

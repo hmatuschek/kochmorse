@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <rule id="call-prefix-sv">
+  <one-of> <t>sv</t> </one-of>
+  <any-number/>
+ </rule>
+
+ <rule id="name-sv">
+  <one-of>
+   <t>george</t> <t>nick</t> <t>kostas</t> <t>john</t> <t>thanos</t> <t>stelios</t> <t>alex</t>
+   <t>christos</t> <t>dimitris</t> <t>manos</t>
+   <t>maria</t> <t>katerina</t> <t>anna</t> <t>mary</t> <t>anastasia</t> <t>georgia</t> <t>christina</t>
+   <t>helen</t> <t>elena</t> <t>dimitra</t>
+  </one-of>
+ </rule>
+
+ <!-- A list of possible cities for dxcc SV weighted by their population -->
+ <rule id="city-sv">
+  <one-of>
+   <t w="3090">athens</t> <t w="788">thessaloniki</t> <t w="213">patras</t> <t w="173">heraklion</t>
+   <t w="162">larissa</t> <t w="144">volos</t> <t w="115">rhodes</t> <t w="112">ioannina</t>
+   <t w="108">chania</t> <t w="106">agrinio</t> <t w="102">chalcis</t> <t w="85">katerini</t>
+   <t w="81">trikala</t> <t w="76">serres</t> <t w="75">lamia</t> <t w="72">alexandroupoli</t>
+   <t w="71">kozani</t> <t w="70">kavala</t> <t w="69">kalamata</t> <t w="66">veria</t>
+  </one-of>
+ </rule>
+</rules>

@@ -3,68 +3,99 @@
 <rules>
  <rule id="rig-type">
   <one-of>
-	 <t w="80">qro</t>
-	 <t w="10">mobile</t>
-	 <t w="10">qrp</t>
-	</one-of>
+   <t w="80">qro</t>
+   <t w="10">mobile</t>
+   <t w="10">qrp</t>
+  </one-of>
  </rule>
 
  <rule id="rig">
   <if var="rig-type" matches="qro">
-	 <one-of>
-	  <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> <t>ts590</t> <t>ts2000</t>
-	  <t>ts990</t> <t>ts480</t> <t>ic718</t> <t>ic7300</t> <t>ic7700</t> <t>k2</t> <t>k3</t>
-	 </one-of>
-	</if>
-	<if var="rig-type" matches="mobile">
-	 <one-of>
-	  <t>ft857</t>
-	 </one-of>
-	</if>
-	<if var="rig-type" matches="qrp">
-	 <one-of>
- 	  <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> <t>ts590</t> <t>ts2000</t>
-    <t>ts990</t> <t>ts480</t> <t>ic718</t> <t>ic7300</t> <t>ic7700</t> <t>k3</t>
-	  <t>ft817</t> <t>kx22</t> <t>k2</t> <t>homemade</t> <t>bitx</t> <t>ubitx</t>
+   <one-of>
+    <i>
+	 <opt>yaesu </opt>
+	 <one-of> <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> <t>ts590</t> <t>ts2000</t> </one-of>
+	</i>
+	<i>
+	 <opt>kenwood </opt>
+	 <one-of> <t>ts990</t> <t>ts480</t> </one-of>
+	</i>
+	<i>
+	 <opt>icom </opt>
+	 <one-of> <t>ic718</t> <t>ic7300</t> <t>ic7700</t> </one-of>
+	</i>
+	<i>
+	 <opt>elcraft </opt>
+	 <one-of><t>k2</t> <t>k3</t></one-of>
+	</i>
    </one-of>
-	</if>
+  </if>
+  <if var="rig-type" matches="mobile">
+   <one-of>
+    <i>
+	 <opt>yaesu </opt>
+	 <one-of> <t>ft857</t> </one-of>
+	</i>
+   </one-of>
+  </if>
+  <if var="rig-type" matches="qrp">
+   <one-of>
+    <i>
+	 <opt>yaesu </opt>
+	 <one-of> <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> <t>ft817</t> </one-of>
+	</i>
+	<i>
+	 <opt>kenwood </opt>
+	 <one-of> <t>ts590</t> <t>ts2000</t> <t>ts990</t> <t>ts480</t></one-of>
+	</i>
+	<i>
+	 <opt>icom </opt>
+	 <one-of> <t>ic718</t> <t>ic7300</t> <t>ic7700</t> </one-of>
+	</i>
+	<i>
+	 <opt>elcraft </opt>
+	 <one-of> <t>k3</t> <t>kx22</t> <t>k2</t> </one-of>
+	</i>
+	<t>homemade</t> <t>bitx</t> <t>ubitx</t>
+   </one-of>
+  </if>
  </rule>
 
  <rule id="pwr">
   <if var="rig-type" matches="qro">
-	 <one-of>
+   <one-of>
     <t w="40">100w</t>
-		<t w="20">50w</t>
-		<t w="20">30w</t>
-		<t w="10">25w</t>
-		<t w="10">20w</t>
-	 </one-of>
-	</if>
-	<if var="rig-type" matches="mobile">
-	 <one-of>
+	<t w="20">50w</t>
+	<t w="20">30w</t>
+	<t w="10">25w</t>
+	<t w="10">20w</t>
+   </one-of>
+  </if>
+  <if var="rig-type" matches="mobile">
+   <one-of>
     <t w="40">100w</t>
-		<t w="20">50w</t>
-		<t w="20">30w</t>
-		<t w="10">25w</t>
-		<t w="10">20w</t>
-	 </one-of>
-	</if>
+	<t w="20">50w</t>
+	<t w="20">30w</t>
+	<t w="10">25w</t>
+	<t w="10">20w</t>
+   </one-of>
+  </if>
   <if var="rig-type" matches="qrp">
-	 <one-of>
-  	<t w="5">10w</t>
-	  <t w="50">5w</t>
-		<t w="20">3w</t>
-	  <t w="20">2w</t>
-	  <t w="5">1w</t>
-	 </one-of>
-	</if>
+   <one-of>
+    <t w="5">10w</t>
+    <t w="50">5w</t>
+    <t w="20">3w</t>
+    <t w="20">2w</t>
+	<t w="5">1w</t>
+   </one-of>
+  </if>
  </rule>
 
  <rule id="ant">
   <one-of>
-	 <t>dipole</t> <t>inv vee</t> <t>vertical</t> <t>g5rv</t> <t>windom</t> <t>long wire</t>
-	 <t>random wire</t> <t>10m wire</t> <t>20m wire</t> <t>30m wire</t> <t>beam</t>
-	</one-of>
+   <t>dipole</t> <t>inv vee</t> <t>vertical</t> <t>g5rv</t> <t>windom</t> <t>long wire</t>
+   <t>random wire</t> <t>10m wire</t> <t>20m wire</t> <t>30m wire</t> <t>beam</t>
+  </one-of>
  </rule>
 
  <rule id="call-appendix">
@@ -72,19 +103,19 @@
    <one-of>
     <t w="90"></t>
     <t w="5">/1</t>
-		<t w="5">/2</t>
-	 </one-of>
-	</if>
-	<if var="rig-type" matches="mobile">
-	 <one-of>
-	  <t w="70">/p</t>
-	  <t w="10">/m</t>
-	  <t w="10">/mm</t>
-	  <t w="10">/a</t>
-	 </one-of>
-	</if>
-	<if var="rig-type" matches="qrp">
-	 <t>/qrp</t>
-	</if>
+	<t w="5">/2</t>
+   </one-of>
+  </if>
+  <if var="rig-type" matches="mobile">
+   <one-of>
+	<t w="70">/p</t>
+	<t w="10">/m</t>
+	<t w="10">/mm</t>
+	<t w="10">/a</t>
+   </one-of>
+  </if>
+  <if var="rig-type" matches="qrp">
+   <t>/qrp</t>
+  </if>
  </rule>
 </rules>

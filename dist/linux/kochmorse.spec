@@ -1,6 +1,6 @@
 Summary: A simple morse tutor using the Koch method
 
-%define version 3.2.3
+%define version 3.3.0
 
 License: GPL-2.0+
 Group: Applications/Communications
@@ -11,15 +11,14 @@ Source: kochmorse-%{version}.tar.gz
 URL: https://github.com/hmatuschek/kochmorse
 Version: %{version}
 Buildroot: /tmp/kochmorserpm
-BuildRequires: gcc-c++, cmake, portaudio-devel
-Requires: portaudio 
+BuildRequires: gcc-c++, cmake
 %if 0%{?suse_version}
-BuildRequires: libqt5-qtbase-devel, update-desktop-files, alsa-devel
-Requires: libqt5-qtbase 
+BuildRequires: libqt5-qtbase-devel, libqt5-qtmultimedia-devel, libqt5-linguist-devel, update-desktop-files
+Requires: libqt5-qtbase, libqt5-qtmultimedia, libqt5-linguist
 %endif
 %if 0%{?fedora}
-BuildRequires: qt5-qtbase-devel
-Requires: qt5-qtbase 
+BuildRequires: qt5-qtbase-devel, qt5-qtmultimedia-devel, qt5-linguist
+Requires: qt5-qtbase, qt5-qtmultimedia, qt5-linguist 
 %endif
 
 %description

@@ -21,7 +21,7 @@
  <!-- A list of possible cities for dxcc ON weighted by their population -->
  <rule id="city-on">
   <one-of>
-   <t w="513">Antwerp</t> <t w="253">ghent</t> <t w="202">charleroi</t> <t w="186">liege</t>
+   <t w="513">antwerp</t> <t w="253">ghent</t> <t w="202">charleroi</t> <t w="186">liege</t>
 	 <t w="144">brussels</t> <t w="117">bruges</t> <t w="107">namur</t> <t w="91">mons</t>
 	 <t w="90">leuven</t> <t w="78">mechelen</t> <t w="77">aalst</t> <t w="77">la louviere</t>
 	 <t w="73">kortrijk</t> <t w="70">hasselt</t> <t w="69">sint niklaas</t> <t w="68">ostend</t>

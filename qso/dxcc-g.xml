@@ -24,4 +24,73 @@
    <t>bristol</t>
   </one-of>
  </rule>
+
+ <rule id="call-prefix-gi">
+  <one-of>
+   <t w="50">gi</t>
+   <t w="40">mi</t>
+   <t w="10">gn</t>
+  </one-of>
+  <any-number/>
+ </rule>
+
+ <rule id="name-gi">
+  <one-of>
+   <t>james</t> <t>jack</t> <t>noah</t> <t>charlie</t> <t>daniel</t> <t>oliver</t> <t>matthew</t>
+   <t>harry</t> <t>thomas</t> <t>jake</t> <t>emily</t> <t>ella</t> <t>grace</t> <t>sophie</t>
+   <t>olivia</t> <t>anna</t> <t>amelia</t> <t>aoife</t> <t>lucy</t> <t>ava</t>
+  </one-of>
+ </rule>
+
+ <rule id="city-gi">
+  <one-of>
+   <t>belfast</t> <t>lisburn</t> <t>derry</t> <t>newry</t>
+  </one-of>
+ </rule>
+
+ <rule id="call-prefix-gm">
+  <one-of>
+   <t w="50">gm</t>
+   <t w="40">mm</t>
+   <t w="10">gs</t>
+  </one-of>
+  <any-number/>
+ </rule>
+
+ <rule id="name-gm">
+  <one-of>
+   <t>jack</t> <t>james</t> <t>oliver</t> <t>lewis</t> <t>logan</t> <t>harry</t> <t>noah</t>
+   <t>leo</t> <t>charlie</t> <t>alexander</t> <t>olivia</t> <t>emily</t> <t>sophie</t> <t>isla</t>
+   <t>ava</t> <t>amelia</t> <t>jessica</t> <t>ella</t> <t>lucy</t> <t>charlotte</t>
+  </one-of>
+ </rule>
+
+ <rule id="city-gm">
+  <one-of>
+   <t>glasgow</t> <t>edinburgh</t> <t>aberdeen</t> <t>dundee</t> <t>inverness</t> <t>perth</t>
+  </one-of>
+ </rule>
+
+ <rule id="call-prefix-gw">
+  <one-of>
+   <t w="50">gw</t>
+   <t w="40">mw</t>
+   <t w="10">gc</t>
+  </one-of>
+  <any-number/>
+ </rule>
+
+ <rule id="name-gw">
+  <one-of>
+   <t>oliver</t> <t>jacob</t> <t>charlie</t> <t>jack</t> <t>noah</t> <t>alfie</t> <t>oscar</t>
+   <t>william</t> <t>george</t> <t>harry</t> <t>amelia</t> <t>olivia</t> <t>ava</t> <t>isla</t>
+   <t>emily</t> <t>ella</t> <t>mia</t> <t>isabella</t> <t>lily</t> <t>evie</t>
+  </one-of>
+ </rule>
+
+ <rule id="city-gw">
+  <one-of>
+   <t>cardiff</t> <t>swansea</t> <t>newport</t> <t>bangor</t>
+  </one-of>
+ </rule>
 </rules>

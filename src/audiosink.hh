@@ -3,66 +3,45 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <portaudio.h>
 #include <inttypes.h>
-
-/** Base for all audio processing or playback classes. */
-class AudioSink: public QObject
-{
-  Q_OBJECT
-
-protected:
-  /** Constructor. */
-  AudioSink(QObject *parent=0);
-
-public:
-  /** Destructor. */
-  virtual ~AudioSink();
-
-  /** Processes or plays the given PCA (16bit, signed integer). */
-  virtual void process(const QByteArray &data) = 0;
-};
+#include <QIODevice>
+#include <QAudioOutput>
+#include <QAudioInput>
 
 
-/** Static methods to PortAudio. */
-class PortAudio
-{
-public:
-  /** Initializes PortAudio library. */
-  static void init();
-  /** Terminates PortAudio library. */
-  static void finalize();
-};
-
-
-/** Wraps PortAudio for playback. It chooses the default playback device.*/
-class PortAudioSink : public AudioSink
+class QAudioSink: public QIODevice
 {
   Q_OBJECT
 
 public:
   /** Constructor. */
-  explicit PortAudioSink(QObject *parent = 0);
+  explicit QAudioSink(QIODevice *src=0, QObject *parent = 0);
   /** Destructor. */
-  virtual ~PortAudioSink();
+  virtual ~QAudioSink();
 
-  /** Plays the given PCA (16bit, signed integer) blocking. */
-  void process(const QByteArray &data);
   /** Returns the current volume. */
   double volume() const;
   /** Sets the current volume. */
   void setVolume(double factor);
 
+  void setSource(QIODevice *source);
+
+  bool isSequential() const;
+  qint64 bytesAvailable() const;
+
+protected:
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
+
 protected:
   /** The port-audio stream. */
-  PaStream *_stream;
-  /** The current volume-factor. */
-  double _volumeFactor;
+  QAudioOutput *_output;
+  QIODevice *_source;
 };
 
 
-/** Wraps PortAudio for recording. It chooses the default recording device.*/
-class PortAudioSource: public QObject
+/** Wraps QAudioInput for recording. It chooses the default recording device.*/
+class QAudioSource: public QIODevice
 {
   Q_OBJECT
 
@@ -70,9 +49,9 @@ public:
   /** Constructor.
    * @param sink Specifies the audio sink, the sample will be send to.
    * @param parent Specified the QObject parent. */
-  explicit PortAudioSource(AudioSink *sink, QObject *parent=0);
+  explicit QAudioSource(QIODevice *sink, QObject *parent=0);
   /** Destructor. */
-  virtual ~PortAudioSource();
+  virtual ~QAudioSource();
 
   /** Starts processing. */
   void start();
@@ -82,16 +61,14 @@ public:
   bool isRunning() const;
 
 protected:
-  /** The callback used by PortAudio. */
-  static int _pa_callback(
-      const void *in, void *out, unsigned long Nframes,
-      const PaStreamCallbackTimeInfo *tinfo, PaStreamCallbackFlags flags, void *ctx);
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
 
 protected:
-  /** The port-audio stream. */
-  PaStream *_stream;
+  /** The Qt Audio stream. */
+  QAudioInput *_stream;
   /** The first processing node. */
-  AudioSink *_sink;
+  QIODevice *_sink;
   /** Output buffer. */
   QByteArray _buffer;
 };

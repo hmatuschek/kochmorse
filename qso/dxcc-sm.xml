@@ -18,7 +18,7 @@
  <!-- A list of possible cities for dxcc SM weighted by their population -->
  <rule id="city-sm">
   <one-of>
-   <t w="851">stockholm</t> <t w="516">gothenburg</t> <t w="293">Malmoe</t> <t w="140">uppsala</t>
+   <t w="851">stockholm</t> <t w="516">gothenburg</t> <t w="293">malmoe</t> <t w="140">uppsala</t>
 	 <t w="110">vaesteras</t> <t w="107">oerebro</t> <t w="97">linkoeping</t>
 	 <t w="97">helsingborg</t> <t w="89">joenkoeping</t> <t w="83">norrkoeping</t> <t w="82">lund</t>
 	 <t w="75">umea</t> <t w="71">gaevle</t> <t w="67">solna</t> <t w="65">vaexjoe</t>

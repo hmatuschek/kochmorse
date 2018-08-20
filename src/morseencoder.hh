@@ -6,12 +6,13 @@
 #include <QWaitCondition>
 #include <QObject>
 #include <QHash>
+#include <QVector>
 #include "audiosink.hh"
 
 
 /** Implements the morse-encoder either running in a separate thread or performing the encoding and
  * playback blocking. */
-class MorseEncoder : public QThread
+class MorseEncoder : public QIODevice
 {
   Q_OBJECT
 
@@ -23,18 +24,24 @@ public:
     SOUND_CRACKING = 2
   } Sound;
 
+  /** Possible jitter variants. */
+  typedef enum {
+    JITTER_EXACT   = 0,
+    JITTER_BUG     = 1,
+    JITTER_STRAIGT = 2
+  } Jitter;
+
+
 public:
   /** Constructor.
-   * @param sink Specifies the audio-sink for the playback.
    * @param ditFreq Specifies the tone freqency of a dot (dit).
    * @param daFreq Specifies the tone frequency of a dash (da).
    * @param speed Specifies the character speed (in WPM).
    * @param effSpeed Specifies the pause speed (in WPM).
-   * @param parallel If @c true, the encoding and playback is performed in a separate thread.
+   * @param jitter Specifies the dit/da length jitter.
    * @param parent Specifies the @c QObject parent. */
-  explicit MorseEncoder(
-      AudioSink *sink, double ditFreq, double daFreq, double speed, double effSpeed,
-      Sound sound, bool parallel=true, QObject *parent= 0);
+  explicit MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
+      Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent= 0);
 
   /** Sends the given text. */
   void send(const QString &text);
@@ -60,6 +67,10 @@ public:
   void setDashTone(double freq);
   /** (Re-) Sets the sound. */
   void setSound(Sound sound);
+  /** (Re-) Sets the jitter. */
+  void setJitter(Jitter jitter);
+
+  qint64 bytesAvailable() const;
 
 signals:
   /** Signals that a char was send. */
@@ -68,12 +79,12 @@ signals:
   void charsSend();
 
 protected:
-  /** The main function of the parallel thread. */
-  virtual void run();
-  /** Encodes and plays the given char (blocking). */
-  void _send(QChar ch);
+  /** Encodes and plays the next char. */
+  void _send();
   /** (Re-) Creates the dit, da and pause samples. */
   void _createSamples();
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
 
 protected:
   /** The current dot-tone frequency. */
@@ -87,6 +98,8 @@ protected:
   double _effSpeed;
   /** The sound variant. */
   Sound _sound;
+  /** The jitter. */
+  Jitter _jitter;
 
   /** Length of a "dit" in samples. */
   size_t _unitLength;
@@ -94,27 +107,19 @@ protected:
   size_t _effUnitLength;
 
   /** A "dit" incl. inter-symbol pause. */
-  QByteArray _ditSample;
+  QVector<QByteArray> _ditSamples;
   /** A "da" incl. inter-symbol pause. */
-  QByteArray _daSample;
+  QVector<QByteArray> _daSamples;
   /** Pause duration between chars. */
   QByteArray _icPause;
   /** Pause duration between words. */
   QByteArray _iwPause;
 
-  /** Audio backend. */
-  AudioSink *_sink;
-
-  /** If @c true, the morse-code generation and playback will happen in a separate thread. */
-  bool _parallel;
-  /** If true, the encoding thread is running. */
-  bool _running;
-  /** The queue lock. */
-  QMutex         _queueLock;
-  /** The queue condition (empty or not). */
-  QWaitCondition _queueWait;
-  /** The character queue. */
+  QChar          _current;
   QList<QChar>   _queue;
+  QByteArray     _buffer;
+  /** The number of milliseconds send. */
+  double _tsend;
   /** The number of milliseconds played. */
   double _played;
 };

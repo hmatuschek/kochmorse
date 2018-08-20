@@ -2,7 +2,7 @@
 #define __KOCHMORSE_MAINWINDOW_HH__
 
 #include <QMainWindow>
-#include <QPlainTextEdit>
+#include <QTextEdit>
 #include <QAction>
 #include <QSlider>
 #include <QLabel>
@@ -23,6 +23,8 @@ protected slots:
   void onSessionFinished();
   /** Gets called, once a char was send. */
   void onCharSend(QString ch);
+  /** Gets called, once a char was received. */
+  void onCharReceived(QString ch);
   /** Gets called on play-button press. */
   void onPlayToggled(bool play);
   /** Gets called on preferences-button press. */
@@ -38,7 +40,7 @@ protected:
   /** Holds a weak reference to the application instance. */
   Application &_app;
   /** Holds the text view. */
-  QPlainTextEdit *_text;
+  QTextEdit *_text;
   /** QAction for the play/stop toggle button. */
   QAction *_play;
   /** QAction for the "preferences" button. */
