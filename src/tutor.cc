@@ -488,7 +488,7 @@ TXTutor::needsDecoder() const {
 ChatTutor::ChatTutor(MorseEncoder *encoder, QObject *parent)
   : Tutor(encoder, parent), _chat(), _inputbuffer(), _outputbuffer()
 {
-  // pass...
+    connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
 ChatTutor::~ChatTutor() {
@@ -529,6 +529,15 @@ ChatTutor::reset() {
   _inputbuffer.clear();
 }
 
+void
+ChatTutor::onCharSend(QChar ch) {
+    if (0 ==_outputbuffer.size())
+        return;
+    ch = _outputbuffer.at(0);
+    _outputbuffer.remove(0, 1);
+    _encoder->send(ch);
+}
+
 bool
 ChatTutor::needsDecoder() const {
   return true;
@@ -537,9 +546,10 @@ ChatTutor::needsDecoder() const {
 void
 ChatTutor::handle(const QChar &ch) {
   _inputbuffer.push_back(ch);
-  if (_inputbuffer.endsWith(" k ")) {
+  if (_inputbuffer.endsWith(" k ") || _inputbuffer.endsWith("qrz? ")) {
     QTextStream outstr(&_outputbuffer);
     _chat.handle(_inputbuffer.simplified(), outstr);
     _inputbuffer.clear();
+    _encoder->send(next());
   }
 }
