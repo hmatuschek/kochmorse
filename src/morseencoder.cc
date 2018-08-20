@@ -43,9 +43,9 @@ MorseEncoder::_createSamples()
   for (int jitter=0; jitter<4; jitter++) {
     size_t slen = _unitLength, plen = _unitLength;
     if ((1 == jitter) || (3==jitter))
-      slen += _unitLength/2;
+      slen += _unitLength/4;
     if ((2 == jitter) || (3==jitter))
-      plen += _unitLength/2;
+      plen += _unitLength/4;
 
     _ditSamples[jitter].resize((slen+plen)*sizeof(int16_t));
     int16_t *ditData = reinterpret_cast<int16_t *>(_ditSamples[jitter].data());
@@ -69,9 +69,9 @@ MorseEncoder::_createSamples()
   for (int jitter=0; jitter<4; jitter++) {
     size_t slen = 3*_unitLength, plen = _unitLength;
     if ((1 == jitter) || (3==jitter))
-      slen += 3*_unitLength/2;
+      slen += _unitLength;
     if ((2 == jitter) || (3==jitter))
-      plen += _unitLength/2;
+      plen += _unitLength/4;
 
     _daSamples[jitter].resize((slen+plen)*sizeof(int16_t));
     int16_t *daData = reinterpret_cast<int16_t *>(_daSamples[jitter].data());
