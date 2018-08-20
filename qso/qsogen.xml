@@ -50,7 +50,7 @@
  <!-- Call by OP B to A -->
  <t><ref var="FullCallA"/> de <ref var="FullCallB"/> <ref var="FullCallB"/> <opt>pse </opt>k<stop/></t>
 
- <opt p="0.3">qrz?<stop/> <ref var="FullCallB"/> <ref var="FullCallB"/> <opt>pse </opt>k<stop/></opt>
+ <opt p="0.2">qrz?<stop/> <ref var="FullCallB"/> <ref var="FullCallB"/> <opt>pse </opt>k<stop/></opt>
 
  <!-- Reply by OP A to B -->
  <t><ref var="FullCallB"/> de <ref var="CallA"/> <bt/> </t>

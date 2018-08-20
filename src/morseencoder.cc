@@ -1,18 +1,17 @@
 #include "morseencoder.hh"
 #include "globals.hh"
 #include <cmath>
+#include <QDebug>
+#include <QByteArray>
 
 
-
-
-MorseEncoder::MorseEncoder(QIODevice *sink, double ditFreq, double daFreq,
-                           double speed, double effSpeed, Sound sound, Jitter jitter, QObject *parent)
-  : QObject(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
+MorseEncoder::MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
+                           Sound sound, Jitter jitter, QObject *parent)
+  : QIODevice(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
     _sound(sound), _jitter(jitter), _unitLength(0), _effUnitLength(0), _ditSamples(4), _daSamples(4),
-    _icPause(), _iwPause(), _sink(sink), _queue(), _tsend(0), _played(0)
+    _icPause(), _iwPause(), _current(0), _queue(), _tsend(0), _played(0)
 {
   _createSamples();
-  connect(_sink, SIGNAL(bytesWritten(qint64)), this, SLOT(onBytesWritten(qint64)));
 }
 
 
@@ -117,10 +116,8 @@ MorseEncoder::send(const QString &text) {
       continue;
     _queue.append(*c);
   }
-  if (empty && (! _queue.isEmpty())) {
-    _send(_queue.front());
-    _queue.pop_front();
-  }
+  if (empty)
+    _send();
 }
 
 
@@ -128,15 +125,16 @@ void
 MorseEncoder::send(QChar ch) {
   if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch))
     return;
-  if (_queue.isEmpty())
-    _send(ch);
-  else
-    _queue.push_back(ch);
+  bool empty = _queue.isEmpty();
+  _queue.append(ch);
+  if (empty)
+    _send();
 }
 
 
 void
 MorseEncoder::start() {
+  _queue.clear();
   resetTime();
 }
 
@@ -191,24 +189,33 @@ MorseEncoder::setJitter(Jitter jitter) {
   _jitter = jitter;
 }
 
+qint64
+MorseEncoder::bytesAvailable() const {
+  return _buffer.size() + QIODevice::bytesAvailable();
+}
+
 void
-MorseEncoder::_send(QChar ch)
+MorseEncoder::_send()
 {
+  if (_queue.isEmpty()) {
+    emit charsSend();
+    return;
+  }
+
   // ensure lower-case letter
-  ch = ch.toLower();
+  _current = _queue.front().toLower(); _queue.pop_front();
 
   // If space -> send inter-word pause
-  if ((' ' == ch) || ('\n') == ch){
+  if ((' ' == _current) || ('\n') == _current){
     // "play" inter-word pause
-    _sink->write(_iwPause);
+    _buffer.append(_iwPause);
     // Update time
     _tsend += double(1000*_iwPause.size())/(2*Globals::sampleRate);
-    emit charSend(ch);
     return;
   }
 
   // Get code
-  QString code = Globals::charTable[ch];
+  QString code = Globals::charTable[_current];
 
   int ditIdx = 0, daIdx=0;
   switch (_jitter) {
@@ -227,32 +234,36 @@ MorseEncoder::_send(QChar ch)
   for (QString::iterator sym=code.begin(); sym!=code.end(); sym++) {
     if ('.' == *sym) {
       // Play "dit"
-      _sink->write(_ditSamples[ditIdx]);
+      _buffer.append(_ditSamples[ditIdx]);
       // Update time
       _tsend += double(1000*_ditSamples[ditIdx].size())/(2*Globals::sampleRate);
     } else {
       // Play "da"
-      _sink->write(_daSamples[daIdx]);
+      _buffer.append(_daSamples[daIdx]);
       // update time
       _tsend += double(1000*_daSamples[daIdx].size())/(2*Globals::sampleRate);
     }
   }
   // Send inter char pause:
-  _sink->write(_icPause);
+  _buffer.append(_icPause);
+  emit readyRead();
   // Update time elapsed
   _tsend += double(1000*_icPause.size())/(2*Globals::sampleRate);
-  emit charSend(ch);
 }
 
-void
-MorseEncoder::onBytesWritten(qint64 n) {
-  double dt = double(1000*n)/(2*Globals::sampleRate);
-  _played += dt;
-  if ((_tsend-_played) < 100) {
-    if (_queue.isEmpty())
-      emit charsSend();
-    else {
-      _send(_queue.front()); _queue.pop_front();
-    }
-  }
+qint64
+MorseEncoder::readData(char *data, qint64 maxlen) {  
+  maxlen = std::min(maxlen, qint64(_buffer.size()));
+  if (0 == maxlen)
+    return 0;
+  memcpy(data, _buffer.constData(), maxlen);
+  _buffer.remove(0, maxlen);
+  if (0 == _buffer.size())
+    emit charSend(_current);
+  return maxlen;
+}
+
+qint64
+MorseEncoder::writeData(const char *data, qint64 len) {
+  return 0;
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<rules>
+ <load file="dxcc.xml"/>
+
+ <rule id="randomcall">
+  <var id="dxcc"><apply rule="dxcc"/></var>
+  <apply rule="call"/>
+ </rule>
+
+ <t>vvv <stop/></t>
+ <rep min="5">
+  <rep min="5">
+   <t><apply rule="randomcall"/> </t>
+  </rep> <t>= <stop/></t>
+ </rep>
+</rules>

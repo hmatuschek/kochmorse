@@ -15,7 +15,7 @@ class QAudioSink: public QIODevice
 
 public:
   /** Constructor. */
-  explicit QAudioSink(QObject *parent = 0);
+  explicit QAudioSink(QIODevice *src=0, QObject *parent = 0);
   /** Destructor. */
   virtual ~QAudioSink();
 
@@ -24,9 +24,10 @@ public:
   /** Sets the current volume. */
   void setVolume(double factor);
 
+  void setSource(QIODevice *source);
+
   bool isSequential() const;
   qint64 bytesAvailable() const;
-  qint64 bytesToWrite() const;
 
 protected:
   qint64 readData(char *data, qint64 maxlen);
@@ -35,8 +36,7 @@ protected:
 protected:
   /** The port-audio stream. */
   QAudioOutput *_output;
-  /** The internal sample buffer. */
-  QByteArray _buffer;
+  QIODevice *_source;
 };
 
 

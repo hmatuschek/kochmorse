@@ -9,8 +9,8 @@
 /* ********************************************************************************************* *
  * QAudioSink, playback
  * ********************************************************************************************* */
-QAudioSink::QAudioSink(QObject *parent)
-  : QIODevice(parent), _output(0)
+QAudioSink::QAudioSink(QIODevice *src, QObject *parent)
+  : QIODevice(parent), _output(0), _source(src)
 {
   QAudioFormat fmt;
   fmt.setByteOrder(QAudioFormat::LittleEndian);
@@ -23,8 +23,14 @@ QAudioSink::QAudioSink(QObject *parent)
   if (! info.isFormatSupported(fmt)) {
     qDebug() << "Warning: Audio format is not supported by device" << info.deviceName();
   }
+
+  if (_source) {
+    connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
+    _source->open(QIODevice::ReadOnly);
+  }
+
   _output = new QAudioOutput(fmt, this);
-  this->open(QIODevice::ReadWrite);
+  this->open(QIODevice::ReadOnly);
   _output->start(this);
 }
 
@@ -42,6 +48,19 @@ QAudioSink::setVolume(double factor) {
   return _output->setVolume(std::max(0.0, std::min(factor,1.0)));
 }
 
+void
+QAudioSink::setSource(QIODevice *source) {
+  if (_source)
+    disconnect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
+
+  _source = source;
+  if (! _source)
+    return;
+
+  connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
+  _source->open(QIODevice::ReadOnly);
+}
+
 bool
 QAudioSink::isSequential() const {
   return true;
@@ -49,31 +68,23 @@ QAudioSink::isSequential() const {
 
 qint64
 QAudioSink::bytesAvailable() const {
-  return _buffer.size() + QIODevice::bytesAvailable();
-}
-
-qint64
-QAudioSink::bytesToWrite() const {
-  return _buffer.size() + QIODevice::bytesToWrite();
+  if (! _source)
+    return QIODevice::bytesAvailable();
+  return _source->bytesAvailable() + QIODevice::bytesAvailable();
 }
 
 qint64
 QAudioSink::readData(char *data, qint64 maxlen) {
-  maxlen = std::min(int(maxlen), _buffer.size());
-  if (0 >= maxlen)
-    return maxlen;
+  if (! _source)
+    return 0;
 
-  emit bytesWritten(maxlen);
-  memcpy(data, _buffer.constData(), maxlen);
-  _buffer.remove(0, maxlen);
+  maxlen = _source->read(data, maxlen);
   return maxlen;
 }
 
 qint64
 QAudioSink::writeData(const char *data, qint64 len) {
-  _buffer.append(data, len);
-  emit readyRead();
-  return len;
+  return 0;
 }
 
 

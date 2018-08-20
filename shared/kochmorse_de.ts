@@ -64,7 +64,7 @@
     <message>
         <location filename="../src/settings.cc" line="448"/>
         <source>Dash pitch (Hz)</source>
-        <translation>Strich Versatz</translation>
+        <translation>Strich Versatz (Hz)</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="449"/>

@@ -23,8 +23,6 @@ public:
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
-    TUTOR_QSO = 2,    ///< QSO Tutor.
-    TUTOR_QCODE = 3,  ///< Q-code tutor.
     TUTOR_TX  = 4,    ///< The TX tutor.
     TUTOR_CHAT  = 5,  ///< The Chat tutor.
     TUTOR_TEXTGEN = 6 ///< Generated text tuto.
@@ -176,18 +174,6 @@ public:
 };
 
 
-/** A configuration panel for the QSO tutor. */
-class QSOTutorSettingsView: public QGroupBox
-{
-  Q_OBJECT
-
-public:
-  explicit QSOTutorSettingsView(QWidget *parent=0);
-
-  void save();
-
-};
-
 /** A configuration panel for the Koch tutor. */
 class KochTutorSettingsView: public QGroupBox
 {
@@ -257,9 +243,12 @@ public:
 
 protected slots:
   void onSelectFile();
+  void onPreDefinedSelected(int idx);
 
 protected:
+  QComboBox *_defined;
   QLineEdit *_filename;
+  QPushButton *_selectFile;
 };
 
 
@@ -280,11 +269,9 @@ protected:
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
-  QSOTutorSettingsView *_qsoSettings;
-  QSOTutorSettingsView *_qcodeSettings;
+  TextGenTutorSettingsView *_textgetSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;
-  TextGenTutorSettingsView *_textgetSettings;
 };
 
 

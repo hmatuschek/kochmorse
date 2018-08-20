@@ -8,8 +8,8 @@
 /* ********************************************************************************************* *
  * Tutor interface
  * ********************************************************************************************* */
-Tutor::Tutor(QObject *parent)
-  : QObject(parent)
+Tutor::Tutor(MorseEncoder *encoder, QObject *parent)
+  : QObject(parent), _encoder(encoder), _running(false)
 {
   // pass...
 }
@@ -28,6 +28,16 @@ Tutor::handle(const QChar &ch) {
   // pass...
 }
 
+void
+Tutor::start() {
+  _running = true;
+}
+
+void
+Tutor::stop() {
+  _running = false;
+}
+
 
 /* ********************************************************************************************* *
  * KochTrainer
@@ -44,17 +54,18 @@ inline QVector<QChar> _initKochLessons() {
 QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTutor::KochTutor(int lesson, bool prefLastChars, bool repeatLastChar,
+KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool repeatLastChar,
                      size_t minGroupSize, size_t maxGroupSize,
                      int lines, bool showSummary, QObject *parent)
-  : Tutor(parent), _lesson(lesson), _prefLastChars(prefLastChars), _repeatLastChar(repeatLastChar),
-    _minGroupSize(std::min(minGroupSize, maxGroupSize)),
-    _maxGroupSize(std::max(minGroupSize, maxGroupSize)),
-    _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars_send(0),
-    _words_send(0), _lines_send(0)
+  : Tutor(encoder, parent), _lesson(lesson), _prefLastChars(prefLastChars),
+    _repeatLastChar(repeatLastChar), _minGroupSize(std::min(minGroupSize, maxGroupSize)),
+    _maxGroupSize(std::max(minGroupSize, maxGroupSize)), _lines(lines), _linecount(0),
+    _showSummary(showSummary), _text(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(0));
+
+  connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
 KochTutor::~KochTutor() {
@@ -63,7 +74,7 @@ KochTutor::~KochTutor() {
 
 QChar
 KochTutor::next() {
-  if ((0 == _text.size()) && (_lines == _linecount))
+  if (atEnd())
     reset();
   else if (0 == _text.size())
     _nextline();
@@ -136,6 +147,20 @@ KochTutor::setShowSummary(bool show) {
 }
 
 void
+KochTutor::start() {
+  this->reset();
+  Tutor::start();
+  _encoder->start();
+  _encoder->send(this->next());
+}
+
+void
+KochTutor::stop() {
+  Tutor::stop();
+  _encoder->stop();
+}
+
+void
 KochTutor::reset()
 {
   // Empty current session
@@ -163,9 +188,17 @@ KochTutor::needsDecoder() const {
   return false;
 }
 
+void KochTutor::onCharSend(QChar c) {
+  if ((! this->atEnd()) && _running)
+    _encoder->send(next());
+  else if (atEnd())
+    emit sessionComplete();
+}
+
 void
 KochTutor::_nextline() {
   // for each of the 5 lines
+  /// @bug This does not appear correct.
   for (size_t i=0; i<25;) {
     // Sample group size
     size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
@@ -195,8 +228,8 @@ KochTutor::_nextline() {
 /* ********************************************************************************************* *
  * RandomTutor
  * ********************************************************************************************* */
-RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
+RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
+  : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
     _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars()
 {
   // Init random number generator
@@ -207,17 +240,22 @@ RandomTutor::RandomTutor(size_t minGroupSize, size_t maxGroupSize, int lines, bo
          << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
          << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
          << QChar(0x2406) /* SN */;
+
+  connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
-RandomTutor::RandomTutor(const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
-  : Tutor(parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
+RandomTutor::RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
+  : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
     _showSummary(showSummary), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(0));
   _chars.reserve(chars.size());
   QSet<QChar>::const_iterator c = chars.begin();
-  for (; c != chars.end(); c++) { _chars.push_back(*c); }
+  for (; c != chars.end(); c++)
+    _chars.push_back(*c);
+
+  connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
 RandomTutor::~RandomTutor() {
@@ -257,6 +295,20 @@ RandomTutor::atEnd() {
 }
 
 void
+RandomTutor::start() {
+  this->reset();
+  Tutor::start();
+  _encoder->start();
+  _encoder->send(this->next());
+}
+
+void
+RandomTutor::stop() {
+  Tutor::stop();
+  _encoder->stop();
+}
+
+void
 RandomTutor::reset()
 {
   // Empty current session
@@ -271,6 +323,13 @@ RandomTutor::reset()
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
   // sample a line
   _nextline();
+}
+
+void RandomTutor::onCharSend(QChar c) {
+  if ((! this->atEnd()) && _running)
+    _encoder->send(next());
+  else if (atEnd())
+    emit sessionComplete();
 }
 
 bool
@@ -326,14 +385,28 @@ RandomTutor::setLines(int lines) {
 /* ********************************************************************************************* *
  * GenQSOTutor
  * ********************************************************************************************* */
-GenTextTutor::GenTextTutor(const QString &filename, QObject *parent)
-  : Tutor(parent), _generator(filename)
+GenTextTutor::GenTextTutor(MorseEncoder *encoder, const QString &filename, QObject *parent)
+  : Tutor(encoder, parent), _generator(filename)
 {
-  // pass...
+  connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
 GenTextTutor::~GenTextTutor() {
   // pass...
+}
+
+void
+GenTextTutor::start() {
+  this->reset();
+  Tutor::start();
+  _encoder->start();
+  _encoder->send(this->next());
+}
+
+void
+GenTextTutor::stop() {
+  Tutor::stop();
+  _encoder->stop();
 }
 
 QChar
@@ -367,12 +440,19 @@ GenTextTutor::needsDecoder() const {
   return false;
 }
 
+void
+GenTextTutor::onCharSend(QChar ch) {
+  if ((! atEnd()) && _running)
+    _encoder->send(next());
+  else if (atEnd())
+    emit sessionComplete();
+}
 
 /* ********************************************************************************************* *
  * TxTutor placeholder tutor
  * ********************************************************************************************* */
 TXTutor::TXTutor(QObject *parent)
-  : Tutor(parent)
+  : Tutor(0, parent)
 {
   // pass...
 }
@@ -405,8 +485,8 @@ TXTutor::needsDecoder() const {
 /* ********************************************************************************************* *
  * ChatTutor
  * ********************************************************************************************* */
-ChatTutor::ChatTutor(QObject *parent)
-  : Tutor(parent), _chat(), _inputbuffer(), _outputbuffer()
+ChatTutor::ChatTutor(MorseEncoder *encoder, QObject *parent)
+  : Tutor(encoder, parent), _chat(), _inputbuffer(), _outputbuffer()
 {
   // pass...
 }
@@ -428,6 +508,19 @@ ChatTutor::next() {
 bool
 ChatTutor::atEnd() {
   return false;
+}
+
+void
+ChatTutor::start() {
+  this->reset();
+  Tutor::start();
+  _encoder->start();
+}
+
+void
+ChatTutor::stop() {
+  Tutor::stop();
+  _encoder->stop();
 }
 
 void

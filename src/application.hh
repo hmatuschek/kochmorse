@@ -7,6 +7,7 @@
 #include "morsedecoder.hh"
 #include "tutor.hh"
 #include "effect.hh"
+#include "qrm.hh"
 
 
 /** Central application class. Manages audio output, effects, morse encoding and the tutors. */
@@ -34,15 +35,13 @@ public slots:
 
 signals:
   /** Gets emitted once a session is done. */
-  void sessionFinished();
+  void sessionComplete();
   /** Gets emitted once for each character send. */
   void charSend(QString ch);
   /** Gets emitted once for each character received. */
   void charReceived(QString ch);
 
 protected slots:
-  /** Gets called if the morse-encoder queue gets empty. */
-  void onCharsSend();
   /** Gets called if a character was send by the encoder. */
   void onCharSend(QChar ch);
   /** Gets called if the morse-decoder received a char. */
@@ -57,6 +56,8 @@ protected:
   QAudioSink *_audio_sink;
   /** The noise effect instance. */
   NoiseEffect *_noiseEffect;
+  /** QRM. */
+  QRMGenerator *_qrm;
   /** The "fading" effect instance. */
   FadingEffect *_fadingEffect;
   /** The actual morse encoder. */

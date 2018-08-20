@@ -84,7 +84,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   this->setCentralWidget(_text);
 
-  QObject::connect(&_app, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
+  QObject::connect(&_app, SIGNAL(sessionComplete()), this, SLOT(onSessionFinished()));
   QObject::connect(&_app, SIGNAL(charSend(QString)), this, SLOT(onCharSend(QString)));
   QObject::connect(&_app, SIGNAL(charReceived(QString)), this, SLOT(onCharReceived(QString)));
   QObject::connect(_play, SIGNAL(triggered(bool)), this, SLOT(onPlayToggled(bool)));

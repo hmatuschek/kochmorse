@@ -12,7 +12,7 @@
 
 /** Implements the morse-encoder either running in a separate thread or performing the encoding and
  * playback blocking. */
-class MorseEncoder : public QObject
+class MorseEncoder : public QIODevice
 {
   Q_OBJECT
 
@@ -34,15 +34,13 @@ public:
 
 public:
   /** Constructor.
-   * @param sink Specifies the audio-sink for the playback.
    * @param ditFreq Specifies the tone freqency of a dot (dit).
    * @param daFreq Specifies the tone frequency of a dash (da).
    * @param speed Specifies the character speed (in WPM).
    * @param effSpeed Specifies the pause speed (in WPM).
    * @param jitter Specifies the dit/da length jitter.
    * @param parent Specifies the @c QObject parent. */
-  explicit MorseEncoder(
-      QIODevice *sink, double ditFreq, double daFreq, double speed, double effSpeed,
+  explicit MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
       Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent= 0);
 
   /** Sends the given text. */
@@ -72,20 +70,21 @@ public:
   /** (Re-) Sets the jitter. */
   void setJitter(Jitter jitter);
 
+  qint64 bytesAvailable() const;
+
 signals:
   /** Signals that a char was send. */
   void charSend(QChar ch);
   /** Signals that all chars in the queue have been send. */
   void charsSend();
 
-protected slots:
-  void onBytesWritten(qint64 n);
-
 protected:
-  /** Encodes and plays the given char (blocking). */
-  void _send(QChar ch);
+  /** Encodes and plays the next char. */
+  void _send();
   /** (Re-) Creates the dit, da and pause samples. */
   void _createSamples();
+  qint64 readData(char *data, qint64 maxlen);
+  qint64 writeData(const char *data, qint64 len);
 
 protected:
   /** The current dot-tone frequency. */
@@ -116,10 +115,9 @@ protected:
   /** Pause duration between words. */
   QByteArray _iwPause;
 
-  /** Audio backend. */
-  QIODevice *_sink;
-
+  QChar          _current;
   QList<QChar>   _queue;
+  QByteArray     _buffer;
   /** The number of milliseconds send. */
   double _tsend;
   /** The number of milliseconds played. */

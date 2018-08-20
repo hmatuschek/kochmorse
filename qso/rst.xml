@@ -27,9 +27,10 @@
    <t w="20">5nn</t>
   </one-of>
   <one-of>
-   <t w="60"/>
+   <t w="30"/>
    <t w="30"><opt> es</opt> qrm</t>
    <t w="10"><opt> es</opt> qrn</t>
+   <t w="30"><opt> es</opt> qsb</t>
   </one-of>
  </rule>
 </rules>

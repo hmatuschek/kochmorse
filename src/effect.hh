@@ -11,13 +11,16 @@ class NoiseEffect : public QIODevice
 
 public:
   /** Constructor, @c snr specifies the signal-to-noise ratio. */
-  explicit NoiseEffect(QIODevice *next, bool enabled=false, float snr=20, QObject *parent = 0);
+  explicit NoiseEffect(QIODevice *src=0, bool enabled=false, float snr=20, QObject *parent = 0);
   /** Destructor. */
   virtual ~NoiseEffect();
   /** Enable/Disable the effect. */
   void setEnabled(bool enabled);
   /** Sets the SNR. */
   void setSNR(float snr);
+  void setSource(QIODevice *src);
+
+  qint64 bytesAvailable() const;
 
 protected:
   /** Samples two indp. std. normal distr. RV. */
@@ -26,8 +29,8 @@ protected:
   qint64 readData(char *data, qint64 maxlen);
 
 protected:
-  /** The audio sink of the effect. */
-  QIODevice *_sink;
+  /** The audio source of the effect. */
+  QIODevice *_source;
   /** If @c true, the effect instance adds some noise. */
   bool _enabled;
   /** The current SNR. */
@@ -42,12 +45,12 @@ class FadingEffect: public QIODevice
 
 public:
   /** Constructor.
-   * @param sink Specifies the @c AudioSink of the effect.
+   * @param source Specifies the @c AudioSource of the effect.
    * @param enabled Specified whether the effect is enabled.
    * @param maxDamp Specifies the maximum damping factor (in dB) of the fading effect.
    * @param rate Specifies the rate of the fading in [1/min].
    * @param parent Specifies the QObject parent. */
-  FadingEffect(QIODevice *sink, bool enabled=false, float maxDamp=-10, float rate=12, QObject *parent=0);
+  FadingEffect(QIODevice *source, bool enabled=false, float maxDamp=-10, float rate=12, QObject *parent=0);
   /** Destructor. */
   virtual ~FadingEffect();
   /** Enable/disable the effect. */
@@ -56,14 +59,17 @@ public:
   void setMaxDamp(float damp);
   /** (Re-) Set the fading rate [1/min]. */
   void setFadingRate(float rate);
+  void setSource(QIODevice *src);
+
+  qint64 bytesAvailable() const;
 
 protected:
   qint64 readData(char *data, qint64 maxlen);
   qint64 writeData(const char *data, qint64 len);
 
 protected:
-  /** The audio sink of the effect. */
-  QIODevice *_sink;
+  /** The audio source of the effect. */
+  QIODevice *_source;
   /** If @c true, the effect is enabled. */
   bool _enabled;
   /** The maximum damping factor. */

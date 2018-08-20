@@ -36,6 +36,7 @@ Lexer::Lexer(const QString &text)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(is)\\b", Qt::CaseInsensitive), Token::T_IS)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b(hr)\\b", Qt::CaseInsensitive), Token::T_HERE)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b([k=])\\b", Qt::CaseInsensitive), Token::T_BREAK)
+      << QPair<QRegExp, Token::Type>(QRegExp("\\b(73)\\b", Qt::CaseInsensitive), Token::T_73)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b([a-z]+)\\b", Qt::CaseInsensitive), Token::T_WORD)
       << QPair<QRegExp, Token::Type>(QRegExp("\\b([0-9]+)\\b", Qt::CaseInsensitive), Token::T_NUMBER);
 }
@@ -99,6 +100,9 @@ void Parser::parse(const QString &text) {
             _state = S_CALL;
             firstcall = tok.value();
             break;
+          case Token::T_73:
+            _state = S_CLOSING;
+            break;
           default:
             _state = S_START;
             break;
@@ -115,6 +119,9 @@ void Parser::parse(const QString &text) {
             break;
           case Token::T_QTH:
             _state = S_QTH;
+            break;
+          case Token::T_73:
+            _state = S_CLOSING;
             break;
           default:
             _state = S_RESPONSE;
@@ -201,6 +208,9 @@ void Parser::parse(const QString &text) {
         }
         break;
 
+      case S_CLOSING:
+        break;
+
       default:
         break;
     }
@@ -220,7 +230,7 @@ void Parser::parse(const QString &text) {
 QSOChat::QSOChat(QObject *parent)
   : QObject(parent), _inQSO(false), _context()
 {
-	reset();
+	// pass...
 }
 
 
@@ -234,6 +244,7 @@ QSOChat::handle(const QString &message, QTextStream &reply) {
   parser.parse(message);
 
   if ((Parser::S_CQ_CALL == parser.state()) && result.contains("dxcall")) {
+    reset();
     TextGen generator(":/qso/chat-cq-response.xml");
     _context["dxcall"] = result["dxcall"];
     generator.generate(reply, _context);
@@ -243,6 +254,9 @@ QSOChat::handle(const QString &message, QTextStream &reply) {
     if (result.contains("dxqth"))
       _context["dxqth"] = result["dxqth"];
     TextGen generator(":/qso/chat-response.xml");
+    generator.generate(reply, _context);
+  } else if (Parser::S_CLOSING == parser.state()) {
+    TextGen generator(":/qso/chat-closing.xml");
     generator.generate(reply, _context);
   }
 
@@ -259,11 +273,12 @@ QSOChat::reset() {
   TextGen generator(":/qso/chat-init.xml");
   QTextStream buffer;
   generator.generate(buffer, _context);
+  qDebug() << "New context:" << _context;
 }
 
 
 bool
 QSOChat::isComplete(const QString &message) {
-	return message.simplified().endsWith(" k",Qt::CaseInsensitive) ||
+	return message.simplified().endsWith(" k", Qt::CaseInsensitive) ||
       message.simplified().endsWith(" +", Qt::CaseInsensitive);
 }

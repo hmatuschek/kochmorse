@@ -473,28 +473,22 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor = new QComboBox();
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
-  _tutor->addItem(tr("QSO"));
-  _tutor->addItem(tr("Q-Codes"));
+  _tutor->addItem(tr("Rule based tutor"));
   _tutor->addItem(tr("Transmit"));
   _tutor->addItem(tr("Chat"));
-  _tutor->addItem(tr("Text generator"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
-  _qsoSettings  = new QSOTutorSettingsView();
-  _qcodeSettings  = new QSOTutorSettingsView();
+  _textgetSettings = new TextGenTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
   _chatSettings = new ChatTutorSettingsView();
-  _textgetSettings = new TextGenTutorSettingsView();
 
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
-  _tutorSettings->addWidget(_qsoSettings);
-  _tutorSettings->addWidget(_qcodeSettings);
+  _tutorSettings->addWidget(_textgetSettings);
   _tutorSettings->addWidget(_txSettings);
   _tutorSettings->addWidget(_chatSettings);
-  _tutorSettings->addWidget(_textgetSettings);
 
   Settings settings;
   if (Settings::TUTOR_KOCH == settings.tutor()) {
@@ -503,21 +497,15 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
     _tutor->setCurrentIndex(1);
     _tutorSettings->setCurrentIndex(1);
-  } else if (Settings::TUTOR_QSO == settings.tutor()) {
+  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
     _tutor->setCurrentIndex(2);
     _tutorSettings->setCurrentIndex(2);
-  } else if (Settings::TUTOR_QCODE == settings.tutor()) {
+  } else if (Settings::TUTOR_TX == settings.tutor()) {
     _tutor->setCurrentIndex(3);
     _tutorSettings->setCurrentIndex(3);
-  } else if (Settings::TUTOR_TX == settings.tutor()) {
+  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
     _tutor->setCurrentIndex(4);
     _tutorSettings->setCurrentIndex(4);
-  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
-    _tutor->setCurrentIndex(5);
-    _tutorSettings->setCurrentIndex(5);
-  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
-    _tutor->setCurrentIndex(6);
-    _tutorSettings->setCurrentIndex(6);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -550,15 +538,11 @@ TutorSettingsView::save() {
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
   } else if (2 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_QSO);
-  } else if (3 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_QCODE);
-  } else if (4 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_TX);
-  } else if (5 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_CHAT);
-  } else if (6 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_TEXTGEN);
+  } else if (3 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_TX);
+  } else if (4 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_CHAT);
   }
 }
 
@@ -794,63 +778,73 @@ RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
 
 
 /* ********************************************************************************************* *
- * QSO Tutor Settings Widget
- * ********************************************************************************************* */
-QSOTutorSettingsView::QSOTutorSettingsView(QWidget *parent)
-  : QGroupBox(tr("QSO tutor settings"), parent)
-{
-  QLabel *label = new QLabel(tr("<No settings for this tutor>"));
-  label->setAlignment(Qt::AlignCenter);
-  QVBoxLayout *layout = new QVBoxLayout();
-  layout->addWidget(label);
-  setLayout(layout);
-}
-
-void
-QSOTutorSettingsView::save() {
-  // pass...
-}
-
-
-/* ********************************************************************************************* *
  * TextGen Tutor Settings Widget
  * ********************************************************************************************* */
 TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
-  : QGroupBox(tr("Generated text tutor settings"),parent)
+  : QGroupBox(tr("Rule based tutor settings"),parent)
 {
   Settings settings;
-  QString help = tr("Select a rule file (ending on .xml) "
-                    "or a plain-text file (ending on .txt) to send.");
+  QString help = tr("Select a build-in tutor or 'user defined'. The rule file (ending on .xml) or a "
+                    "plain-text file (ending on .txt) can then be selected below.");
+
+  _defined = new QComboBox();
+  _defined->addItem(tr("Generated QSO"), ":/qso/qsogen.xml");
+  _defined->addItem(tr("Q-Codes/Words"), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Call signs"), ":/qso/callsigns.xml");
+  _defined->addItem(tr("User defined ..."));
 
   _filename = new QLineEdit();
-  _filename->setText(settings.textGenFilename());
   _filename->setToolTip(help);
   _filename->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::MinimumExpanding);
+  _filename->setEnabled(false);
 
-  QPushButton *select = new QPushButton("...");
-  select->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  _selectFile = new QPushButton("...");
+  _selectFile->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  _selectFile->setEnabled(false);
+
+  QString selected = settings.textGenFilename();
+  if (":/qso/qsogen.xml" == selected) {
+    _defined->setCurrentIndex(0);
+  } else if (":/qso/qcodes.xml" == selected) {
+    _defined->setCurrentIndex(1);
+  } else if (":/qso/callsigns.xml" == selected) {
+    _defined->setCurrentIndex(2);
+  } else {
+    _defined->setCurrentIndex(3);
+    _filename->setText(selected);
+    _filename->setEnabled(true);
+    _selectFile->setEnabled(true);
+  }
+
 
   QHBoxLayout *llayout = new QHBoxLayout();
   llayout->addWidget(_filename, 1);
-  llayout->addWidget(select);
+  llayout->addWidget(_selectFile);
 
   QFormLayout *layout = new QFormLayout();
   QLabel *label = new QLabel(help);
   label->setWordWrap(true);
   layout->addWidget(label);
+  layout->addRow(tr("Build-in tutor"), _defined);
   layout->addRow(tr("Rule/text file"), llayout);
   layout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
   setLayout(layout);
 
-  connect(select, SIGNAL(clicked(bool)), this, SLOT(onSelectFile()));
+  connect(_defined, SIGNAL(currentIndexChanged(int)), this, SLOT(onPreDefinedSelected(int)));
+  connect(_selectFile, SIGNAL(clicked(bool)), this, SLOT(onSelectFile()));
 }
 
 void
 TextGenTutorSettingsView::save() {
-  qDebug() << "Got" << _filename->text();
-  QFileInfo info(_filename->text());
-  if (info.exists())
-    Settings().setTextGenFilename(info.absoluteFilePath());
+  if (_filename->isEnabled()) {
+    QFileInfo info(_filename->text());
+    if (info.exists())
+      Settings().setTextGenFilename(info.absoluteFilePath());
+  } else {
+    QFileInfo info(_defined->currentData().toString());
+    if (info.exists())
+      Settings().setTextGenFilename(info.absoluteFilePath());
+  }
 }
 
 void
@@ -861,6 +855,17 @@ TextGenTutorSettingsView::onSelectFile() {
                                                   tr("Rule file (*.xml);;Text file (*.txt)"));
   if (! filename.isEmpty())
     _filename->setText(filename);
+}
+
+void
+TextGenTutorSettingsView::onPreDefinedSelected(int idx) {
+  if (3 == idx) {
+    _filename->setEnabled(true);
+    _selectFile->setEnabled(true);
+  } else {
+    _filename->setEnabled(false);
+    _selectFile->setEnabled(false);
+  }
 }
 
 

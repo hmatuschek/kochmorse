@@ -45,5 +45,7 @@
         <file>qso/dxcc-z3.xml</file>
         <file>qso/dxcc-sv.xml</file>
         <file alias="lang/kochmorse_de_DE.qm">shared/kochmorse_de.qm</file>
+        <file>qso/callsigns.xml</file>
+        <file>qso/chat-closing.xml</file>
     </qresource>
 </RCC>
