@@ -30,7 +30,7 @@ Below, you will find a list of features of the current KochMorse release.
    the noise effect, it simulates the conditions on HF bands pretty well.
 
 ## Releases 
- * 2017-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
+ * 2018-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
  * 2015-06-30 - [**Version 3.2.2**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.2)
  * 2015-02-28 - [**Version 3.2.1**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.1)
  * 2015-02-22 - [**Version 3.2.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.0)
