@@ -15,9 +15,9 @@
  <var id="dxrst"><apply rule="rst"/></var>
 
  <var id="rig-type"><apply rule="rig-type"/></var>
- <var id="myrig"><apply rule="rig"/><var>
- <var id="mypwr"><apply rule="pwr"/><var>
- <var id="myant"><apply rule="ant"/><var>
+ <var id="myrig"><apply rule="rig"/></var>
+ <var id="mypwr"><apply rule="pwr"/></var>
+ <var id="myant"><apply rule="ant"/></var>
  <var id="myfullcall"><ref var="mycall"/><apply rule="call-appendix"/></var>
 
  <var id="wx-temp"><apply rule="wx-temp"/></var>

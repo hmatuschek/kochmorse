@@ -12,7 +12,8 @@ class Token
 {
 public:
   typedef enum {
-    T_CALL, T_DE, T_CQ, T_RST, T_NAME, T_IS, T_HERE, T_QTH, T_WORD, T_NUMBER, T_BREAK, T_73, T_EOS
+    T_CALL, T_DE, T_CQ, T_QRZ, T_RST, T_NAME, T_IS, T_HERE, T_NEAR, T_QTH, T_RIG, T_ANT, T_PWR, T_WX,
+    T_WORD, T_NUMBER, T_BREAK, T_73, T_EOS
   } Type;
 
 public:
@@ -47,11 +48,11 @@ class Parser
 public:
   typedef enum {
     S_START, S_RESPONSE, S_CLOSING,
-    S_CQ, S_CQ_CALL, S_CALL, S_NAME, S_RST, S_QTH
+    S_CQ, S_QRZ, S_CQ_CALL, S_CALL, S_NAME, S_RST, S_QTH, S_RIG, S_ANT, S_PWR, S_WX
   } State;
 
 public:
-  Parser(QHash<QString, QString> &ctx);
+  Parser(QHash<QString, QString> &ctx, State init=S_START);
 
   void parse(const QString &text);
   inline State state() const { return _state; }
@@ -67,6 +68,11 @@ class QSOChat: public QObject
 	Q_OBJECT
 
 public:
+  typedef enum {
+    S_INITIAL, S_CQ, S_BASIC_XCHANGE, S_RAG_CHEW
+  } State;
+
+public:
   explicit QSOChat(QObject *parent=0);
 
 	inline QHash<QString, QString> &context() { return _context; }
@@ -80,7 +86,7 @@ public:
 	static bool isComplete(const QString &message);
 
 protected:
-  bool _inQSO;
+  State _state;
 	QHash<QString, QString> _context;
 };
 

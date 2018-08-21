@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 
 <rules>
- <t><ref var="dxcall"/> de <ref var="mycall"/> <opt><ref var="mycall"/> </opt>k<stop/></t>
+ <one-of>
+  <t><ref var="dxcall"/> de <ref var="myfullcall"/> <opt><ref var="myfullcall"/> </opt><opt>pse </opt>k<stop/></t>
+  <t><ref var="myfullcall"/> <opt><ref var="myfullcall"/></opt><opt> k</opt><stop/></t>
+ </one-of>
 </rules>
