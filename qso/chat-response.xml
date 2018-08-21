@@ -18,4 +18,5 @@
   <t><bk/></t>
   <t><ar/> <ref var="dxcall"/> de <ref var="mycall"/> <opt>pse </opt> k</t>
  </one-of>
+ <t><stop/></t>
 </rules>

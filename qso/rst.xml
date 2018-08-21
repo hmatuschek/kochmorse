@@ -17,8 +17,8 @@
  </rule>
  <rule id="rst-t">
   <if var="rst-q" matches="good"><t>9</t></if>
-	<if var="rst-q" matches="fair"><t>9</t></if>
-	<if var="rst-q" matches="bad"><one-of><t w="10">9</t><t w="5">8</t><t w="2">7</t></one-of></if>
+  <if var="rst-q" matches="fair"><t>9</t></if>
+  <if var="rst-q" matches="bad"><one-of><t w="10">9</t><t w="5">8</t><t w="2">7</t></one-of></if>
  </rule>
 
  <rule id="rst">
@@ -27,7 +27,7 @@
    <t w="20">5nn</t>
   </one-of>
   <one-of>
-   <t w="30"/>
+   <t w="30"><if var="rst-q" matches="good"><opt> fb</opt></if></t>
    <t w="30"><opt> es</opt> qrm</t>
    <t w="10"><opt> es</opt> qrn</t>
    <t w="30"><opt> es</opt> qsb</t>

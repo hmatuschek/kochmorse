@@ -3,6 +3,8 @@
 <rules>
  <load file="dxcc.xml"/>
  <load file="rst.xml"/>
+ <load file="rig.xml"/>
+ <load file="wx.xml"/>
 
  <var id="dxcc"><apply rule="dxcc"/></var>
  <var id="mycall"><apply rule="call"/></var>
@@ -11,4 +13,13 @@
 
  <var id="rst-q"><apply rule="rst-q"/></var>
  <var id="dxrst"><apply rule="rst"/></var>
+
+ <var id="rig-type"><apply rule="rig-type"/></var>
+ <var id="myrig"><apply rule="rig"/><var>
+ <var id="mypwr"><apply rule="pwr"/><var>
+ <var id="myant"><apply rule="ant"/><var>
+ <var id="myfullcall"><ref var="mycall"/><apply rule="call-appendix"/></var>
+
+ <var id="wx-temp"><apply rule="wx-temp"/></var>
+ <var id="mywx"><apply rule="wx"/></var>
 </rules>

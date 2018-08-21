@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<rules>
+ <t>rr </t>
+ <opt p="0.7"><ref var="dxcall"/> de <ref var="mycall"/> <bt/> </opt>
+ <t>rig <opt>hr </opt><ref var="myrig"/> <ref var="myrig"/> <bt/> </t>
+ <one-of>
+  <t>pwr <ref var="mypwr"/> <ref var="mypwr"/> <bt/> ant <ref var="myant"/> <ref var="myant"/> </t>
+  <t>pwr <ref var="mypwr"/> <ref var="mypwr"/> into <opt>ant </opt><ref var="myant"/> <ref var="myant"/> </t>
+  <t>ant <ref var="myant"/> <ref var="myant"/> <bt/> pwr <ref var="mypwr"/> <ref var="mypwr"/> </t>
+ </one-of>
+ <opt><bt/> wx <opt>hr </opt><ref var="mywx"/> <opt>ii </opt><ref var="mywx"/> </opt>
+ <opt><bt/> hw<opt> cpy</opt>? </opt>
+ <t><ar/> <ref var="dxcall"/> de <ref var="mycall"/> <opt>pse </opt>k<stop/></t>
+</rules>

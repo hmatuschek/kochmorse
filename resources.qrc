@@ -47,5 +47,6 @@
         <file alias="lang/kochmorse_de_DE.qm">shared/kochmorse_de.qm</file>
         <file>qso/callsigns.xml</file>
         <file>qso/chat-closing.xml</file>
+        <file>qso/chat-ragchew.xml</file>
     </qresource>
 </RCC>

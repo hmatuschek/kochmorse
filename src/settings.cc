@@ -475,7 +475,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->addItem(tr("Random"));
   _tutor->addItem(tr("Rule based tutor"));
   _tutor->addItem(tr("Transmit"));
-  _tutor->addItem(tr("Chat"));
+  _tutor->addItem(tr("QSO Chat"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
@@ -790,7 +790,7 @@ TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
   _defined = new QComboBox();
   _defined->addItem(tr("Generated QSO"), ":/qso/qsogen.xml");
   _defined->addItem(tr("Q-Codes/Words"), ":/qso/qcodes.xml");
-  _defined->addItem(tr("Call signs"), ":/qso/callsigns.xml");
+  _defined->addItem(tr("Call signs"),    ":/qso/callsigns.xml");
   _defined->addItem(tr("User defined ..."));
 
   _filename = new QLineEdit();
@@ -892,7 +892,7 @@ TXTutorSettingsView::save() {
  * Chat Tutor Settings Widget
  * ********************************************************************************************* */
 ChatTutorSettingsView::ChatTutorSettingsView(QWidget *parent)
-  : QGroupBox(tr("Chat tutor settings"),parent)
+  : QGroupBox(tr("QSO Chat tutor settings"),parent)
 {
   QLabel *label = new QLabel(tr("<No settings for this tutor>"));
   label->setAlignment(Qt::AlignCenter);

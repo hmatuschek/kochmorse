@@ -68,9 +68,9 @@
 
  <rule id="wx">
   <if var="wx-temp" matches="hot"><apply rule="wx-hot"/></if>
-	<if var="wx-temp" matches="warm"><apply rule="wx-warm"/></if>
-	<if var="wx-temp" matches="cold"><apply rule="wx-cold"/></if>
-	<if var="wx-temp" matches="ice"><apply rule="wx-ice"/></if>
+  <if var="wx-temp" matches="warm"><apply rule="wx-warm"/></if>
+  <if var="wx-temp" matches="cold"><apply rule="wx-cold"/></if>
+  <if var="wx-temp" matches="ice"><apply rule="wx-ice"/></if>
  </rule>
 </rules>
 
