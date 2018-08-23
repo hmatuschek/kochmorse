@@ -120,6 +120,9 @@ void Parser::parse(const QString &text) {
 
       case S_RESPONSE:
         switch (tok.type()) {
+          case Token::T_CQ:
+            _state = S_CQ;
+            break;
           case Token::T_CALL:
             break;
           case Token::T_NAME:
