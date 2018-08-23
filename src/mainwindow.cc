@@ -42,13 +42,13 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   // Preferences button
   _pref = new QAction(
-        QIcon::fromTheme("system-preferences", QIcon(":/icons/preferences.svg")), "", this);
+        QIcon::fromTheme("preferences-system", QIcon(":/icons/preferences.svg")), "", this);
   _pref->setShortcut(QKeySequence::Preferences);
   _pref->setToolTip(tr("Settings"));
 
   // Info button
   _info = new QAction(
-        QIcon::fromTheme("application-help", QIcon(":/icons/help.svg")), "", this);
+        QIcon::fromTheme("system-help", QIcon(":/icons/help.svg")), "", this);
   _info->setToolTip(tr("About Koch Morse"));
 
   // Volume slider
