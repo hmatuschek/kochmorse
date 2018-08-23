@@ -354,6 +354,24 @@ Settings::setFadingMaxDamp(float damp) {
   setValue("fading/maxDamp", damp);
 }
 
+bool
+Settings::qrmEnabled() const {
+  return value("qrm/enabled", false).toBool();
+}
+void
+Settings::setQRMEnabled(bool enabled) {
+  setValue("qrm/enabled", enabled);
+}
+
+int
+Settings::qrmStations() const {
+  return std::max(0, value("qrm/stations", 3).toInt());
+}
+void
+Settings::setQRMStations(int num) {
+  setValue("qrm/stations", num);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -949,9 +967,23 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   QGroupBox *fadingBox = new QGroupBox(tr("Fading"));
   fadingBox->setLayout(fadingLayout);
 
+  _qrmEnabled = new QCheckBox();
+  _qrmEnabled->setChecked(settings.qrmEnabled());
+
+  _qrmStations = new QSpinBox();
+  _qrmStations->setMinimum(0);
+  _qrmStations->setValue(settings.qrmStations());
+
+  QFormLayout *qrmLayout = new QFormLayout();
+  qrmLayout->addRow(tr("Enabled"), _qrmEnabled);
+  qrmLayout->addRow(tr("Num QRM stations"), _qrmStations);
+  QGroupBox *qrmBox = new QGroupBox(tr("QRM"));
+  qrmBox->setLayout(qrmLayout);
+
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(noiseBox);
   layout->addWidget(fadingBox);
+  layout->addWidget(qrmBox);
   setLayout(layout);
 }
 
@@ -965,6 +997,9 @@ EffectSettingsView::save() {
   settings.setFadingEnabled(Qt::Checked == _fadingEnabled->checkState());
   settings.setFadingRate(_fadingRate->value());
   settings.setFadingMaxDamp(_fadingMaxDamp->value());
+
+  settings.setQRMEnabled(_qrmEnabled->isChecked());
+  settings.setQRMStations(_qrmStations->value());
 }
 
 

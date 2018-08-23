@@ -147,6 +147,14 @@ public:
   /** Fading effect: max damping [dB]. */
   float fadingMaxDamp() const;
   void setFadingMaxDamp(float damp);
+
+  /** QRM effect: Enabled. */
+  bool qrmEnabled() const;
+  void setQRMEnabled(bool enabled);
+
+  /** QRM effect: num. of QRM stations. */
+  int qrmStations() const;
+  void setQRMStations(int num);
 };
 
 
@@ -310,6 +318,8 @@ protected:
   QCheckBox *_fadingEnabled;
   QSpinBox  *_fadingRate;
   QSpinBox  *_fadingMaxDamp;
+  QCheckBox *_qrmEnabled;
+  QSpinBox  *_qrmStations;
 };
 
 

@@ -37,6 +37,33 @@ QRMGenerator::enable(bool enabled) {
   _enabled = enabled;
 }
 
+int
+QRMGenerator::stations() const {
+  return _num;
+}
+
+void
+QRMGenerator::setStations(int num) {
+  // Delete old stations
+  for (int i=0; i<_num; i++) {
+    _generator[i]->deleteLater();
+    _encoder[i]->deleteLater();
+  }
+  _generator.clear();; _encoder.clear();
+
+  _num = num; _generator.resize(_num); _encoder.resize(_num);
+  // Create new stations
+  for (size_t i=0; i<_num; i++) {
+    double f = ((rand() % 700) + 300), wpm = 15 + (rand() % 10);
+    MorseEncoder::Jitter jitter = MorseEncoder::Jitter(rand()%4);
+		_encoder[i] = new MorseEncoder(f, f, wpm, wpm, MorseEncoder::SOUND_SHARP, jitter, this);
+    _encoder[i]->open(QIODevice::ReadOnly);
+		_generator[i] = new GenTextTutor(_encoder[i], ":/qso/qsogen.xml", this);
+    connect(_generator[i], SIGNAL(sessionComplete()), _generator[i], SLOT(start()));
+    _generator[i]->start();
+	}
+}
+
 void
 QRMGenerator::setSource(QIODevice *src) {
   if (_source)

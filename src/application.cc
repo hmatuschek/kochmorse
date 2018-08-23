@@ -20,8 +20,10 @@ Application::Application(int &argc, char *argv[])
   _audio_sink->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(0, settings.noiseEnabled(), settings.noiseSNR(), this);
-  _qrm = new QRMGenerator(0, 4, this);
-  _qrm->enable(false);
+
+  _qrm = new QRMGenerator(0, settings.qrmStations(), this);
+  _qrm->enable(settings.qrmEnabled());
+
   _fadingEffect = new FadingEffect(0, settings.fadingEnabled(),
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
@@ -127,6 +129,8 @@ Application::applySettings()
   _fadingEffect->setEnabled(settings.fadingEnabled());
   _fadingEffect->setMaxDamp(settings.fadingMaxDamp());
   _fadingEffect->setFadingRate(settings.fadingRate());
+  _qrm->enable(settings.qrmEnabled());
+  _qrm->setStations(settings.qrmStations());
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());

@@ -19,6 +19,9 @@ public:
 	bool enabled() const;
 	void enable(bool enabled);
 
+  int stations() const;
+  void setStations(int num);
+
   void setSource(QIODevice *src);
   qint64 bytesAvailable() const;
 
