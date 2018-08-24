@@ -17,6 +17,8 @@ NoiseEffect::NoiseEffect(QIODevice *source, bool enabled, float snr, QObject *pa
     connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
     _source->open(QIODevice::ReadOnly);
   }
+
+  setSNR(_snr);
 }
 
 NoiseEffect::~NoiseEffect() {
@@ -70,29 +72,18 @@ NoiseEffect::readData(char *data, qint64 len) {
   size_t n = (len/2);
 
   // Copy input buffer
-  QByteArray buffer = _source->read(2*n);
-  n = buffer.size()/2;
-
-  int16_t *in = reinterpret_cast<int16_t *>(buffer.data());
-  // Get noise and signal scale-factor.
-  float n_factor=0, s_factor=1;
-  if (0 > _snr) {
-    // If SNR < 0, keep noise at level "1" == 2**12, but reduce signal
-    n_factor = ((1<<14)-1); s_factor = std::pow(10, _snr/20-6);
-  } else {
-    // If SNR > 0, keep signal at level "1" and scale noise down.
-    n_factor = ((1<<14)-1)*std::pow(10, -_snr/20); s_factor = 0.5;
-  }
+  n = _source->read(data, 2*n)/2;
+  int16_t *in = reinterpret_cast<int16_t *>(data);
   // For every pair of frames
   for (size_t i=0; i<n; i+=2) {
     float a, b; gaussRNG(a,b);
-    in[i]   = s_factor*in[i] + n_factor*a;
-    in[i+1] = s_factor*in[i+1] + n_factor*b;
+    in[i]   = _sfac*in[i] + _nfac*a;
+    in[i+1] = _sfac*in[i+1] + _nfac*b;
   }
   // If N-frames is odd -> handle last frame
   if (n%2) {
     float a, b; gaussRNG(a,b);
-    in[n-1] = s_factor*in[n-1] + n_factor*a;
+    in[n-1] = _sfac*in[n-1] + _nfac*a;
   }
   return 2*n;
 }
@@ -110,6 +101,15 @@ NoiseEffect::setEnabled(bool enabled) {
 void
 NoiseEffect::setSNR(float snr) {
   _snr = snr;
+  // Get noise and signal scale-factor.
+  _nfac = 0; _sfac = 1;
+  if (0 > _snr) {
+    // If SNR < 0, keep noise at level "1" == 2**12, but reduce signal
+    _nfac = ((1<<14)-1); _sfac = std::pow(10, _snr/20-6);
+  } else {
+    // If SNR > 0, keep signal at level "1" and scale noise down.
+    _nfac = ((1<<14)-1)*std::pow(10, -_snr/20); _sfac = 0.5;
+  }
 }
 
 

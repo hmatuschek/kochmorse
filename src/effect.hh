@@ -35,6 +35,7 @@ protected:
   bool _enabled;
   /** The current SNR. */
   float _snr;
+  float _sfac, _nfac;
 };
 
 
