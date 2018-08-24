@@ -42,8 +42,8 @@ Below, you will find a list of features of the current KochMorse release.
 
 This is a C++/Qt reimplementation of my "old" python morse-code tutor (also called "kochmorse",
 https://kochmorse.googlecode.com). As the "old" implementation relied on ALSA for sound output,
-it was restricted to Linux. This reimplementation now uses PortAudio for the sound output and the
-GUI is implemented using Qt5, it is therefore more platform independent and runs under Linux,
-MacOS X and Windows.
+it was restricted to Linux. This reimplementation now uses the Qt5 Multimedia module for the 
+sound output and the GUI is implemented using Qt5, it is therefore more platform independent 
+and runs under Linux, MacOS X and Windows.
 
  
