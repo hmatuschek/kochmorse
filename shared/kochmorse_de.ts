@@ -4,12 +4,16 @@
 <context>
     <name>ChatTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="890"/>
         <source>Chat tutor settings</source>
-        <translation>Chat Tutor Einstellungen</translation>
+        <translation type="vanished">Chat Tutor Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="892"/>
+        <location filename="../src/settings.cc" line="922"/>
+        <source>QSO Chat tutor settings</source>
+        <translation>QSO Chat Tutor Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="924"/>
         <source>&lt;No settings for this tutor&gt;</source>
         <translation>&lt;Keine Einstellungen für diesen Tutor&gt;</translation>
     </message>
@@ -17,62 +21,62 @@
 <context>
     <name>CodeSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="425"/>
+        <location filename="../src/settings.cc" line="452"/>
         <source>Soft</source>
         <translation>Weich</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="426"/>
+        <location filename="../src/settings.cc" line="453"/>
         <source>Sharp</source>
         <translation>Hart</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="427"/>
+        <location filename="../src/settings.cc" line="454"/>
         <source>Cracking</source>
         <translation>Knackend</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="435"/>
+        <location filename="../src/settings.cc" line="462"/>
         <source>Exact</source>
         <translation>Exakt</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="436"/>
+        <location filename="../src/settings.cc" line="463"/>
         <source>Bug</source>
         <translation>Bug</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="437"/>
+        <location filename="../src/settings.cc" line="464"/>
         <source>Straight</source>
         <translation>Handtaste</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="445"/>
+        <location filename="../src/settings.cc" line="472"/>
         <source>Speed (WPM)</source>
         <translation>Geschw. (WPM)</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="446"/>
+        <location filename="../src/settings.cc" line="473"/>
         <source>Eff. speed (WPM)</source>
         <translation>Eff. Geschw. (WPM)</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="447"/>
+        <location filename="../src/settings.cc" line="474"/>
         <source>Tone (Hz)</source>
         <translation>Ton (Hz)</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="448"/>
+        <location filename="../src/settings.cc" line="475"/>
         <source>Dash pitch (Hz)</source>
         <translation>Strich Versatz (Hz)</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="449"/>
+        <location filename="../src/settings.cc" line="476"/>
         <source>Sound</source>
         <translation>Klang</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="450"/>
+        <location filename="../src/settings.cc" line="477"/>
         <source>Jitter</source>
         <translation>Stil</translation>
     </message>
@@ -80,17 +84,17 @@
 <context>
     <name>DeviceSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="998"/>
+        <location filename="../src/settings.cc" line="1053"/>
         <source>Output device</source>
         <translation>Ausgabe</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="999"/>
+        <location filename="../src/settings.cc" line="1054"/>
         <source>Input device</source>
         <translation>Eingabe</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="1000"/>
+        <location filename="../src/settings.cc" line="1055"/>
         <source>Detector threshold (dB)</source>
         <translation>Detektorschwellwert</translation>
     </message>
@@ -98,41 +102,57 @@
 <context>
     <name>EffectSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="922"/>
-        <location filename="../src/settings.cc" line="941"/>
+        <location filename="../src/settings.cc" line="954"/>
+        <location filename="../src/settings.cc" line="973"/>
+        <location filename="../src/settings.cc" line="991"/>
         <source>Enabled</source>
         <translation>Aktiv</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="923"/>
+        <location filename="../src/settings.cc" line="955"/>
         <source>SNR (dB)</source>
         <translation>SNR (dB)</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="924"/>
+        <location filename="../src/settings.cc" line="956"/>
         <source>Noise</source>
         <translation>Rauschen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="942"/>
+        <location filename="../src/settings.cc" line="974"/>
         <source>Rate [1/min]</source>
         <translation>Rate [1/min]</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="943"/>
+        <location filename="../src/settings.cc" line="975"/>
         <source>max. Damping [dB]</source>
         <translation>max. Dämpfung [dB]</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="944"/>
+        <location filename="../src/settings.cc" line="976"/>
         <source>Fading</source>
         <translation>Schwund</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="992"/>
+        <source>Num QRM stations</source>
+        <translation>QRM Stationen</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="993"/>
+        <source>SNR</source>
+        <translation>SNR</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="994"/>
+        <source>QRM</source>
+        <translation>QRM</translation>
     </message>
 </context>
 <context>
     <name>KochTutor</name>
     <message>
-        <location filename="../src/tutor.cc" line="129"/>
+        <location filename="../src/tutor.cc" line="140"/>
         <source>
 
 Sent %1 chars in %2 words and %3 lines.</source>
@@ -144,47 +164,47 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>KochTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="570"/>
+        <location filename="../src/settings.cc" line="581"/>
         <source>Koch tutor settings</source>
         <translation>Koch Tutor Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="615"/>
+        <location filename="../src/settings.cc" line="626"/>
         <source>Lesson</source>
         <translation>Lektion</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="616"/>
+        <location filename="../src/settings.cc" line="627"/>
         <source>Prefer last chars</source>
         <translation>Neue Zeichen bevorzugen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="617"/>
+        <location filename="../src/settings.cc" line="628"/>
         <source>Repeat last char</source>
         <translation>Neues Zeichen wiederholen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="618"/>
+        <location filename="../src/settings.cc" line="629"/>
         <source>Min. group size</source>
         <translation>Min. Gruppengröße</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="619"/>
+        <location filename="../src/settings.cc" line="630"/>
         <source>Max. group size</source>
         <translation>Max. Gruppengröße</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="620"/>
+        <location filename="../src/settings.cc" line="631"/>
         <source>Infinite lines</source>
         <translation>Unendlich</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="621"/>
+        <location filename="../src/settings.cc" line="632"/>
         <source>Line count</source>
         <translation>Zeilenanzahl</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="622"/>
+        <location filename="../src/settings.cc" line="633"/>
         <source>Show summary</source>
         <translation>Zusammenfassung anzeigen</translation>
     </message>
@@ -195,6 +215,21 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <location filename="../src/listwidget.cc" line="10"/>
         <source>Select...</source>
         <translation>Auswahl...</translation>
+    </message>
+    <message>
+        <location filename="../src/listwidget.cc" line="12"/>
+        <source>all</source>
+        <translation>alle</translation>
+    </message>
+    <message>
+        <location filename="../src/listwidget.cc" line="13"/>
+        <source>none</source>
+        <translation>keine</translation>
+    </message>
+    <message>
+        <location filename="../src/listwidget.cc" line="14"/>
+        <source>invert</source>
+        <translation>invertieren</translation>
     </message>
 </context>
 <context>
@@ -234,20 +269,18 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>QSOTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="800"/>
         <source>QSO tutor settings</source>
-        <translation>QSO Tutor Einstellungen</translation>
+        <translation type="vanished">QSO Tutor Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="802"/>
         <source>&lt;No settings for this tutor&gt;</source>
-        <translation>&lt;Keine Einstellungen für diesen Tutor&gt;</translation>
+        <translation type="vanished">&lt;Keine Einstellungen für diesen Tutor&gt;</translation>
     </message>
 </context>
 <context>
     <name>RandomTutor</name>
     <message>
-        <location filename="../src/tutor.cc" line="231"/>
+        <location filename="../src/tutor.cc" line="269"/>
         <source>
 
 Sent %1 chars in %2 words and %3 lines.</source>
@@ -259,52 +292,52 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>RandomTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="660"/>
+        <location filename="../src/settings.cc" line="671"/>
         <source>Random tutor settings</source>
         <translation>Zufallstutor Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="699"/>
+        <location filename="../src/settings.cc" line="710"/>
         <source>Characters</source>
         <translation>Buchstaben</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="700"/>
+        <location filename="../src/settings.cc" line="711"/>
         <source>Numbers</source>
         <translation>Zahlen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="701"/>
+        <location filename="../src/settings.cc" line="712"/>
         <source>Punctuations</source>
         <translation>Satzzeichen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="702"/>
+        <location filename="../src/settings.cc" line="713"/>
         <source>Prosigns</source>
         <translation>Sonderzeichen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="737"/>
+        <location filename="../src/settings.cc" line="748"/>
         <source>Min. group size</source>
         <translation>Min. Groppengröße</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="738"/>
+        <location filename="../src/settings.cc" line="749"/>
         <source>Max. group size</source>
         <translation>Max. Gruppengröße</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="739"/>
+        <location filename="../src/settings.cc" line="750"/>
         <source>Infinite lines</source>
         <translation>Unendlich</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="740"/>
+        <location filename="../src/settings.cc" line="751"/>
         <source>Line count</source>
         <translation>Zeilenanzahl</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="741"/>
+        <location filename="../src/settings.cc" line="752"/>
         <source>Show summary</source>
         <translation>Zusammenfassung anzeigen</translation>
     </message>
@@ -312,22 +345,22 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../src/settings.cc" line="372"/>
+        <location filename="../src/settings.cc" line="399"/>
         <source>Tutor</source>
         <translation>Tutor</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="373"/>
+        <location filename="../src/settings.cc" line="400"/>
         <source>Morse Code</source>
         <translation>Morsecode</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="374"/>
+        <location filename="../src/settings.cc" line="401"/>
         <source>Effects</source>
         <translation>Effekte</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="375"/>
+        <location filename="../src/settings.cc" line="402"/>
         <source>Devices</source>
         <translation>Geräte</translation>
     </message>
@@ -335,12 +368,12 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>TXTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="871"/>
+        <location filename="../src/settings.cc" line="903"/>
         <source>Transmit tutor settings</source>
         <translation>Sendetutor Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="873"/>
+        <location filename="../src/settings.cc" line="905"/>
         <source>&lt;No settings for this tutor&gt;</source>
         <translation>&lt;Keine Einstellungen für diesen Tutor&gt;</translation>
     </message>
@@ -414,27 +447,60 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>TextGenTutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="819"/>
         <source>Generated text tutor settings</source>
-        <translation>Einstallungen des Regelbasierter Tutors</translation>
+        <translation type="vanished">Einstallungen des Regelbasierter Tutors</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="822"/>
         <source>Select a rule file (ending on .xml) or a plain-text file (ending on .txt) to send.</source>
-        <translation>Wählen sie eine Regel (mit der Endung .xml) oder eine Textdatei (mit der Endung .txt) aus.</translation>
+        <translation type="vanished">Wählen sie eine Regel (mit der Endung .xml) oder eine Textdatei (mit der Endung .txt) aus.</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="841"/>
+        <location filename="../src/settings.cc" line="811"/>
+        <source>Rule based tutor settings</source>
+        <translation>Regelbasierter Tutor Einstellungen</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="814"/>
+        <source>Select a build-in tutor or &apos;user defined&apos;. The rule file (ending on .xml) or a plain-text file (ending on .txt) can then be selected below.</source>
+        <translation>Wähle einen Standardtutor oder einen &apos;Benutzerdefinierten Tutor&apos; aus. Die Regeldatei (mit .xml Endung) oder eine Textdatei (mit .txt Endung) kann unten ausgewählt werden.</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="818"/>
+        <source>Generated QSO</source>
+        <translation>Erzeugte QSOs</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="819"/>
+        <source>Q-Codes/Words</source>
+        <translation>Q-Codes/Wörter</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="820"/>
+        <source>Call signs</source>
+        <translation>Rufzeichen</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="821"/>
+        <source>User defined ...</source>
+        <translation>Benutzerdefiniert ...</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="855"/>
+        <source>Build-in tutor</source>
+        <translation>Standardtutor</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="856"/>
         <source>Rule/text file</source>
         <translation>Regel- oder Textdatei</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="859"/>
+        <location filename="../src/settings.cc" line="880"/>
         <source>Select rule or text file.</source>
         <translation>Wählen sie eine Regel- oder Textdatei aus.</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="861"/>
+        <location filename="../src/settings.cc" line="882"/>
         <source>Rule file (*.xml);;Text file (*.txt)</source>
         <translation>Regeldatei (*.xml);;Textdatei (*.txt)</translation>
     </message>
@@ -442,42 +508,48 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>TutorSettingsView</name>
     <message>
-        <location filename="../src/settings.cc" line="474"/>
+        <location filename="../src/settings.cc" line="501"/>
         <source>Koch method</source>
         <translation>Koch Methode</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="475"/>
+        <location filename="../src/settings.cc" line="502"/>
         <source>Random</source>
         <translation>Zufällige Zeichen</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="476"/>
+        <location filename="../src/settings.cc" line="503"/>
+        <source>Rule based tutor</source>
+        <translation>Regelbasierter Tutor</translation>
+    </message>
+    <message>
+        <location filename="../src/settings.cc" line="505"/>
+        <source>QSO Chat</source>
+        <translation>QSO Chat</translation>
+    </message>
+    <message>
         <source>QSO</source>
-        <translation>QSO</translation>
+        <translation type="vanished">QSO</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="477"/>
         <source>Q-Codes</source>
-        <translation>Q-Codes</translation>
+        <translation type="vanished">Q-Codes</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="478"/>
+        <location filename="../src/settings.cc" line="504"/>
         <source>Transmit</source>
         <translation>Senden</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="479"/>
         <source>Chat</source>
-        <translation>Chat</translation>
+        <translation type="vanished">Chat</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="480"/>
         <source>Text generator</source>
-        <translation>Regelbasierter Text</translation>
+        <translation type="vanished">Regelbasierter Text</translation>
     </message>
     <message>
-        <location filename="../src/settings.cc" line="524"/>
+        <location filename="../src/settings.cc" line="539"/>
         <source>Current tutor</source>
         <translation>Tutor</translation>
     </message>

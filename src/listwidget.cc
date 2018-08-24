@@ -9,9 +9,9 @@ ListWidget::ListWidget(QWidget *parent) :
   _list = new QListWidget();
   QPushButton *selection = new QPushButton(tr("Select..."));
   QMenu *selectionMenu = new QMenu();
-  selectionMenu->addAction("all", this, SLOT(onSelectAll()));
-  selectionMenu->addAction("none", this, SLOT(onSelectNone()));
-  selectionMenu->addAction("invert", this, SLOT(onInvertSelection()));
+  selectionMenu->addAction(tr("all"), this, SLOT(onSelectAll()));
+  selectionMenu->addAction(tr("none"), this, SLOT(onSelectNone()));
+  selectionMenu->addAction(tr("invert"), this, SLOT(onInvertSelection()));
   selection->setMenu(selectionMenu);
 
   QVBoxLayout *layout = new QVBoxLayout();
