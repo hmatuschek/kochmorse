@@ -372,6 +372,15 @@ Settings::setQRMStations(int num) {
   setValue("qrm/stations", num);
 }
 
+double
+Settings::qrmSNR() const {
+  return std::max(0., value("qrm/snr", 3).toDouble());
+}
+void
+Settings::setQRMSNR(double db) {
+  setValue("qrm/snr", db);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -974,9 +983,14 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _qrmStations->setMinimum(0);
   _qrmStations->setValue(settings.qrmStations());
 
+  _qrmSNR = new QSpinBox();
+  _qrmSNR->setMinimum(0);
+  _qrmSNR->setValue(settings.qrmSNR());
+
   QFormLayout *qrmLayout = new QFormLayout();
   qrmLayout->addRow(tr("Enabled"), _qrmEnabled);
   qrmLayout->addRow(tr("Num QRM stations"), _qrmStations);
+  qrmLayout->addRow(tr("SNR"), _qrmSNR);
   QGroupBox *qrmBox = new QGroupBox(tr("QRM"));
   qrmBox->setLayout(qrmLayout);
 
@@ -1000,6 +1014,7 @@ EffectSettingsView::save() {
 
   settings.setQRMEnabled(_qrmEnabled->isChecked());
   settings.setQRMStations(_qrmStations->value());
+  settings.setQRMSNR(_qrmSNR->value());
 }
 
 

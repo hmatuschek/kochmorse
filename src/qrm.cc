@@ -1,11 +1,12 @@
 #include "qrm.hh"
 #include <QByteArray>
 #include <QDebug>
+#include <cmath>
 
 
-QRMGenerator::QRMGenerator(QIODevice *source, size_t num, QObject *parent)
+QRMGenerator::QRMGenerator(QIODevice *source, size_t num, double snr, QObject *parent)
     : QIODevice(parent), _source(source), _enabled(false), _num(num), _encoder(_num),
-      _generator(_num)
+      _generator(_num), _snr(snr), _fsig(1), _fqrm(1)
 {
   if (_source) {
     connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
@@ -21,6 +22,8 @@ QRMGenerator::QRMGenerator(QIODevice *source, size_t num, QObject *parent)
     connect(_generator[i], SIGNAL(sessionComplete()), _generator[i], SLOT(start()));
     _generator[i]->start();
 	}
+
+  setSNR(snr);
 }
 
 QRMGenerator::~QRMGenerator() {
@@ -62,6 +65,20 @@ QRMGenerator::setStations(int num) {
     connect(_generator[i], SIGNAL(sessionComplete()), _generator[i], SLOT(start()));
     _generator[i]->start();
 	}
+}
+
+double
+QRMGenerator::snr() const {
+  return _snr;
+}
+
+void
+QRMGenerator::setSNR(double db) {
+  _snr = db;
+  _fsig = 1;
+  _fqrm = std::pow(10, -_snr/20);
+  double n = _fqrm + _fsig;
+  _fqrm /= n; _fsig /= n;
 }
 
 void
@@ -106,11 +123,11 @@ QRMGenerator::readData(char *data, qint64 len) {
 	_source->read(data, 2*nsample);
 	int16_t *out = (int16_t *)(data);
 	for (qint64 i=0; i<nsample; i++) {
-		double value = double(out[i])/2;
+		double value = double(out[i])*_fsig;
     int16_t qrmv=0;
 		for (size_t j=0; j<_num; j++) {
       _encoder[j]->read((char *)&qrmv, 2);
-      value += double(qrmv)/10/_num;
+      value += double(qrmv)*_fqrm/_num;
 		}
 		out[i] = value;
 	}

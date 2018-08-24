@@ -10,8 +10,8 @@
      <t><bt/> name <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t></i>
   <i><t><bt/> <one-of><t>op</t><t>name</t></one-of> <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t>
      <t><bt/> qth <opt>hr </opt><ref var="myqth"/> <ref var="myqth"/> </t></i>
-  <i><t><bt/> qth <opt>hr </opt><ref var="myqth"/> <ref var="myqth"/> <bt/></t>
-     <t><one-of><t>op</t><t>name</t></one-of> <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t></i>
+  <i><t><bt/> qth <opt>hr </opt><ref var="myqth"/> <ref var="myqth"/> </t>
+     <t><bt/> <one-of><t>op</t><t>name</t></one-of> <opt>hr </opt><ref var="myname"/> <ref var="myname"/> </t></i>
  </one-of>
  <opt><bt/> hw<opt> cpy</opt>? </opt>
  <one-of>

@@ -13,7 +13,7 @@ class QRMGenerator: public QIODevice
 	Q_OBJECT
 
 public:
-	QRMGenerator(QIODevice *source, size_t num, QObject *parent);
+	QRMGenerator(QIODevice *source, size_t num, double snr, QObject *parent);
 	virtual ~QRMGenerator();
 
 	bool enabled() const;
@@ -21,6 +21,9 @@ public:
 
   int stations() const;
   void setStations(int num);
+
+  double snr() const;
+  void setSNR(double db);
 
   void setSource(QIODevice *src);
   qint64 bytesAvailable() const;
@@ -36,6 +39,10 @@ protected:
 	size_t _num;
 	QVector<MorseEncoder *> _encoder;
 	QVector<GenTextTutor *> _generator;
+
+  double _snr;
+  double _fsig;
+  double _fqrm;
 };
 
 

@@ -21,7 +21,7 @@ Application::Application(int &argc, char *argv[])
 
   _noiseEffect = new NoiseEffect(0, settings.noiseEnabled(), settings.noiseSNR(), this);
 
-  _qrm = new QRMGenerator(0, settings.qrmStations(), this);
+  _qrm = new QRMGenerator(0, settings.qrmStations(), settings.qrmSNR(), this);
   _qrm->enable(settings.qrmEnabled());
 
   _fadingEffect = new FadingEffect(0, settings.fadingEnabled(),
@@ -131,6 +131,7 @@ Application::applySettings()
   _fadingEffect->setFadingRate(settings.fadingRate());
   _qrm->enable(settings.qrmEnabled());
   _qrm->setStations(settings.qrmStations());
+  _qrm->setSNR(settings.qrmSNR());
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());

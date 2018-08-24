@@ -155,6 +155,10 @@ public:
   /** QRM effect: num. of QRM stations. */
   int qrmStations() const;
   void setQRMStations(int num);
+
+  /** QRM effect: signal to "noise" ratio. */
+  double qrmSNR() const;
+  void setQRMSNR(double db);
 };
 
 
@@ -320,6 +324,7 @@ protected:
   QSpinBox  *_fadingMaxDamp;
   QCheckBox *_qrmEnabled;
   QSpinBox  *_qrmStations;
+  QSpinBox  *_qrmSNR;
 };
 
 
