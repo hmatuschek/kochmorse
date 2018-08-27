@@ -13,13 +13,15 @@ Application::Application(int &argc, char *argv[])
 
   QTranslator *translator = new QTranslator(this);
   translator->load(QLocale(), "kochmorse", "_", ":/lang/");
-  qDebug() << "UI Locales: " << QLocale().uiLanguages();
+  //qDebug() << "UI Locales: " << QLocale().uiLanguages();
   installTranslator(translator);
 
   _audio_sink = new QAudioSink(0, this);
   _audio_sink->setVolume(settings.volume());
 
-  _noiseEffect = new NoiseEffect(0, settings.noiseEnabled(), settings.noiseSNR(), this);
+  _noiseEffect = new NoiseEffect(0, settings.noiseEnabled(), settings.noiseSNR(),
+                                 settings.noiseFilterEnabled(), settings.tone(),
+                                 settings.noiseFilterBw(), this);
 
   _qrm = new QRMGenerator(0, settings.qrmStations(), settings.qrmSNR(), this);
   _qrm->enable(settings.qrmEnabled());
@@ -126,6 +128,9 @@ Application::applySettings()
   // Update effects
   _noiseEffect->setEnabled(settings.noiseEnabled());
   _noiseEffect->setSNR(settings.noiseSNR());
+  _noiseEffect->setFiterEnabled(settings.noiseFilterEnabled());
+  _noiseEffect->setFc(settings.tone());
+  _noiseEffect->setBw(settings.noiseFilterBw());
   _fadingEffect->setEnabled(settings.fadingEnabled());
   _fadingEffect->setMaxDamp(settings.fadingMaxDamp());
   _fadingEffect->setFadingRate(settings.fadingRate());

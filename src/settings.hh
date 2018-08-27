@@ -136,6 +136,12 @@ public:
   /** Noise effect: Set SNR (dB). */
   void setNoiseSNR(float snr);
 
+  bool noiseFilterEnabled() const;
+  void setNoiseFilterEnabled(bool enabled);
+
+  float noiseFilterBw() const;
+  void setNoiseFilterBw(float Bw);
+
   /** Fading effect: Enabled. */
   bool fadingEnabled() const;
   void setFadingEnabled(bool enabled);
@@ -319,6 +325,8 @@ public:
 protected:
   QCheckBox *_noiseEnabled;
   QSpinBox  *_noiseSNR;
+  QCheckBox *_noiseFilter;
+  QSpinBox  *_noiseBw;
   QCheckBox *_fadingEnabled;
   QSpinBox  *_fadingRate;
   QSpinBox  *_fadingMaxDamp;

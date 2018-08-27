@@ -3,6 +3,7 @@
 
 #include "audiosink.hh"
 
+#define FIR_ORDER 32
 
 /** Samples colored (filtered) noise and adds it to the clean signal. */
 class NoiseEffect : public QIODevice
@@ -11,13 +12,24 @@ class NoiseEffect : public QIODevice
 
 public:
   /** Constructor, @c snr specifies the signal-to-noise ratio. */
-  explicit NoiseEffect(QIODevice *src=0, bool enabled=false, float snr=20, QObject *parent = 0);
+  explicit NoiseEffect(QIODevice *src=0, bool enabled=false, float snr=20, bool filter=false, float Fc=650, float Bw=300, QObject *parent = 0);
   /** Destructor. */
   virtual ~NoiseEffect();
+
   /** Enable/Disable the effect. */
   void setEnabled(bool enabled);
   /** Sets the SNR. */
   void setSNR(float snr);
+
+  bool filterEnabled() const;
+  void setFiterEnabled(bool enabled);
+
+  float Fc() const;
+  void setFc(float Fc);
+
+  float Bw() const;
+  void setBw(float Bw);
+
   void setSource(QIODevice *src);
 
   qint64 bytesAvailable() const;
@@ -25,6 +37,8 @@ public:
 protected:
   /** Samples two indp. std. normal distr. RV. */
   void gaussRNG(float &a, float &b);
+  float filter(float value);
+  void updateFIR();
   qint64 writeData(const char *data, qint64 len);
   qint64 readData(char *data, qint64 maxlen);
 
@@ -36,6 +50,13 @@ protected:
   /** The current SNR. */
   float _snr;
   float _sfac, _nfac;
+
+  bool _filter;
+  float _Fc;
+  float _Bw;
+  float _fir[FIR_ORDER];
+  float _buffer[FIR_ORDER];
+  int _bidx;
 };
 
 

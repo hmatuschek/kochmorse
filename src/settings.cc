@@ -326,6 +326,24 @@ Settings::setNoiseSNR(float snr) {
 }
 
 bool
+Settings::noiseFilterEnabled() const {
+  return value("noise/filter", false).toBool();
+}
+void
+Settings::setNoiseFilterEnabled(bool enabled) {
+  setValue("noise/filter", enabled);
+}
+
+float
+Settings::noiseFilterBw() const {
+  return value("noise/bw", 300).toFloat();
+}
+void
+Settings::setNoiseFilterBw(float Bw) {
+  setValue("noise/bw", Bw);
+}
+
+bool
 Settings::fadingEnabled() const {
   return value("fading/enabled", false).toBool();
 }
@@ -950,9 +968,19 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _noiseSNR->setMaximum(60);
   _noiseSNR->setValue(settings.noiseSNR());
 
+  _noiseFilter = new QCheckBox();
+  _noiseFilter->setChecked(settings.noiseFilterEnabled());
+
+  _noiseBw = new QSpinBox();
+  _noiseBw->setMinimum(10);
+  _noiseBw->setMaximum(4000);
+  _noiseBw->setValue(settings.noiseFilterBw());
+
   QFormLayout *noiseLayout = new QFormLayout();
   noiseLayout->addRow(tr("Enabled"), _noiseEnabled);
   noiseLayout->addRow(tr("SNR (dB)"), _noiseSNR);
+  noiseLayout->addRow(tr("Bandpass"), _noiseFilter);
+  noiseLayout->addRow(tr("Bandwidth [Hz]"), _noiseBw);
   QGroupBox *noiseBox = new QGroupBox(tr("Noise"));
   noiseBox->setLayout(noiseLayout);
 
@@ -1005,10 +1033,12 @@ void
 EffectSettingsView::save() {
   Settings settings;
 
-  settings.setNoiseEnabled(Qt::Checked == _noiseEnabled->checkState());
+  settings.setNoiseEnabled(_noiseEnabled->isChecked());
   settings.setNoiseSNR(_noiseSNR->value());
+  settings.setNoiseFilterEnabled(_noiseFilter->isChecked());
+  settings.setNoiseFilterBw(_noiseBw->value());
 
-  settings.setFadingEnabled(Qt::Checked == _fadingEnabled->checkState());
+  settings.setFadingEnabled(_fadingEnabled->isChecked());
   settings.setFadingRate(_fadingRate->value());
   settings.setFadingMaxDamp(_fadingMaxDamp->value());
 

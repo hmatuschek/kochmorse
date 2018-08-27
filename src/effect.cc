@@ -3,13 +3,17 @@
 #include <cmath>
 #include "globals.hh"
 #include <QDebug>
+#include <iostream>
+
+
+#define sinc(x) (x==0 ? 1: (std::sin(M_PI*x)/(M_PI*x)))
 
 
 /* ******************************************************************************************** *
  * Noise effect
  * ******************************************************************************************** */
-NoiseEffect::NoiseEffect(QIODevice *source, bool enabled, float snr, QObject *parent)
-  : QIODevice(parent), _source(source), _enabled(enabled), _snr(snr)
+NoiseEffect::NoiseEffect(QIODevice *source, bool enabled, float snr, bool filter, float Fc, float Bw, QObject *parent)
+  : QIODevice(parent), _source(source), _enabled(enabled), _snr(snr), _filter(filter), _Fc(Fc), _Bw(Bw), _bidx(0)
 {
   // init RNG
   srand(time(0));
@@ -19,10 +23,21 @@ NoiseEffect::NoiseEffect(QIODevice *source, bool enabled, float snr, QObject *pa
   }
 
   setSNR(_snr);
+  updateFIR();
 }
 
 NoiseEffect::~NoiseEffect() {
   // pass...
+}
+
+void
+NoiseEffect::updateFIR() {
+  float Bl = (_Fc-_Bw/2)/Globals::sampleRate;
+  float Bu = (_Fc+_Bw/2)/Globals::sampleRate;
+  for (int i=0; i<FIR_ORDER; i++) {
+    _buffer[i] = 0;
+    _fir[i] = (2*Bu*sinc(2*Bu*(i-16)) - 2*Bl*sinc(2*Bl*(i-16)));
+  }
 }
 
 void
@@ -59,6 +74,20 @@ NoiseEffect::gaussRNG(float &a, float &b) {
   b = y*std::sqrt(-2*std::log(s)/s);
 }
 
+float
+NoiseEffect::filter(float value) {
+  if (! _filter)
+    return value;
+
+  _buffer[_bidx++] = value;
+  if (_bidx>=FIR_ORDER)
+    _bidx=0;
+  double res = 0;
+  for (int i=0; i<FIR_ORDER; i++)
+    res += (_buffer[(_bidx+i)%FIR_ORDER] * _fir[i])*2;
+  return res;
+}
+
 qint64
 NoiseEffect::readData(char *data, qint64 len) {
   if (! _source)
@@ -77,13 +106,12 @@ NoiseEffect::readData(char *data, qint64 len) {
   // For every pair of frames
   for (size_t i=0; i<n; i+=2) {
     float a, b; gaussRNG(a,b);
-    in[i]   = _sfac*in[i] + _nfac*a;
-    in[i+1] = _sfac*in[i+1] + _nfac*b;
+    in[i] = filter(_sfac*in[i] + _nfac*a);
+    in[i+1] = filter(_sfac*in[i+2] + _nfac*a);
   }
-  // If N-frames is odd -> handle last frame
   if (n%2) {
     float a, b; gaussRNG(a,b);
-    in[n-1] = _sfac*in[n-1] + _nfac*a;
+    in[n-1] = filter(_sfac*in[n-1] + _nfac*a);
   }
   return 2*n;
 }
@@ -110,6 +138,38 @@ NoiseEffect::setSNR(float snr) {
     // If SNR > 0, keep signal at level "1" and scale noise down.
     _nfac = ((1<<14)-1)*std::pow(10, -_snr/20); _sfac = 0.5;
   }
+}
+
+bool
+NoiseEffect::filterEnabled() const {
+  return _filter;
+}
+
+void
+NoiseEffect::setFiterEnabled(bool enabled) {
+  _filter = enabled;
+}
+
+float
+NoiseEffect::Fc() const {
+  return _Fc;
+}
+
+void
+NoiseEffect::setFc(float Fc) {
+  _Fc = Fc;
+  updateFIR();
+}
+
+float
+NoiseEffect::Bw() const {
+  return _Bw;
+}
+
+void
+NoiseEffect::setBw(float Bw) {
+  _Bw = Bw;
+  updateFIR();
 }
 
 
