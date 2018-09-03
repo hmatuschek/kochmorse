@@ -17,13 +17,13 @@ APP_LIBRARY_DIR = KochMorse.app/Contents/Frameworks
 APP_BINARY_DIR  = KochMorse.app/Contents/MacOS
 APP_PLUGIN_DIR  = KochMorse.app/Contents/PlugIns
 APP_RESOURCE_DIR  = KochMorse.app/Contents/Resources
-VERSION = 3.3.0
+VERSION = 3.4.0
 
 app: dmg
 
 clean:
 	rm -f ${APP_BINARY_DIR}/kochmorse
-	rm -f ${APP_LIBRARY_DIR}/*
+	rm -rf ${APP_LIBRARY_DIR}/*
 	rm -f KochMorse-${VERSION}.dmg
 
 dmg: kochmorse-app
