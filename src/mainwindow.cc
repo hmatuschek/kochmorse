@@ -31,6 +31,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   f.setStyleHint(QFont::Monospace);
   _text->document()->setDefaultFont(f);
   _text->setReadOnly(true);
+  _text->setTextInteractionFlags(Qt::NoTextInteraction);
 
   // Play button
   _play = new QAction(
