@@ -12,7 +12,8 @@ class NoiseEffect : public QIODevice
 
 public:
   /** Constructor, @c snr specifies the signal-to-noise ratio. */
-  explicit NoiseEffect(QIODevice *src=0, bool enabled=false, float snr=20, bool filter=false, float Fc=650, float Bw=300, QObject *parent = 0);
+  explicit NoiseEffect(QIODevice *src=nullptr, bool enabled=false, float snr=20, bool filter=false,
+                       float Fc=650, float Bw=300, QObject *parent = nullptr);
   /** Destructor. */
   virtual ~NoiseEffect();
 
@@ -21,25 +22,37 @@ public:
   /** Sets the SNR. */
   void setSNR(float snr);
 
+  /** Returns @c true if the filter is enabled. */
   bool filterEnabled() const;
+  /** Enables/disables the filter. */
   void setFiterEnabled(bool enabled);
 
+  /** Returns the center frequency of the filter. */
   float Fc() const;
+  /** Sets the filters center frequency. */
   void setFc(float Fc);
 
+  /** Returns the filter bandwidth. */
   float Bw() const;
+  /** Sets the filter bandwidth. */
   void setBw(float Bw);
 
+  /** Sets the audio source. */
   void setSource(QIODevice *src);
 
+  /** Retruns the number of bytes available for reading. Implements the QIODevice interface. */
   qint64 bytesAvailable() const;
 
 protected:
   /** Samples two indp. std. normal distr. RV. */
   void gaussRNG(float &a, float &b);
+  /** Apply the FIR band-pass filter to the sample. */
   float filter(float value);
+  /** Updates the FIR band-pass filter. */
   void updateFIR();
+  /** Does nothing. Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
+  /** Reads some data. Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
 
 protected:
@@ -49,13 +62,21 @@ protected:
   bool _enabled;
   /** The current SNR. */
   float _snr;
-  float _sfac, _nfac;
-
+  /** Signal scaling factor. */
+  float _sfac;
+  /** Noise scaling factor. */
+  float _nfac;
+  /** If @c true, enables filtering. */
   bool _filter;
+  /** FIR center frequency. */
   float _Fc;
+  /** FIR filter bandwidth. */
   float _Bw;
+  /** FIR filter kernel. */
   float _fir[FIR_ORDER];
+  /** FIR convolution ring buffer. */
   float _buffer[FIR_ORDER];
+  /** Ring buffer index. */
   int _bidx;
 };
 
@@ -72,7 +93,8 @@ public:
    * @param maxDamp Specifies the maximum damping factor (in dB) of the fading effect.
    * @param rate Specifies the rate of the fading in [1/min].
    * @param parent Specifies the QObject parent. */
-  FadingEffect(QIODevice *source, bool enabled=false, float maxDamp=-10, float rate=12, QObject *parent=0);
+  FadingEffect(QIODevice *source, bool enabled=false, float maxDamp=-10, float rate=12,
+               QObject *parent=nullptr);
   /** Destructor. */
   virtual ~FadingEffect();
   /** Enable/disable the effect. */
@@ -83,10 +105,13 @@ public:
   void setFadingRate(float rate);
   void setSource(QIODevice *src);
 
+  /** Returns the number of bytes available for reading. Implements the QIODevice interface. */
   qint64 bytesAvailable() const;
 
 protected:
+  /** Reads some data. Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
+  /** Does nothing. Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
 
 protected:

@@ -6,7 +6,7 @@
 
 MorseDecoder::MorseDecoder(double speed, float threshold, QObject *parent)
   : QIODevice(parent), _speed(speed), _ditLength(0), _unitLength(0),
-    _Nsamples(0), _buffer(0), _threshold(threshold), _highCount(0), _lowCount(0),
+    _Nsamples(0), _buffer(nullptr), _threshold(threshold), _highCount(0), _lowCount(0),
     _lastChar('\0')
 {
   _updateConfig();
@@ -30,7 +30,8 @@ MorseDecoder::setThreshold(double threshold) {
 void
 MorseDecoder::_updateConfig() {
   // Free "old" tables and buffers.
-  if (0 != _buffer) { delete _buffer; }
+  if (nullptr != _buffer)
+    delete _buffer;
 
   // Compute dit length in samples from speed and sample rate
   _ditLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
@@ -103,6 +104,8 @@ MorseDecoder::writeData(const char *data, qint64 len)
 
 qint64
 MorseDecoder::readData(char *data, qint64 maxlen) {
+  Q_UNUSED(data);
+  Q_UNUSED(maxlen);
   return 0;
 }
 

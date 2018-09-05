@@ -41,7 +41,7 @@ public:
    * @param jitter Specifies the dit/da length jitter.
    * @param parent Specifies the @c QObject parent. */
   explicit MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
-      Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent= 0);
+      Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent=nullptr);
 
   /** Sends the given text. */
   void send(const QString &text);
@@ -70,6 +70,8 @@ public:
   /** (Re-) Sets the jitter. */
   void setJitter(Jitter jitter);
 
+  /** Returns the number of bytes available for reading.
+   * Implements the QIODevice interface. */
   qint64 bytesAvailable() const;
 
 signals:
@@ -83,7 +85,9 @@ protected:
   void _send();
   /** (Re-) Creates the dit, da and pause samples. */
   void _createSamples();
+  /** Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
+  /** Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
 
 protected:
@@ -115,8 +119,11 @@ protected:
   /** Pause duration between words. */
   QByteArray _iwPause;
 
+  /** The current char being send. */
   QChar          _current;
+  /** The queue of chars to send. */
   QList<QChar>   _queue;
+  /** Audio output buffer. */
   QByteArray     _buffer;
   /** The number of milliseconds send. */
   double _tsend;

@@ -15,7 +15,7 @@ class QAudioSink: public QIODevice
 
 public:
   /** Constructor. */
-  explicit QAudioSink(QIODevice *src=0, QObject *parent = 0);
+  explicit QAudioSink(QIODevice *src = nullptr, QObject *parent = nullptr);
   /** Destructor. */
   virtual ~QAudioSink();
 
@@ -24,18 +24,25 @@ public:
   /** Sets the current volume. */
   void setVolume(double factor);
 
+  /** (Re-) Sets the audio source. */
   void setSource(QIODevice *source);
 
+  /** Returns @c true. Implements the QIODevice interface. */
   bool isSequential() const;
+  /** Returns the number of bytes available to reading.
+   * Implements the QIODevice interface. */
   qint64 bytesAvailable() const;
 
 protected:
+  /** Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
+  /** Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
 
 protected:
   /** The port-audio stream. */
   QAudioOutput *_output;
+  /** Holds the audio source. */
   QIODevice *_source;
 };
 
@@ -49,7 +56,7 @@ public:
   /** Constructor.
    * @param sink Specifies the audio sink, the sample will be send to.
    * @param parent Specified the QObject parent. */
-  explicit QAudioSource(QIODevice *sink, QObject *parent=0);
+  explicit QAudioSource(QIODevice *sink, QObject *parent=nullptr);
   /** Destructor. */
   virtual ~QAudioSource();
 
@@ -61,7 +68,9 @@ public:
   bool isRunning() const;
 
 protected:
+  /** Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
+  /** Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
 
 protected:

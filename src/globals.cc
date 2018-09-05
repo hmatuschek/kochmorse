@@ -81,6 +81,7 @@ QHash<QChar, QString> Globals::prosignTable = _initProsignTable();
 
 QString
 Globals::mapProsign(QChar ch) {
-  if (! prosignTable.contains(ch)) { return ch; }
+  if (! prosignTable.contains(ch))
+    return ch;
   return prosignTable[ch];
 }

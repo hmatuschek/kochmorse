@@ -3,12 +3,14 @@
 
 #include <QDialog>
 
+/** Just the "About" dialog. */
 class AboutDialog : public QDialog
 {
   Q_OBJECT
 
 public:
-  explicit AboutDialog(QWidget *parent = 0);
+  /** Constructor. */
+  explicit AboutDialog(QWidget *parent = nullptr);
 };
 
 #endif // ABOUTDIALOG_HH

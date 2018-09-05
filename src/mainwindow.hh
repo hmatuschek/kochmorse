@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
   /** Constructor. */
-  explicit MainWindow(Application &app, QWidget *parent = 0);
+  explicit MainWindow(Application &app, QWidget *parent = nullptr);
 
 protected slots:
   /** Gets called, once a tutor session is finished. */

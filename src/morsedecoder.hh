@@ -17,7 +17,7 @@ public:
    * The speed can be reset by a call @c setSpeed.
    * @param speed Specifies the expected speed in WPM.
    * @param threshold Specifies the signal detection threshold in RMS. */
-  explicit MorseDecoder(double speed, float threshold=1e-5, QObject *parent = 0);
+  explicit MorseDecoder(double speed, float threshold=1e-5, QObject *parent = nullptr);
   /** Destructor. */
   virtual ~MorseDecoder();
   /** Reset the speed of the decoder in WPM. */
@@ -46,7 +46,9 @@ protected:
   /** Decodes symbols (dot, dash & pause) into chars. */
   void _processSymbol(char sym);
 
+  /** Implements the QIODevice interface. */
   qint64 readData(char *data, qint64 maxlen);
+  /** Implements the QIODevice interface. */
   qint64 writeData(const char *data, qint64 len);
 
 protected:

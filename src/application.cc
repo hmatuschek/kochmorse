@@ -7,7 +7,8 @@
 
 
 Application::Application(int &argc, char *argv[])
- : QApplication(argc, argv), _running(false), _audio_sink(0), _noiseEffect(0), _encoder(0), _tutor(0)
+ : QApplication(argc, argv), _running(false), _audio_sink(nullptr), _noiseEffect(nullptr),
+   _encoder(nullptr), _tutor(nullptr)
 {
   Settings settings;
 
@@ -16,17 +17,17 @@ Application::Application(int &argc, char *argv[])
   //qDebug() << "UI Locales: " << QLocale().uiLanguages();
   installTranslator(translator);
 
-  _audio_sink = new QAudioSink(0, this);
+  _audio_sink = new QAudioSink(nullptr, this);
   _audio_sink->setVolume(settings.volume());
 
-  _noiseEffect = new NoiseEffect(0, settings.noiseEnabled(), settings.noiseSNR(),
+  _noiseEffect = new NoiseEffect(nullptr, settings.noiseEnabled(), settings.noiseSNR(),
                                  settings.noiseFilterEnabled(), settings.tone(),
                                  settings.noiseFilterBw(), this);
 
-  _qrm = new QRMGenerator(0, settings.qrmStations(), settings.qrmSNR(), this);
+  _qrm = new QRMGenerator(nullptr, settings.qrmStations(), settings.qrmSNR(), this);
   _qrm->enable(settings.qrmEnabled());
 
-  _fadingEffect = new FadingEffect(0, settings.fadingEnabled(),
+  _fadingEffect = new FadingEffect(nullptr, settings.fadingEnabled(),
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
   _encoder = new MorseEncoder(settings.tone(), settings.tone()+settings.dashPitch(),
@@ -65,6 +66,7 @@ Application::Application(int &argc, char *argv[])
     break;
 
   case Settings::TUTOR_TEXTGEN:
+  default:
     _tutor = new GenTextTutor(_encoder, settings.textGenFilename());
     break;
   }
@@ -89,7 +91,7 @@ Application::setVolume(double factor) {
 
 QString
 Application::summary() const {
-  if (0 == _tutor)
+  if (nullptr == _tutor)
     return "";
   return _tutor->summary();
 }
@@ -177,6 +179,7 @@ Application::applySettings()
       break;
 
     case Settings::TUTOR_CHAT:
+    default:
       _tutor = new ChatTutor(_encoder, this);
       break;
   }

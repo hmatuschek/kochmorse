@@ -10,7 +10,7 @@
  * QAudioSink, playback
  * ********************************************************************************************* */
 QAudioSink::QAudioSink(QIODevice *src, QObject *parent)
-  : QIODevice(parent), _output(0), _source(src)
+  : QIODevice(parent), _output(nullptr), _source(src)
 {
   QAudioFormat fmt;
   fmt.setByteOrder(QAudioFormat::LittleEndian);
@@ -84,6 +84,8 @@ QAudioSink::readData(char *data, qint64 maxlen) {
 
 qint64
 QAudioSink::writeData(const char *data, qint64 len) {
+  Q_UNUSED(data);
+  Q_UNUSED(len);
   return 0;
 }
 

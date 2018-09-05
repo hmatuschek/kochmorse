@@ -13,7 +13,7 @@ class ListWidget : public QWidget
   Q_OBJECT
 public:
   /** Constructor. */
-  explicit ListWidget(QWidget *parent = 0);
+  explicit ListWidget(QWidget *parent = nullptr);
   /** Add an item to the list. */
   void addItem(const QString &name, const QVariant &data, bool checked=false);
   /** The number of rows in the list. */

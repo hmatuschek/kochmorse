@@ -73,7 +73,7 @@ public:
   } State;
 
 public:
-  explicit QSOChat(QObject *parent=0);
+  explicit QSOChat(QObject *parent=nullptr);
 
 	inline QHash<QString, QString> &context() { return _context; }
 	inline const QHash<QString, QString> &context() const { return _context; }

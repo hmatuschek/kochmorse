@@ -16,7 +16,7 @@ NoiseEffect::NoiseEffect(QIODevice *source, bool enabled, float snr, bool filter
   : QIODevice(parent), _source(source), _enabled(enabled), _snr(snr), _filter(filter), _Fc(Fc), _Bw(Bw), _bidx(0)
 {
   // init RNG
-  srand(time(0));
+  srand(time(nullptr));
   if (_source) {
     connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
     _source->open(QIODevice::ReadOnly);
