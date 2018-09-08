@@ -48,7 +48,7 @@ QRMGenerator::stations() const {
 void
 QRMGenerator::setStations(int num) {
   // Delete old stations
-  for (int i=0; i<_num; i++) {
+  for (size_t i=0; i<_num; i++) {
     _generator[i]->deleteLater();
     _encoder[i]->deleteLater();
   }
