@@ -14,7 +14,7 @@ class TextGenRule: public QObject
 
 protected:
   /** Hidden constructor. */
-	explicit TextGenRule(QObject *parent=0);
+	explicit TextGenRule(QObject *parent=nullptr);
 
 public:
   /** Needs to be implemented by all rules to generate the actual content. */
@@ -29,7 +29,7 @@ class TextGenTextRule: public TextGenRule
 
 public:
   /** Constructs a simple rule that replicates given text. */
-	TextGenTextRule(const QString &text, QObject *parent=0);
+	TextGenTextRule(const QString &text, QObject *parent=nullptr);
 
 	virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
@@ -46,7 +46,7 @@ class TextGenAnyLetterRule: public TextGenRule
 
 public:
   /** Constructs the random letter rule. */
-  explicit TextGenAnyLetterRule(QObject *parent=0);
+  explicit TextGenAnyLetterRule(QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 };
@@ -59,23 +59,30 @@ class TextGenAnyNumberRule: public TextGenRule
 
 public:
   /** Constructs the random number rule. */
-  explicit TextGenAnyNumberRule(QObject *parent=0);
+  explicit TextGenAnyNumberRule(QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 };
 
 
+/** A simple rule that may generate some optional text. */
 class TextGenOptRule: public TextGenRule
 {
   Q_OBJECT
 
 public:
-  TextGenOptRule(TextGenRule *rule, double p, QObject *parent=0);
+  /** Constructs a new optional text rule.
+   * @param rule Specifies the text rule.
+   * @param p Specifies the probability to generate text from  @c rule.
+   * @param parent Specifies the @c QObject parent. */
+  TextGenOptRule(TextGenRule *rule, double p, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
 protected:
+  /** Holds the probability to generate text from rule @c _rule. */
   double _p;
+  /** The text rule. */
   TextGenRule *_rule;
 };
 
@@ -87,7 +94,7 @@ class TextGenOneOfRule: public TextGenRule
 
 public:
   /** Constructs an empty "one-of" rule. Use @c addRule to add rules. */
-	TextGenOneOfRule(QObject *parent=0);
+	TextGenOneOfRule(QObject *parent=nullptr);
 
   /** Adds the specified rule with the associated weight. */
 	void addRule(double weight, TextGenRule *rule);
@@ -102,18 +109,27 @@ protected:
 };
 
 
+/** This rule randomly repeates some other text rule. */
 class TextGenRepeatRule: public TextGenRule
 {
   Q_OBJECT
 
 public:
-  TextGenRepeatRule(size_t nmin, size_t nmax, TextGenRule *rule, QObject *parent=0);
+  /** Constructs a repetition rule.
+   * @param nmin Specifies the minimum number of repetitions.
+   * @param nmax Specifies the maximum number of repetitions.
+   * @param rule Specifies the text rule to repeat.
+   * @param parent Specifies the @c QObject parent. */
+  TextGenRepeatRule(size_t nmin, size_t nmax, TextGenRule *rule, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
 protected:
+  /** The minimum number of repetitions. */
   size_t _nmin;
+  /** The maximum number of repetitions. */
   size_t _nmax;
+  /** The text rule to repeat. */
   TextGenRule *_rule;
 };
 
@@ -127,7 +143,7 @@ class TextGenVariable: public TextGenRule
 
 public:
   /** Constructs the variable definition rule for the specified variable name (@c id). */
-  TextGenVariable(const QString &id, TextGenRule *rule, QObject *parent=0);
+  TextGenVariable(const QString &id, TextGenRule *rule, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
@@ -148,9 +164,9 @@ class TextGenCondRule: public TextGenRule
 
 public:
   /** Constructs the condition that applies if the specified @c var has the specified @c value. */
-  TextGenCondRule(const QString &var, const QString &value, TextGenRule *rule, QObject *parent=0);
+  TextGenCondRule(const QString &var, const QString &value, TextGenRule *rule, QObject *parent=nullptr);
   /** Constructs the condition that applies if the specified @c var is defined (irrespective of the actual value). */
-  TextGenCondRule(const QString &var, TextGenRule *rule, QObject *parent=0);
+  TextGenCondRule(const QString &var, TextGenRule *rule, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
@@ -174,7 +190,7 @@ class TextGenRefRule: public TextGenRule
 
 public:
   /** Constructs a variable reference rule. */
-  TextGenRefRule(const QString &id, QObject *parent=0);
+  TextGenRefRule(const QString &id, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
@@ -192,11 +208,11 @@ Q_OBJECT
 
 protected:
   /** Constructs an empty list-rule. */
-  explicit TextGenListRule(QObject *parent=0);
+  explicit TextGenListRule(QObject *parent=nullptr);
 
 public:
   /** Constructs a list-rule from the passed rules. */
-  TextGenListRule(const QList<TextGenRule *> &rules, QObject *parent=0);
+  TextGenListRule(const QList<TextGenRule *> &rules, QObject *parent=nullptr);
 
   virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
 
@@ -213,9 +229,9 @@ class TextGen: public TextGenListRule
 
 public:
   /** Constructs a text generator from the rules specified as XML in @c filename. */
-  explicit TextGen(const QString &filename, QObject *parent = 0);
+  explicit TextGen(const QString &filename, QObject *parent = nullptr);
   /** Constructs a text generator from the rules specified as XML read by @c reader. */
-  explicit TextGen(QXmlStreamReader &reader, QObject *parent = 0);
+  explicit TextGen(QXmlStreamReader &reader, QObject *parent = nullptr);
 
   /** Loads a XML files with rules and add them to the generator. */
   bool load(QString filename);
