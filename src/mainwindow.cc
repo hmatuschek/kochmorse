@@ -6,6 +6,7 @@
 #include <QFont>
 #include <QToolBar>
 #include <QLabel>
+#include <QShortcut>
 
 #include "settings.hh"
 #include "aboutdialog.hh"
@@ -69,6 +70,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   // Quit button
   _quit = new QAction(QIcon::fromTheme("application-exit", QIcon(":/icons/exit.svg")), "", this);
   _quit->setToolTip(tr("Quit Koch Morse"));
+  QShortcut* quitShortcut = new QShortcut(QKeySequence(tr("Ctrl+q")), this);
 
   // Assemble tool bar
   QToolBar *tbox = new QToolBar();
@@ -91,6 +93,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   QObject::connect(_pref, SIGNAL(triggered()), this, SLOT(onPrefClicked()));
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
+  QObject::connect(quitShortcut, SIGNAL(activated()), this, SLOT(onQuit()));
   QObject::connect(_volume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
 }
 
