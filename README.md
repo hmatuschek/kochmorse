@@ -25,11 +25,14 @@ Below, you will find a list of features of the current KochMorse release.
  * Different speed of characters and pauses. This allows to practice the reading in full speed,
    while having enough time to write the character down.
  * Different tones for dashes and dots.
+ * Keying style -- Simulates straight key or bug-style dash/dot-length jitter.
  * Noise audio effect -- Increases the difficulty to read the morse code for practicing.
  * Fading audio effect -- Periodically fades the morse signal for practicing. In conjecture with
    the noise effect, it simulates the conditions on HF bands pretty well.
+ * QRM effect -- Increases the difficulty to read the morse code by simulating parallel QSOs nearby.
 
 ## Releases 
+ * 2018-09-25 - [**Version 3.4.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.4.0)
  * 2018-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
  * 2015-06-30 - [**Version 3.2.2**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.2)
  * 2015-02-28 - [**Version 3.2.1**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.2.1)
