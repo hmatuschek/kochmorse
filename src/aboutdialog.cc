@@ -26,5 +26,5 @@ AboutDialog::AboutDialog(QWidget *parent)
 
 void
 AboutDialog::help() {
-  QDesktopServices::openUrl(tr("http://github.com/hmatuschek/kochmorse/wiki/Home"));
+  QDesktopServices::openUrl(tr("https://github.com/hmatuschek/kochmorse/wiki"));
 }
