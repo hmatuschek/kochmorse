@@ -11,6 +11,9 @@ class AboutDialog : public QDialog
 public:
   /** Constructor. */
   explicit AboutDialog(QWidget *parent = nullptr);
+
+protected slots:
+  void help();
 };
 
 #endif // ABOUTDIALOG_HH

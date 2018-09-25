@@ -2,6 +2,19 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="de_DE">
 <context>
+    <name>AboutDialog</name>
+    <message>
+        <location filename="../src/aboutdialog.cc" line="11"/>
+        <source>About KochMorse</source>
+        <translation>Über Kochmorse</translation>
+    </message>
+    <message>
+        <location filename="../src/aboutdialog.cc" line="29"/>
+        <source>http://github.com/hmatuschek/kochmorse/wiki/Home</source>
+        <translation>http://github.com/hmatuschek/kochmorse/wiki/Home</translation>
+    </message>
+</context>
+<context>
     <name>ChatTutorSettingsView</name>
     <message>
         <source>Chat tutor settings</source>
@@ -245,33 +258,33 @@ Sent %1 chars in %2 words and %3 lines.</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cc" line="19"/>
+        <location filename="../src/mainwindow.cc" line="20"/>
         <source>Koch Morse Tutor</source>
         <translation>Koch Morse Tutor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cc" line="39"/>
+        <location filename="../src/mainwindow.cc" line="41"/>
         <source>Start/Stop</source>
         <translation>Start/Stop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cc" line="46"/>
+        <location filename="../src/mainwindow.cc" line="48"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cc" line="51"/>
+        <location filename="../src/mainwindow.cc" line="53"/>
         <source>About Koch Morse</source>
         <translation>Über KochMorse</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cc" line="58"/>
-        <location filename="../src/mainwindow.cc" line="160"/>
+        <location filename="../src/mainwindow.cc" line="60"/>
+        <location filename="../src/mainwindow.cc" line="163"/>
         <source>Volume: %1%</source>
         <translation>Lautstärke: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cc" line="70"/>
+        <location filename="../src/mainwindow.cc" line="72"/>
         <source>Quit Koch Morse</source>
         <translation>KochMorse beenden</translation>
     </message>
