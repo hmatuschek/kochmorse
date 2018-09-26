@@ -38,7 +38,7 @@
  </rule>
 
  <t>vvv<stop/></t>
- <rep min="5">
+ <rep min="10">
   <rep min="10">
    <one-of>
     <i w="10"><apply rule="qcode"/></i>
