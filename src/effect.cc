@@ -36,7 +36,7 @@ NoiseEffect::updateFIR() {
   float Bu = (_Fc+_Bw/2)/Globals::sampleRate;
   for (int i=0; i<FIR_ORDER; i++) {
     _buffer[i] = 0;
-    _fir[i] = (2*Bu*sinc(2*Bu*(i-16)) - 2*Bl*sinc(2*Bl*(i-16)));
+    _fir[i] = (2*Bu*sinc(2*Bu*(i-FIR_ORDER/2)) - 2*Bl*sinc(2*Bl*(i-FIR_ORDER/2)));
   }
 }
 
@@ -84,7 +84,7 @@ NoiseEffect::filter(float value) {
     _bidx=0;
   double res = 0;
   for (int i=0; i<FIR_ORDER; i++)
-    res += (_buffer[(_bidx+i)%FIR_ORDER] * _fir[i])*2;
+    res += (_buffer[(_bidx+i)%FIR_ORDER] * _fir[i]);
   return res;
 }
 
@@ -98,10 +98,10 @@ NoiseEffect::readData(char *data, qint64 len) {
     return _source->read(data, len);
 
   // Number of frames
-  size_t n = (len/2);
+  size_t n = size_t(len/2);
 
   // Copy input buffer
-  n = _source->read(data, 2*n)/2;
+  n = size_t(_source->read(data, 2*n)/2);
   int16_t *in = reinterpret_cast<int16_t *>(data);
   // For every pair of frames
   for (size_t i=0; i<n; i+=2) {
