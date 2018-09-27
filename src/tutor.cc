@@ -63,7 +63,7 @@ KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool
     _showSummary(showSummary), _text(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
-  srand(time(0));
+  srand(time(nullptr));
 
   connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
@@ -137,8 +137,17 @@ QString
 KochTutor::summary() const {
   if (! _showSummary)
     return "";
+  int chars_send = _chars_send; chars_send -= 3; // - "vvv\n"
+  int words_send = _words_send;
+  int lines_send = _lines_send; lines_send -= 1; // - "vvv\n"
+  if (_repeatLastChar) {
+    chars_send -= 5;
+    words_send -= 5;
+    lines_send -= 1;
+  }
+  chars_send -= lines_send; // - " =\n" at end of each line
   return tr("\n\nSent %1 chars in %2 words and %3 lines.")
-      .arg(_chars_send).arg(_words_send).arg(_lines_send);
+      .arg(chars_send).arg(words_send).arg(lines_send);
 }
 
 void
@@ -266,8 +275,12 @@ QString
 RandomTutor::summary() const {
   if (! _showSummary)
     return "";
+  int chars_send = _chars_send; chars_send -= 3; // - "vvv\n"
+  int words_send = _words_send;
+  int lines_send = _lines_send; lines_send -= 1; // - "vvv\n"
+  chars_send -= lines_send; // - " =\n" at end of each line
   return tr("\n\nSent %1 chars in %2 words and %3 lines.")
-      .arg(_chars_send).arg(_words_send).arg(_lines_send);
+      .arg(chars_send).arg(words_send).arg(lines_send);
 }
 
 QChar
