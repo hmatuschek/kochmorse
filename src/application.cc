@@ -4,11 +4,13 @@
 #include <cmath>
 #include <QTranslator>
 #include <QDebug>
+#include <QMessageBox>
+#include "config.h"
 
 
 Application::Application(int &argc, char *argv[])
  : QApplication(argc, argv), _running(false), _audio_sink(nullptr), _noiseEffect(nullptr),
-   _encoder(nullptr), _tutor(nullptr)
+   _encoder(nullptr), _tutor(nullptr), _checkUpdate(nullptr)
 {
   Settings settings;
 
@@ -78,6 +80,17 @@ Application::Application(int &argc, char *argv[])
   connect(_decoder, SIGNAL(unknownCharReceived(QString)), this, SLOT(onUnknownCharReceived(QString)));
 
   connect(_tutor, SIGNAL(sessionComplete()), this, SIGNAL(sessionComplete()));
+
+  connect(&_checkUpdate, SIGNAL(updateAvailable(QString)), this, SLOT(onUpdateAvailable(QString)));
+
+#ifdef CHECK_FOR_UPDATES
+  QDateTime lastUpdate = settings.lastCheckForUpdates();
+  qDebug() << "Last check for updates" << lastUpdate;
+  if (settings.checkForUpdates() && ((! lastUpdate.isValid()) || (lastUpdate.daysTo(QDateTime::currentDateTime()) > 7))) {
+    _checkUpdate.check();
+    settings.checkedForUpdates();
+  }
+#endif
 }
 
 Application::~Application() {
@@ -202,4 +215,23 @@ Application::onCharReceived(QChar ch) {
 void
 Application::onUnknownCharReceived(QString ch) {
   emit charReceived(QString("<%1>").arg(ch));
+}
+
+void
+Application::onUpdateAvailable(QString version) {
+  QString text("<b>%1</b> of KochMorse is available for download. "
+               "You are runnnig version <b>%2.%3.%4</b>.<br><br>"
+               "Head to <a href=\"https://github.com/hmatuschek/kochmorse/releases\">"
+               "github.com/hmatuschek/kochmorse/releases</a> for download.");
+
+  QMessageBox mbox;
+  mbox.setText(tr("New version available."));
+  mbox.setInformativeText(text.arg(version).arg(VERSION_MAJOR).arg(VERSION_MINOR).arg(VERSION_PATCH));
+  mbox.setTextFormat(Qt::RichText);
+  mbox.setTextInteractionFlags(Qt::TextBrowserInteraction);
+  mbox.setIcon(QMessageBox::Information);
+  mbox.setStandardButtons(QMessageBox::Close);
+  mbox.setDefaultButton(QMessageBox::Close);
+
+  mbox.exec();
 }

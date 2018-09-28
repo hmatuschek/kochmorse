@@ -9,6 +9,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QSettings>
+#include <QDateTime>
 #include "listwidget.hh"
 #include <QGroupBox>
 #include "morseencoder.hh"
@@ -36,6 +37,11 @@ public:
   double volume() const;
   /** Sets the current volume. */
   void setVolume(double factor);
+
+  bool checkForUpdates() const;
+  void setCheckForUpdates(bool enable);
+  QDateTime lastCheckForUpdates() const;
+  void checkedForUpdates();
 
   /** Retunrs the current character speed. */
   int speed() const;

@@ -34,6 +34,26 @@ Settings::setVolume(double factor) {
   this->setValue("volume", factor);
 }
 
+bool
+Settings::checkForUpdates() const {
+  return value("checkUpdates", true).toBool();
+}
+void
+Settings::setCheckForUpdates(bool enabled) {
+  setValue("checkUpdates", enabled);
+}
+
+QDateTime
+Settings::lastCheckForUpdates() const {
+  return value("lastCheckUpdates", QDateTime()).value<QDateTime>();
+}
+void
+Settings::checkedForUpdates() {
+  setValue("lastCheckUpdates", QDateTime::currentDateTime());
+}
+
+
+
 int
 Settings::speed() const {
   return this->value("speed", 20).toInt();

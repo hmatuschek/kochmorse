@@ -8,6 +8,7 @@
 #include "tutor.hh"
 #include "effect.hh"
 #include "qrm.hh"
+#include "checkupdate.hh"
 
 
 /** Central application class. Manages audio output, effects, morse encoding and the tutors. */
@@ -48,6 +49,7 @@ protected slots:
   void onCharReceived(QChar ch);
   /** Gets called if the morse-decoder received an unknown char. */
   void onUnknownCharReceived(QString ch);
+  void onUpdateAvailable(QString version);
 
 protected:
   /** If @c true a session is running. */
@@ -69,6 +71,8 @@ protected:
   QAudioSource *_audio_src;
   /** The decoder device. */
   MorseDecoder *_decoder;
+
+  CheckUpdate _checkUpdate;
 };
 
 #endif // __KOCHMORSE_APPLICATION_HH__
