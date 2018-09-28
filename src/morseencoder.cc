@@ -222,7 +222,7 @@ MorseEncoder::_send()
     case JITTER_BUG:
       daIdx = rand() % 4;
       break;
-    case JITTER_STRAIGT:
+    case JITTER_STRAIGHT:
       ditIdx = rand() % 4;
       daIdx = rand() % 4;
       break;

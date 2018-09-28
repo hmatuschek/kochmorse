@@ -28,7 +28,7 @@ public:
   typedef enum {
     JITTER_EXACT   = 0,
     JITTER_BUG     = 1,
-    JITTER_STRAIGT = 2
+    JITTER_STRAIGHT = 2
   } Jitter;
 
 

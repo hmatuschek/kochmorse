@@ -57,7 +57,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _volume->setMinimum(0);
   _volume->setMaximum(100);
   _volume->setValue(int(100*settings.volume()));
-  _volumeLabel = new QLabel(tr("Volume: %1%").arg(int(100*settings.volume())));
+  _volumeLabel = new QLabel(tr("Volume: %1 %").arg(int(100*settings.volume())));
 
   QWidget *volPanel = new QWidget();
   QVBoxLayout *volPanelLayout = new QVBoxLayout();

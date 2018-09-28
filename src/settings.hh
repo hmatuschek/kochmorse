@@ -326,6 +326,12 @@ public:
 
   void save();
 
+protected slots:
+  void onNoiseToggled(bool enabled);
+  void onNoiseFilterToggled(bool enabled);
+  void onFadingToggled(bool enabled);
+  void onQRMToggled(bool enabled);
+
 protected:
   QCheckBox *_noiseEnabled;
   QSpinBox  *_noiseSNR;
@@ -364,6 +370,9 @@ public:
 
 public slots:
   virtual void accept();
+
+protected slots:
+  void showHelp();
 
 protected:
   QTabWidget *_tabs;

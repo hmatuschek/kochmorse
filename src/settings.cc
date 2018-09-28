@@ -12,6 +12,7 @@
 #include "globals.hh"
 #include <QDebug>
 #include <QAudioDeviceInfo>
+#include <QDesktopServices>
 
 
 /* ********************************************************************************************* *
@@ -212,7 +213,7 @@ Settings::setKochLineCount(int lines) {
 
 bool
 Settings::kochSummary() const {
-  return this->value("koch/summary", false).toBool();
+  return this->value("koch/summary", true).toBool();
 }
 
 void
@@ -432,6 +433,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
   bbox->addButton(QDialogButtonBox::Cancel);
+  bbox->addButton(QDialogButtonBox::Help);
 
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(_tabs);
@@ -440,6 +442,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
   QObject::connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
+  QObject::connect(bbox, SIGNAL(helpRequested()), this, SLOT(showHelp()));
 }
 
 void
@@ -449,6 +452,11 @@ SettingsDialog::accept() {
   _effects->save();
   _devices->save();
   QDialog::accept();
+}
+
+void
+SettingsDialog::showHelp() {
+  QDesktopServices::openUrl(tr("https://github.com/hmatuschek/kochmorse/wiki/Settings"));
 }
 
 
@@ -463,37 +471,44 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   _speed = new QSpinBox();
   _speed->setMinimum(5); _speed->setMaximum(100);
   _speed->setValue(settings.speed());
+  _speed->setToolTip(tr("Specifies the speed (in WPM) for the symbols."));
 
   _effSpeed = new QSpinBox();
   _effSpeed->setMinimum(5); _speed->setMaximum(100);
   _effSpeed->setValue(settings.effSpeed());
+  _effSpeed->setToolTip(tr("Specifies the pause lengths between symbols and words."));
 
   _tone = new QLineEdit(QString::number(settings.tone()));
   QIntValidator *tone_val = new QIntValidator(20,20000);
   _tone->setValidator(tone_val);
+  _tone->setToolTip(tr("Specifies the freqency (in Hz) of the CW tone."));
 
   _daPitch = new QLineEdit(QString::number(settings.dashPitch()));
   QIntValidator *pitch_val = new QIntValidator(-1000,1000);
   _daPitch->setValidator(pitch_val);
+  _daPitch->setToolTip(tr("Specifies the freqency offset (in Hz) for the 'dah' tone."));
 
   _sound = new QComboBox();
   _sound->addItem(tr("Soft"), uint(MorseEncoder::SOUND_SOFT));
   _sound->addItem(tr("Sharp"), uint(MorseEncoder::SOUND_SHARP));
   _sound->addItem(tr("Cracking"), uint(MorseEncoder::SOUND_CRACKING));
+  _sound->setToolTip(tr("Selects the sound 'sharpness' for the CW tone."));
   switch (settings.sound()) {
-  case MorseEncoder::SOUND_SOFT: _sound->setCurrentIndex(0); break;
-  case MorseEncoder::SOUND_SHARP: _sound->setCurrentIndex(1); break;
-  case MorseEncoder::SOUND_CRACKING: _sound->setCurrentIndex(2); break;
+    case MorseEncoder::SOUND_SOFT: _sound->setCurrentIndex(0); break;
+    case MorseEncoder::SOUND_SHARP: _sound->setCurrentIndex(1); break;
+    case MorseEncoder::SOUND_CRACKING: _sound->setCurrentIndex(2); break;
   }
 
   _jitter = new QComboBox();
   _jitter->addItem(tr("Exact"), uint(MorseEncoder::JITTER_EXACT));
   _jitter->addItem(tr("Bug"), uint(MorseEncoder::JITTER_BUG));
-  _jitter->addItem(tr("Straight"), uint(MorseEncoder::JITTER_STRAIGT));
+  _jitter->addItem(tr("Straight"), uint(MorseEncoder::JITTER_STRAIGHT));
+  _jitter->setToolTip(tr("Selects the timeing jitter to simulate a semi-automatic key (bug) "
+                         "or a straight key."));
   switch (settings.jitter()) {
     case MorseEncoder::JITTER_EXACT: _jitter->setCurrentIndex(0); break;
     case MorseEncoder::JITTER_BUG: _jitter->setCurrentIndex(1); break;
-    case MorseEncoder::JITTER_STRAIGT: _jitter->setCurrentIndex(2); break;
+    case MorseEncoder::JITTER_STRAIGHT: _jitter->setCurrentIndex(2); break;
   }
 
   QFormLayout *layout = new QFormLayout();
@@ -526,6 +541,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   : QWidget(parent)
 {
   _tutor = new QComboBox();
+  _tutor->setToolTip(tr("Select a tutor. If you learn the code, start with 'Koch method'."));
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
   _tutor->addItem(tr("Rule based tutor"));
@@ -708,7 +724,7 @@ void
 KochTutorSettingsView::onInfiniteToggled(bool enabled) {
   _lineCount->setEnabled(! enabled);
   _summary->setEnabled(! enabled);
-  _threshold->setEnabled(! enabled);
+  _threshold->setEnabled((! enabled) && _summary->isChecked());
 }
 
 void
@@ -769,23 +785,28 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   _minGroupSize->setValue(settings.randomMinGroupSize());
   _minGroupSize->setMinimum(1);
   _minGroupSize->setMaximum(settings.randomMaxGroupSize());
+  _minGroupSize->setToolTip(tr("Specifies the minimum group size."));
 
   _maxGroupSize = new QSpinBox();
   _maxGroupSize->setValue(settings.randomMaxGroupSize());
   _maxGroupSize->setMinimum(settings.randomMinGroupSize());
   _maxGroupSize->setMaximum(20);
+  _maxGroupSize->setToolTip(tr("Specifies the maximum group size. If equal to minimum group size, a fixed size is implied."));
 
   _infinite = new QCheckBox();
   _infinite->setChecked(settings.randomInfiniteLineCount());
+  _infinite->setToolTip(tr("Sends an infinite number of lines."));
 
   _lineCount = new QSpinBox();
   _lineCount->setMinimum(1);
   _lineCount->setValue(settings.randomLineCount());
+  _lineCount->setToolTip(tr("Specifies the number of lines to send."));
   if (settings.randomInfiniteLineCount())
     _lineCount->setEnabled(false);
 
   _summary = new QCheckBox();
   _summary->setChecked(settings.randomSummary());
+  _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
   if (settings.randomInfiniteLineCount())
     _summary->setEnabled(false);
 
@@ -997,19 +1018,29 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
 
   _noiseEnabled = new QCheckBox();
   _noiseEnabled->setChecked(settings.noiseEnabled());
+  _noiseEnabled->setToolTip(tr("Enables the noise effect."));
 
   _noiseSNR = new QSpinBox();
   _noiseSNR->setMinimum(-60);
   _noiseSNR->setMaximum(60);
   _noiseSNR->setValue(int(settings.noiseSNR()));
+  _noiseSNR->setEnabled(settings.noiseEnabled());
+  _noiseSNR->setToolTip(tr("Specifies the signal-to-noise ratio in dB for the noise effect (should be >10dB)."));
 
   _noiseFilter = new QCheckBox();
   _noiseFilter->setChecked(settings.noiseFilterEnabled());
+  _noiseFilter->setEnabled(settings.noiseEnabled());
+  _noiseFilter->setToolTip(tr("Enables a band-pass audio fiter around the CW tone freqency."));
 
   _noiseBw = new QSpinBox();
   _noiseBw->setMinimum(10);
   _noiseBw->setMaximum(4000);
   _noiseBw->setValue(int(settings.noiseFilterBw()));
+  _noiseBw->setEnabled(settings.noiseEnabled() && settings.noiseFilterEnabled());
+  _noiseBw->setToolTip(tr("Specifies the bandwidth in Hz of the audio filter."));
+
+  connect(_noiseEnabled, SIGNAL(toggled(bool)), this, SLOT(onNoiseToggled(bool)));
+  connect(_noiseFilter, SIGNAL(toggled(bool)), this, SLOT(onNoiseFilterToggled(bool)));
 
   QFormLayout *noiseLayout = new QFormLayout();
   noiseLayout->addRow(tr("Enabled"), _noiseEnabled);
@@ -1021,16 +1052,22 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
 
   _fadingEnabled = new QCheckBox();
   _fadingEnabled->setChecked(settings.fadingEnabled());
+  _fadingEnabled->setToolTip(tr("Enables the fading effect of the CW signal to simulate QSB."));
 
   _fadingRate = new QSpinBox();
   _fadingRate->setMinimum(1);
   _fadingRate->setMaximum(60);
   _fadingRate->setValue(int(settings.fadingRate()));
-
+  _fadingRate->setEnabled(settings.fadingEnabled());
+  _fadingRate->setToolTip(tr("Specifies the average rate (per minute) at which the signal will fade away."));
   _fadingMaxDamp = new QSpinBox();
   _fadingMaxDamp->setMinimum(-60);
   _fadingMaxDamp->setMaximum(0);
   _fadingMaxDamp->setValue(int(settings.fadingMaxDamp()));
+  _fadingMaxDamp->setEnabled(settings.fadingEnabled());
+  _fadingMaxDamp->setToolTip(tr("Specifies the maximum damping in dB for the fading effect."));
+
+  connect(_fadingEnabled, SIGNAL(toggled(bool)), this, SLOT(onFadingToggled(bool)));
 
   QFormLayout *fadingLayout = new QFormLayout();
   fadingLayout->addRow(tr("Enabled"), _fadingEnabled);
@@ -1041,14 +1078,21 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
 
   _qrmEnabled = new QCheckBox();
   _qrmEnabled->setChecked(settings.qrmEnabled());
+  _qrmEnabled->setToolTip(tr("Enables a QRM effect that simulates nearby QSOs"));
 
   _qrmStations = new QSpinBox();
   _qrmStations->setMinimum(0);
   _qrmStations->setValue(settings.qrmStations());
+  _qrmStations->setEnabled(settings.qrmEnabled());
+  _qrmStations->setToolTip(tr("Specifies the number of QRM stations."));
 
   _qrmSNR = new QSpinBox();
   _qrmSNR->setMinimum(0);
   _qrmSNR->setValue(int(settings.qrmSNR()));
+  _qrmSNR->setEnabled(settings.qrmEnabled());
+  _qrmSNR->setToolTip(tr("Specifies the relative power (in dB) of all QRM stations to the CW signal."));
+
+  connect(_qrmEnabled, SIGNAL(toggled(bool)), this, SLOT(onQRMToggled(bool)));
 
   QFormLayout *qrmLayout = new QFormLayout();
   qrmLayout->addRow(tr("Enabled"), _qrmEnabled);
@@ -1082,6 +1126,30 @@ EffectSettingsView::save() {
   settings.setQRMSNR(_qrmSNR->value());
 }
 
+void
+EffectSettingsView::onNoiseToggled(bool enabled) {
+  _noiseSNR->setEnabled(enabled);
+  _noiseFilter->setEnabled(enabled);
+  _noiseBw->setEnabled(enabled && _noiseFilter->isChecked());
+}
+
+void
+EffectSettingsView::onNoiseFilterToggled(bool enabled) {
+  _noiseBw->setEnabled(enabled);
+}
+
+void
+EffectSettingsView::onFadingToggled(bool enabled) {
+  _fadingRate->setEnabled(enabled);
+  _fadingMaxDamp->setEnabled(enabled);
+}
+
+void
+EffectSettingsView::onQRMToggled(bool enabled) {
+  _qrmSNR->setEnabled(enabled);
+  _qrmStations->setEnabled(enabled);
+}
+
 
 /* ********************************************************************************************* *
  * Device Settings Widget
@@ -1092,6 +1160,7 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   Settings settings;
 
   _outputDevices = new QComboBox();
+  _outputDevices->setToolTip(tr("Select the audio output device."));
   QAudioDeviceInfo currentDevice = settings.outputDevice();
   QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
   foreach (auto device, devices) {
@@ -1101,6 +1170,7 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   }
 
   _inputDevices = new QComboBox();
+  _inputDevices->setToolTip(tr("Select the audio input device used for decoding CW send by you."));
   currentDevice = settings.inputDevice();
   devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
   foreach (auto device, devices) {
@@ -1113,6 +1183,7 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   _decoderLevel->setMinimum(-60);
   _decoderLevel->setMaximum(0);
   _decoderLevel->setValue(int(settings.decoderLevel()));
+  _decoderLevel->setToolTip(tr("Specifies the detector threshold in dB for decoding CW."));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Output device"), _outputDevices);

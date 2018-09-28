@@ -216,8 +216,8 @@ void KochTutor::onCharSend(QChar c) {
 
 void
 KochTutor::_nextline() {
-  // for each of the 5 lines
-  /// @bug This does not appear correct.
+  // For each line:
+  //  -> every line consists of 25 symbols irrespecive of the group size.
   for (size_t i=0; i<25;) {
     // Sample group size
     size_t n = _minGroupSize + ( rand() % (1+_maxGroupSize-_minGroupSize) );
@@ -229,7 +229,7 @@ KochTutor::_nextline() {
         while ((v < 0) || (v >= _lesson)) {
           v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
         }
-        idx = v;
+        idx = size_t(v);
       } else {
         idx = _lesson*double(rand())/RAND_MAX;
       }
@@ -252,7 +252,7 @@ RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxG
     _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars()
 {
   // Init random number generator
-  srand(time(0));
+  srand(time(nullptr));
   _chars << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
          << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
          << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
@@ -268,7 +268,7 @@ RandomTutor::RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t
     _showSummary(showSummary), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
-  srand(time(0));
+  srand(time(nullptr));
   _chars.reserve(chars.size());
   QSet<QChar>::const_iterator c = chars.begin();
   for (; c != chars.end(); c++)
