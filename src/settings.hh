@@ -105,6 +105,8 @@ public:
   void setKochLineCount(int lines);
   bool kochSummary() const;
   void setKochSummary(bool show);
+  int kochSuccessThreshold() const;
+  void setKochSuccessThreshold(int thres);
 
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
@@ -207,6 +209,7 @@ protected slots:
   void onMinSet(int value);
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
+  void onShowSummaryToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
@@ -217,6 +220,7 @@ protected:
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
   QCheckBox *_summary;
+  QSpinBox *_threshold;
 };
 
 

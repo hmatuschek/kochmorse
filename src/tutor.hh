@@ -62,7 +62,7 @@ public:
    * @param parent Specifies the QObject parent. */
   KochTutor(MorseEncoder *encoder, int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
             size_t minGroupSize=5, size_t maxGroupSize=5,
-            int lines=5, bool showSummary=false, QObject *parent=0);
+            int lines=5, bool showSummary=false, int successThreshold=90, QObject *parent=nullptr);
   /** Destructor. */
   virtual ~KochTutor();
 
@@ -87,6 +87,7 @@ public:
   /** Sets the number of lines to send. */
   void setLines(int lines);
   void setShowSummary(bool show);
+  void setSuccessThreshold(int thres);
   /** Samples the next character. */
   QChar next();
   /** If @ctrue, the current session is at the end. */
@@ -122,6 +123,7 @@ protected:
   /** The number of lines send. */
   int _linecount;
   bool _showSummary;
+  int _threshold;
   /** The list of chars of the current session. */
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */

@@ -47,7 +47,7 @@ Application::Application(int &argc, char *argv[])
     _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
                            settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                            (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                           settings.kochSummary(), this);
+                           settings.kochSummary(), settings.kochSuccessThreshold(), this);
     break;
 
   case Settings::TUTOR_RANDOM:
@@ -160,7 +160,7 @@ Application::applySettings()
       _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(),
                              settings.kochRepeatLastChar(), settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                              (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                             settings.kochSummary(), this);
+                             settings.kochSummary(), settings.kochSuccessThreshold(), this);
       break;
 
     case Settings::TUTOR_RANDOM:

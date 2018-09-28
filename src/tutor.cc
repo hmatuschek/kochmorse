@@ -25,6 +25,7 @@ Tutor::summary() const {
 
 void
 Tutor::handle(const QChar &ch) {
+  Q_UNUSED(ch);
   // pass...
 }
 
@@ -56,11 +57,12 @@ QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool repeatLastChar,
                      size_t minGroupSize, size_t maxGroupSize,
-                     int lines, bool showSummary, QObject *parent)
+                     int lines, bool showSummary, int successThreshold, QObject *parent)
   : Tutor(encoder, parent), _lesson(lesson), _prefLastChars(prefLastChars),
     _repeatLastChar(repeatLastChar), _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)), _lines(lines), _linecount(0),
-    _showSummary(showSummary), _text(), _chars_send(0), _words_send(0), _lines_send(0)
+    _showSummary(showSummary), _threshold(successThreshold), _text(),
+    _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -137,17 +139,24 @@ QString
 KochTutor::summary() const {
   if (! _showSummary)
     return "";
-  int chars_send = _chars_send; chars_send -= 3; // - "vvv\n"
-  int words_send = _words_send;
-  int lines_send = _lines_send; lines_send -= 1; // - "vvv\n"
+  int chars_send = int(_chars_send); chars_send -= 3; // - "vvv\n"
+  int words_send = int(_words_send);
+  int lines_send = int(_lines_send); lines_send -= 1; // - "vvv\n"
   if (_repeatLastChar) {
     chars_send -= 5;
     words_send -= 5;
     lines_send -= 1;
   }
   chars_send -= lines_send; // - " =\n" at end of each line
-  return tr("\n\nSent %1 chars in %2 words and %3 lines.")
-      .arg(chars_send).arg(words_send).arg(lines_send);
+  int threshold = int(chars_send*(100-_threshold))/100;
+  if (_lesson < _lessons.size())
+    return tr("\n\nSent %1 chars in %2 words and %3 lines. "
+              "If you have less than %4 mistakes, you can proceed to lesson %5.")
+        .arg(chars_send).arg(words_send).arg(lines_send).arg(threshold).arg(_lesson+1);
+  else
+    return tr("\n\nSent %1 chars in %2 words and %3 lines. "
+              "If you have less than %4 mistakes, you completed the course!")
+        .arg(chars_send).arg(words_send).arg(lines_send).arg(threshold);
 }
 
 void
@@ -198,6 +207,7 @@ KochTutor::needsDecoder() const {
 }
 
 void KochTutor::onCharSend(QChar c) {
+  Q_UNUSED(c);
   if ((! this->atEnd()) && _running)
     _encoder->send(next());
   else if (atEnd())

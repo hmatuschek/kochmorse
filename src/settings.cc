@@ -220,6 +220,16 @@ Settings::setKochSummary(bool show) {
   this->setValue("koch/summary", show);
 }
 
+int
+Settings::kochSuccessThreshold() const {
+  return this->value("koch/thres", 90).toInt();
+}
+
+void
+Settings::setKochSuccessThreshold(int thres) {
+  this->setValue("koch/thres", thres);
+}
+
 
 QSet<QChar>
 Settings::randomChars() const {
@@ -603,42 +613,58 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   _lesson = new QSpinBox();
   _lesson->setMinimum(2); _lesson->setMaximum(43);
   _lesson->setValue(settings.kochLesson());
+  _lesson->setToolTip(tr("Specifies the number of symbols for this lesson."));
 
   _prefLastChars = new QCheckBox();
   _prefLastChars->setChecked(settings.kochPrefLastChars());
+  _prefLastChars->setToolTip(tr("If enabled, increases the likelihood of newer symbols."));
 
   _repLastChar = new QCheckBox();
   _repLastChar->setChecked(settings.kochRepeatLastChar());
+  _repLastChar->setToolTip(tr("If enabled, repeats the new symbol before the lesson starts."));
 
   _minGroupSize = new QSpinBox();
   _minGroupSize->setValue(settings.kochMinGroupSize());
   _minGroupSize->setMinimum(1);
   _minGroupSize->setMaximum(settings.kochMaxGroupSize());
+  _minGroupSize->setToolTip(tr("Specifies the minimum group size."));
 
   _maxGroupSize = new QSpinBox();
   _maxGroupSize->setValue(settings.kochMaxGroupSize());
   _maxGroupSize->setMinimum(settings.kochMinGroupSize());
   _maxGroupSize->setMaximum(20);
+  _maxGroupSize->setToolTip(tr("Specifies the maximum group size. If equal to minimum group size, a fixed size is implied."));
 
   _infinite = new QCheckBox();
   _infinite->setChecked(settings.kochInfiniteLineCount());
+  _infinite->setToolTip(tr("Sends an infinite number of lines."));
 
   _lineCount = new QSpinBox();
   _lineCount->setMinimum(1);
   _lineCount->setValue(settings.kochLineCount());
+  _lineCount->setToolTip(tr("Specifies the number of lines to send."));
   if (settings.kochInfiniteLineCount())
     _lineCount->setEnabled(false);
 
   _summary = new QCheckBox();
   _summary->setChecked(settings.kochSummary());
+  _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
   if (settings.kochInfiniteLineCount())
     _summary->setEnabled(false);
+
+  _threshold = new QSpinBox();
+  _threshold->setMinimum(75);
+  _threshold->setMaximum(100);
+  _threshold->setValue(settings.kochSuccessThreshold());
+  _threshold->setToolTip(tr("Specifies the success rate at which the lesson is completed."));
+  _threshold->setEnabled(_summary->isEnabled() && _summary->isChecked());
 
   // Cross connect min and max group size splin boxes to maintain
   // consistent settings
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
+  connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
@@ -649,6 +675,8 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   layout->addRow(tr("Infinite lines"), _infinite);
   layout->addRow(tr("Line count"), _lineCount);
   layout->addRow(tr("Show summary"), _summary);
+  layout->addRow(tr("Lesson target"), _threshold);
+
   this->setLayout(layout);
 }
 
@@ -663,6 +691,7 @@ KochTutorSettingsView::save() {
   settings.setKochInifiniteLineCount(_infinite->isChecked());
   settings.setKochLineCount(_lineCount->value());
   settings.setKochSummary(_summary->isChecked());
+  settings.setKochSuccessThreshold(_threshold->value());
 }
 
 void
@@ -679,6 +708,12 @@ void
 KochTutorSettingsView::onInfiniteToggled(bool enabled) {
   _lineCount->setEnabled(! enabled);
   _summary->setEnabled(! enabled);
+  _threshold->setEnabled(! enabled);
+}
+
+void
+KochTutorSettingsView::onShowSummaryToggled(bool enabled) {
+  _threshold->setEnabled(enabled);
 }
 
 
@@ -956,7 +991,7 @@ ChatTutorSettingsView::save() {
  * Effect Settings Widget
  * ********************************************************************************************* */
 EffectSettingsView::EffectSettingsView(QWidget *parent)
-  : QWidget(parent), _noiseEnabled(0), _noiseSNR(0)
+  : QWidget(parent), _noiseEnabled(nullptr), _noiseSNR(nullptr)
 {
   Settings settings;
 
@@ -966,7 +1001,7 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _noiseSNR = new QSpinBox();
   _noiseSNR->setMinimum(-60);
   _noiseSNR->setMaximum(60);
-  _noiseSNR->setValue(settings.noiseSNR());
+  _noiseSNR->setValue(int(settings.noiseSNR()));
 
   _noiseFilter = new QCheckBox();
   _noiseFilter->setChecked(settings.noiseFilterEnabled());
@@ -974,7 +1009,7 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _noiseBw = new QSpinBox();
   _noiseBw->setMinimum(10);
   _noiseBw->setMaximum(4000);
-  _noiseBw->setValue(settings.noiseFilterBw());
+  _noiseBw->setValue(int(settings.noiseFilterBw()));
 
   QFormLayout *noiseLayout = new QFormLayout();
   noiseLayout->addRow(tr("Enabled"), _noiseEnabled);
@@ -990,12 +1025,12 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _fadingRate = new QSpinBox();
   _fadingRate->setMinimum(1);
   _fadingRate->setMaximum(60);
-  _fadingRate->setValue(settings.fadingRate());
+  _fadingRate->setValue(int(settings.fadingRate()));
 
   _fadingMaxDamp = new QSpinBox();
   _fadingMaxDamp->setMinimum(-60);
   _fadingMaxDamp->setMaximum(0);
-  _fadingMaxDamp->setValue(settings.fadingMaxDamp());
+  _fadingMaxDamp->setValue(int(settings.fadingMaxDamp()));
 
   QFormLayout *fadingLayout = new QFormLayout();
   fadingLayout->addRow(tr("Enabled"), _fadingEnabled);
@@ -1013,7 +1048,7 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
 
   _qrmSNR = new QSpinBox();
   _qrmSNR->setMinimum(0);
-  _qrmSNR->setValue(settings.qrmSNR());
+  _qrmSNR->setValue(int(settings.qrmSNR()));
 
   QFormLayout *qrmLayout = new QFormLayout();
   qrmLayout->addRow(tr("Enabled"), _qrmEnabled);
@@ -1077,7 +1112,7 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   _decoderLevel = new QSpinBox();
   _decoderLevel->setMinimum(-60);
   _decoderLevel->setMaximum(0);
-  _decoderLevel->setValue(settings.decoderLevel());
+  _decoderLevel->setValue(int(settings.decoderLevel()));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Output device"), _outputDevices);
