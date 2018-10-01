@@ -406,37 +406,37 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="20"/>
         <source>Koch Morse Tutor</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutor de Morse Koch</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="41"/>
         <source>Start/Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicio/Fin</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="48"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustes</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="53"/>
         <source>About Koch Morse</source>
-        <translation type="unfinished"></translation>
+        <translation>Acerca de Morse Koch</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="60"/>
         <source>Volume: %1 %</source>
-        <translation type="unfinished"></translation>
+        <translation>Volumen: %1 %</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="72"/>
         <source>Quit Koch Morse</source>
-        <translation type="unfinished"></translation>
+        <translation>Salir de Morse Koch</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="163"/>
         <source>Volume: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Volumen: %1%</translation>
     </message>
 </context>
 <context>
@@ -446,7 +446,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
         <source>
 
 Sent %1 chars in %2 words and %3 lines.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se han enviado %1 caracteres en %2 palabras y %3 líneas.</translation>
     </message>
 </context>
 <context>
@@ -454,77 +454,77 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="740"/>
         <source>Random tutor settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustes aleatorios del Tutor</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="779"/>
         <source>Characters</source>
-        <translation type="unfinished"></translation>
+        <translation>Caracteres</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="780"/>
         <source>Numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Números</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="781"/>
         <source>Punctuations</source>
-        <translation type="unfinished"></translation>
+        <translation>Puntuaciones</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="782"/>
         <source>Prosigns</source>
-        <translation type="unfinished"></translation>
+        <translation>Fases para Código</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="788"/>
         <source>Specifies the minimum group size.</source>
-        <translation type="unfinished"></translation>
+        <translation>Especifica el menor tamaño de grupo.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="794"/>
         <source>Specifies the maximum group size. If equal to minimum group size, a fixed size is implied.</source>
-        <translation type="unfinished"></translation>
+        <translation>Especifica el mayor tamaño de grupo</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="798"/>
         <source>Sends an infinite number of lines.</source>
-        <translation type="unfinished"></translation>
+        <translation>Envía un número infinito de líneas.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="803"/>
         <source>Specifies the number of lines to send.</source>
-        <translation type="unfinished"></translation>
+        <translation>Especifíca el número de líneas a enviar.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="809"/>
         <source>If enabled, shows a summary statistics at the end.</source>
-        <translation type="unfinished"></translation>
+        <translation>Muestra estadísticas al final (Si es que está activado).</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="822"/>
         <source>Min. group size</source>
-        <translation type="unfinished"></translation>
+        <translation>Mínimo tamaño de grupo</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="823"/>
         <source>Max. group size</source>
-        <translation type="unfinished"></translation>
+        <translation>Máximo tamaño de grupo</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="824"/>
         <source>Infinite lines</source>
-        <translation type="unfinished"></translation>
+        <translation>Líneas Infinitas</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="825"/>
         <source>Line count</source>
-        <translation type="unfinished"></translation>
+        <translation>Cantidad de Líneas</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="826"/>
         <source>Show summary</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Resumen</translation>
     </message>
 </context>
 <context>
@@ -532,22 +532,22 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="428"/>
         <source>Tutor</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutor</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="429"/>
         <source>Morse Code</source>
-        <translation type="unfinished"></translation>
+        <translation>Código Morse</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="430"/>
         <source>Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Efectos</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="431"/>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Dispositivos</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="459"/>
