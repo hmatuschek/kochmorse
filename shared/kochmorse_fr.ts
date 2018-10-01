@@ -6,12 +6,12 @@
     <message>
         <location filename="../src/aboutdialog.cc" line="11"/>
         <source>About KochMorse</source>
-        <translation type="unfinished"></translation>
+        <translation>À propos de KochMorse</translation>
     </message>
     <message>
         <location filename="../src/aboutdialog.cc" line="29"/>
         <source>https://github.com/hmatuschek/kochmorse/wiki</source>
-        <translation type="unfinished"></translation>
+        <translation>https://github.com/hmatuschek/kochmorse/wiki</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@
     <message>
         <location filename="../src/settings.cc" line="1163"/>
         <source>Select the audio output device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le périphérique de sortie audio.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1173"/>
@@ -140,17 +140,17 @@
     <message>
         <location filename="../src/settings.cc" line="1189"/>
         <source>Output device</source>
-        <translation type="unfinished"></translation>
+        <translation>Périphérique de sortie</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1190"/>
         <source>Input device</source>
-        <translation type="unfinished"></translation>
+        <translation>Périphérique d&apos;entrée</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1191"/>
         <source>Detector threshold (dB)</source>
-        <translation type="unfinished"></translation>
+        <translation>Seuil de détection (dB)</translation>
     </message>
 </context>
 <context>
@@ -383,22 +383,22 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/listwidget.cc" line="10"/>
         <source>Select...</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner…</translation>
     </message>
     <message>
         <location filename="../src/listwidget.cc" line="12"/>
         <source>all</source>
-        <translation type="unfinished"></translation>
+        <translation>tout</translation>
     </message>
     <message>
         <location filename="../src/listwidget.cc" line="13"/>
         <source>none</source>
-        <translation type="unfinished"></translation>
+        <translation>aucun</translation>
     </message>
     <message>
         <location filename="../src/listwidget.cc" line="14"/>
         <source>invert</source>
-        <translation type="unfinished"></translation>
+        <translation>inverser</translation>
     </message>
 </context>
 <context>
@@ -416,7 +416,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="48"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="53"/>
@@ -426,7 +426,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="60"/>
         <source>Volume: %1 %</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume&#xa0;: %1 %</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="72"/>
@@ -436,7 +436,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="163"/>
         <source>Volume: %1%</source>
-        <translation type="unfinished"></translation>
+        <translation>Volume&#xa0;: %1%</translation>
     </message>
 </context>
 <context>
@@ -459,7 +459,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="779"/>
         <source>Characters</source>
-        <translation type="unfinished"></translation>
+        <translation>Caractères</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="780"/>
@@ -469,7 +469,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="781"/>
         <source>Punctuations</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponctuations</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="782"/>
@@ -519,12 +519,12 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="825"/>
         <source>Line count</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de lignes</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="826"/>
         <source>Show summary</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher le récapitulatif</translation>
     </message>
 </context>
 <context>
@@ -542,17 +542,17 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="430"/>
         <source>Effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Effets</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="431"/>
         <source>Devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Périphériques</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="459"/>
         <source>https://github.com/hmatuschek/kochmorse/wiki/Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>https://github.com/hmatuschek/kochmorse/wiki/Settings</translation>
     </message>
 </context>
 <context>
@@ -580,7 +580,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <location filename="../src/textgen.cc" line="704"/>
         <location filename="../src/textgen.cc" line="736"/>
         <source>Unexpected element at line %1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément inattendu à la ligne %1&#xa0;: %2</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="359"/>
@@ -596,7 +596,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <location filename="../src/textgen.cc" line="587"/>
         <location filename="../src/textgen.cc" line="603"/>
         <source>Unexpected element &apos;%2&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément inattendu «&#xa0;%2&#xa0;»</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="379"/>
@@ -631,7 +631,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/textgen.cc" line="725"/>
         <source>Unknown rule &apos;%1&apos; referenced at line %2.</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle inconnue «&#xa0;%1&#xa0;» référencée à la ligne %2.</translation>
     </message>
 </context>
 <context>
