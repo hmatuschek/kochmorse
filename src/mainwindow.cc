@@ -43,13 +43,14 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _play->setChecked(false);
 
   // Preferences button
-  _pref = new QAction(QIcon(":/icons/preferences.svg"), "", this);
+  _pref = new QAction(
+        QIcon::fromTheme("preferences-system", QIcon(":/icons/preferences.svg")), "", this);
   _pref->setShortcut(QKeySequence::Preferences);
   _pref->setToolTip(tr("Settings"));
 
   // Info button
   _info = new QAction(
-        QIcon::fromTheme("help-about", QIcon(":/icons/help.svg")), "", this);
+        QIcon::fromTheme("system-help", QIcon(":/icons/help.svg")), "", this);
   _info->setToolTip(tr("About Koch Morse"));
 
   // Volume slider
@@ -68,7 +69,8 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   volPanel->setLayout(volPanelLayout);
 
   // Quit button
-  _quit = new QAction(QIcon::fromTheme("application-exit", QIcon(":/icons/exit.svg")), "", this);
+  _quit = new QAction(
+        QIcon::fromTheme("system-shutdown", QIcon(":/icons/exit.svg")), "", this);
   _quit->setToolTip(tr("Quit Koch Morse"));
   _quit->setShortcuts(QKeySequence::Quit);
 
