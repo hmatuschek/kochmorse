@@ -48,5 +48,6 @@
         <file>qso/callsigns.xml</file>
         <file>qso/chat-closing.xml</file>
         <file>qso/chat-ragchew.xml</file>
+        <file>text/contributors.html</file>
     </qresource>
 </RCC>
