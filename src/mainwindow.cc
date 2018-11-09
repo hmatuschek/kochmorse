@@ -97,8 +97,9 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
   QObject::connect(_volume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
+  QObject::connect(playShortcut, SIGNAL(activated()), _play,SLOT(toggle()));
   connect(playShortcut, &QShortcut::activated, this, [this](){
-    onPlayToggled(true);
+    onPlayToggled(_play->isChecked());
   });
 
 }
