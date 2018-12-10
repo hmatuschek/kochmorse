@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QSlider>
 #include <QLabel>
+#include <QShortcut>
 
 #include "application.hh"
 
@@ -53,6 +54,8 @@ protected:
   QLabel *_volumeLabel;
   /** The action for the "quit" button. */
   QAction *_quit;
+  /** The shortcut for the play button*/
+  QShortcut *playShortcut;
 };
 
 #endif // __KOCHMORSE_MAINWINDOW_HH__
