@@ -27,10 +27,10 @@
    <t w="30">op</t> <t w="01">pls</t> <t w="30">pse</t> <t w="20">pwr</t> <t w="01">px</t>
    <t w="20">rr</t> <t w="10">rx</t> <t w="01">rfi</t> <t w="20">rig</t> <t w="20">rpt</t>
    <t w="01">rprt</t> <t w="30">rst</t> <t w="10">sae</t> <t w="10">sase</t> <t w="01">sed</t>
-   <t w="01">sfr</t> <t w="10">sig</t> <t w="10">sigs</t> <t w="01">sk</t> <t w="01">sked</t>
-   <t w="01">snr</t> <t w="10">sri</t> <t w="01">ssb</t> <t w="10">stn</t> <t w="20">temp</t>
+   <t w="01">sfr</t> <t w="10">sig</t> <t w="10">sigs</t> <t w="05">sk</t> <t w="05">sked</t>
+   <t w="01">snr</t> <t w="20">sri</t> <t w="05">ssb</t> <t w="10">stn</t> <t w="20">temp</t>
    <t w="01">tfc</t> <t w="01">tks</t> <t w="01">tmw</t> <t w="20">tnx</t> <t w="01">tre</t>
-   <t w="01">tt</t> <t w="30">tu</t> <t w="01">tvi</t> <t w="01">tx</t> <t w="01">trx</t>
+   <t w="01">tt</t> <t w="30">tu</t> <t w="01">tvi</t> <t w="01">tx</t> <t w="10">trx</t>
    <t w="10">ufb</t> <t w="20">ur</t> <t w="10">urs</t> <t w="01">vx</t> <t w="20">vy</t>
    <t w="01">wa</t> <t w="01">wb</t> <t w="10">wkd</t> <t w="20">wx</t> <t w="10">xyl</t>
    <t w="10">yl</t> <t w="01">yr</t> <t w="30">73</t> <t w="10">88</t> <t w="10">55</t>
