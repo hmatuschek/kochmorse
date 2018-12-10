@@ -6,7 +6,6 @@
 #include <QFont>
 #include <QToolBar>
 #include <QLabel>
-#include <QShortcut>
 
 #include "settings.hh"
 #include "aboutdialog.hh"
@@ -87,6 +86,9 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   this->setCentralWidget(_text);
 
+  //set shortcut
+  playShortcut = new QShortcut(QKeySequence("Ctrl+X"), this);
+
   QObject::connect(&_app, SIGNAL(sessionComplete()), this, SLOT(onSessionFinished()));
   QObject::connect(&_app, SIGNAL(charSend(QString)), this, SLOT(onCharSend(QString)));
   QObject::connect(&_app, SIGNAL(charReceived(QString)), this, SLOT(onCharReceived(QString)));
@@ -95,6 +97,11 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
   QObject::connect(_volume, SIGNAL(valueChanged(int)), this, SLOT(onVolumeChanged(int)));
+  QObject::connect(playShortcut, SIGNAL(activated()), _play,SLOT(toggle()));
+  connect(playShortcut, &QShortcut::activated, this, [this](){
+    onPlayToggled(_play->isChecked());
+  });
+
 }
 
 void
