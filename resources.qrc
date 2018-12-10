@@ -49,5 +49,7 @@
         <file>qso/chat-closing.xml</file>
         <file>qso/chat-ragchew.xml</file>
         <file>text/contributors.html</file>
+        <file>qso/qcodes-de.xml</file>
+        <file>qso/qsogen-de.xml</file>
     </qresource>
 </RCC>
