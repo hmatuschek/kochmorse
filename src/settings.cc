@@ -260,11 +260,20 @@ Settings::randomChars() const {
           << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
           << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
           << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
+          << QChar(0x017a) /*ź*/ << QChar(0x00e4) /*ä*/ << QChar(0x0105) /*ą*/ << QChar(0x00f6) /*ö*/
+          << QChar(0x00f8) /*ø*/ << QChar(0x00f3) /*ó*/ << QChar(0x00fc) /*ü*/ << QChar(0x016d) /*ŭ*/
+          << QChar(0x03c7) /*χ*/ << QChar(0x0125) /*ĥ*/ << QChar(0x00e0) /*à*/ << QChar(0x00e5) /*å*/
+          << QChar(0x00e8) /*è*/ << QChar(0x00e9) /*é*/ << QChar(0x0109) /*ę*/ << QChar(0x00f0) /*ð*/
+          << QChar(0x00de) /*þ*/ << QChar(0x0109) /*ĉ*/ << QChar(0x0107) /*ć*/ << QChar(0x011d) /*ĝ*/
+          << QChar(0x0125) /*ĵ*/ << QChar(0x015d) /*ŝ*/ << QChar(0x0142) /*ł*/ << QChar(0x0144) /*ń*/
+          << QChar(0x00f1) /*ñ*/ << QChar(0x0107) /*ż*/ << QChar(0x00bf) /*¿*/ << QChar(0x00a1) /*¡*/
+          << QChar(0x00df) /*ß*/ << QChar(0x0144) /*ś*/
           << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
           << QChar(0x2406) /* SN */;
   } else {
     QString str = this->value("random/chars").toString();
-    for (int i=0; i<str.size(); i++) { chars.insert(str[i]); }
+    for (int i=0; i<str.size(); i++)
+      chars.insert(str[i]);
   }
   return chars;
 }
@@ -762,37 +771,56 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   Settings settings;
 
   QSet<QChar> enabled_chars = settings.randomChars();
-  QList<QChar> alpha, num, punct, prosign;
+  QList<QChar> alpha, num, punct, prosign, special;
   alpha << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
         << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z';
   num << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9';
   punct << '.' << ',' << ':' << ';' << '?' << '-' << '@' << '(' << ')' << '/';
   prosign << '=' << '+' << '&' << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */
           << QChar(0x2403) /* SK */ << QChar(0x2406) /* SN */ << QChar(0x2407) /* KL */;
+  special << QChar(0x017a) /*ź*/ << QChar(0x00e4) /*ä*/ << QChar(0x0105) /*ą*/ << QChar(0x00f6) /*ö*/
+          << QChar(0x00f8) /*ø*/ << QChar(0x00f3) /*ó*/ << QChar(0x00fc) /*ü*/ << QChar(0x016d) /*ŭ*/
+          << QChar(0x03c7) /*χ*/ << QChar(0x0125) /*ĥ*/ << QChar(0x00e0) /*à*/ << QChar(0x00e5) /*å*/
+          << QChar(0x00e8) /*è*/ << QChar(0x00e9) /*é*/ << QChar(0x0109) /*ę*/ << QChar(0x00f0) /*ð*/
+          << QChar(0x00de) /*þ*/ << QChar(0x0109) /*ĉ*/ << QChar(0x0107) /*ć*/ << QChar(0x011d) /*ĝ*/
+          << QChar(0x0125) /*ĵ*/ << QChar(0x015d) /*ŝ*/ << QChar(0x0142) /*ł*/ << QChar(0x0144) /*ń*/
+          << QChar(0x00f1) /*ñ*/ << QChar(0x0107) /*ż*/ << QChar(0x00bf) /*¿*/ << QChar(0x00a1) /*¡*/
+          << QChar(0x00df) /*ß*/ << QChar(0x0144) /*ś*/;
 
   // Assemble char table
   _alpha = new ListWidget();
   foreach (QChar c, alpha) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _alpha->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble char table
   _num = new ListWidget();
   foreach (QChar c, num) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _num->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble punc table
   _punct = new ListWidget();
   foreach (QChar c, punct) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _punct->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble prosig table
   _prosign = new ListWidget();
   foreach (QChar c, prosign) {
-    QString txt = QString("%1 (%2)").arg(Globals::mapProsign(c)).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _prosign->addItem(txt, c, enabled_chars.contains(c));
+  }
+  // Assemble special table
+  _special = new ListWidget();
+  foreach (QChar c, special) {
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
+    _special->addItem(txt, c, enabled_chars.contains(c));
   }
 
   QTabWidget *tabs = new QTabWidget();
@@ -800,6 +828,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   tabs->addTab(_num, tr("Numbers"));
   tabs->addTab(_punct, tr("Punctuations"));
   tabs->addTab(_prosign, tr("Prosigns"));
+  tabs->addTab(_special, tr("Special"));
 
   _minGroupSize = new QSpinBox();
   _minGroupSize->setValue(settings.randomMinGroupSize());
@@ -870,6 +899,11 @@ RandomTutorSettingsView::save() {
   for (int i=0; i<_prosign->numRows(); i++) {
     if (_prosign->isChecked(i)) {
       enabled_chars.insert(_prosign->itemData(i).toChar());
+    }
+  }
+  for (int i=0; i<_special->numRows(); i++) {
+    if (_special->isChecked(i)) {
+      enabled_chars.insert(_special->itemData(i).toChar());
     }
   }
 

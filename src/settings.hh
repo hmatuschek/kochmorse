@@ -251,6 +251,7 @@ protected:
   ListWidget *_num;
   ListWidget *_punct;
   ListWidget *_prosign;
+  ListWidget *_special;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
