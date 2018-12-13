@@ -51,5 +51,6 @@
         <file>text/contributors.html</file>
         <file>qso/qcodes-de.xml</file>
         <file>qso/qsogen-de.xml</file>
+        <file>qso/wx-de.xml</file>
     </qresource>
 </RCC>

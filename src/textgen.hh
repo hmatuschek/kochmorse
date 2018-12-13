@@ -222,10 +222,19 @@ protected:
 };
 
 
+
 /** This class parses a XML description of rules that form the text generators. */
 class TextGen: public TextGenListRule
 {
   Q_OBJECT
+
+public:
+  class Context: public QHash<QString, QString>
+  {
+  public:
+    Context();
+    Context(const Context &other);
+  };
 
 public:
   /** Constructs a text generator from the rules specified as XML in @c filename. */

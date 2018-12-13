@@ -4,6 +4,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include <QDate>
 
 
 /* ********************************************************************************************* *
@@ -228,6 +229,56 @@ TextGenListRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
     if (rule)
       rule->generate(buffer, ctx);
   }
+}
+
+
+/* ********************************************************************************************* *
+ * Implementation of TextGen::Context
+ * ********************************************************************************************* */
+TextGen::Context::Context()
+  : QHash<QString, QString>()
+{
+  QDateTime now = QDateTime::currentDateTimeUtc();
+  switch (now.date().month()) {
+    case 12:
+    case 1:
+    case 2:
+      insert("ToY","winter");
+      break;
+    case 3:
+    case 4:
+    case 5:
+      insert("ToY","spring");
+      break;
+    case 6:
+    case 7:
+    case 8:
+      insert("ToY","summer");
+      break;
+    case 9:
+    case 10:
+    case 11:
+      insert("ToY","fall");
+      break;
+    default: break;
+  }
+  if ((now.time().hour()>=6) && (now.time().hour()<12)) {
+    insert("ToD","gm");
+  } else if ((now.time().hour()>=12) && (now.time().hour()<15)) {
+    insert("ToD","gd");
+  } if ((now.time().hour()>=15) && (now.time().hour()<18)) {
+    insert("ToD","ga");
+  } if ((now.time().hour()>=18) && (now.time().hour()<23)) {
+    insert("ToD","ge");
+  } else {
+    insert("ToD","gn");
+  }
+}
+
+TextGen::Context::Context(const Context &other)
+  : QHash<QString, QString>(other)
+{
+  // pass...
 }
 
 
