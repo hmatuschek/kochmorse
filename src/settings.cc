@@ -451,6 +451,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
+
+  /* TODO: split DeviceSettingsView into a dummy and delay the population of it */
   _devices = new DeviceSettingsView();
 
   _tabs = new QTabWidget();
@@ -458,6 +460,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tabs->addTab(_code, tr("Morse Code"));
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
+
+  QObject::connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(tabSelected()));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -472,6 +476,13 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   QObject::connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
   QObject::connect(bbox, SIGNAL(helpRequested()), this, SLOT(showHelp()));
+}
+
+void
+SettingsDialog::tabSelected() {
+    if(_tabs->currentIndex()==3) {
+        _devices->populateDeviceSettingsView();
+    }
 }
 
 void
@@ -1217,32 +1228,35 @@ EffectSettingsView::onQRMToggled(bool enabled) {
 DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   : QWidget(parent)
 {
-  Settings settings;
+    //Settings settings;
+    _settings = new Settings();
 
   _outputDevices = new QComboBox();
   _outputDevices->setToolTip(tr("Select the audio output device."));
-  QAudioDeviceInfo currentDevice = settings.outputDevice();
-  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-  foreach (auto device, devices) {
-    _outputDevices->addItem(device.deviceName());
-    if (device == currentDevice)
-      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
-  }
+//  QAudioDeviceInfo currentDevice = settings.outputDevice();
+//  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+//  foreach (auto device, devices) {
+//    _outputDevices->addItem(device.deviceName());
+//    if (device == currentDevice)
+//      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
+//  }
 
   _inputDevices = new QComboBox();
   _inputDevices->setToolTip(tr("Select the audio input device used for decoding CW send by you."));
-  currentDevice = settings.inputDevice();
-  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
-  foreach (auto device, devices) {
-    _inputDevices->addItem(device.deviceName());
-    if (device == currentDevice)
-      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
-  }
+//  currentDevice = settings.inputDevice();
+//  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+//  foreach (auto device, devices) {
+//    _inputDevices->addItem(device.deviceName());
+//    if (device == currentDevice)
+//      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
+//  }
 
   _decoderLevel = new QSpinBox();
   _decoderLevel->setMinimum(-60);
   _decoderLevel->setMaximum(0);
-  _decoderLevel->setValue(int(settings.decoderLevel()));
+//  _decoderLevel->setValue(int(settings.decoderLevel()));
+  _decoderLevel->setValue(int(_settings->decoderLevel()));
+
   _decoderLevel->setToolTip(tr("Specifies the detector threshold in dB for decoding CW."));
 
   QFormLayout *layout = new QFormLayout();
@@ -1259,4 +1273,24 @@ DeviceSettingsView::save() {
   settings.setOutputDevice(_outputDevices->currentText());
   settings.setInputDevice(_inputDevices->currentText());
   settings.setDecoderLevel(_decoderLevel->value());
+}
+
+void DeviceSettingsView::populateDeviceSettingsView() {
+
+  QAudioDeviceInfo currentDevice = _settings->outputDevice();
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+  foreach (auto device, devices) {
+    _outputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
+  }
+
+  currentDevice = _settings->inputDevice();
+  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  foreach (auto device, devices) {
+    _inputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
+  }
+
 }

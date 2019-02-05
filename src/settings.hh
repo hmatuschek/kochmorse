@@ -360,12 +360,14 @@ class DeviceSettingsView: public QWidget
 public:
   explicit DeviceSettingsView(QWidget *parent=0);
 
+  void populateDeviceSettingsView();
   void save();
 
 protected:
   QComboBox *_inputDevices;
   QComboBox *_outputDevices;
   QSpinBox  *_decoderLevel;
+  Settings *_settings;
 };
 
 /** The preferences dialog. */
@@ -377,6 +379,7 @@ public:
 
 public slots:
   virtual void accept();
+  void tabSelected();
 
 protected slots:
   void showHelp();
