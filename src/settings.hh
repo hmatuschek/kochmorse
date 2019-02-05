@@ -359,7 +359,6 @@ class DeviceSettingsView: public QWidget
 
 public:
   explicit DeviceSettingsView(QWidget *parent=0);
-
   void populateDeviceSettingsView();
   void save();
 
@@ -379,10 +378,10 @@ public:
 
 public slots:
   virtual void accept();
-  void tabSelected();
 
 protected slots:
   void showHelp();
+  void tabSelected();
 
 protected:
   QTabWidget *_tabs;
