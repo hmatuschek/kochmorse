@@ -26,8 +26,8 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _text = new QTextEdit();
   _text->setMinimumSize(640,230);
   QFont f = _text->document()->defaultFont();
-  f.setFamily("Courier");
-  f.setPointSize(14);
+  f.setFamily("Monospace");
+  f.setPointSize(11);
   f.setStyleHint(QFont::Monospace);
   _text->document()->setDefaultFont(f);
   _text->setReadOnly(true);
