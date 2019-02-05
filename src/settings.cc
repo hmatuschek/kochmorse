@@ -1226,33 +1226,17 @@ EffectSettingsView::onQRMToggled(bool enabled) {
 DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   : QWidget(parent)
 {
-    //Settings settings;
     _settings = new Settings();
 
   _outputDevices = new QComboBox();
   _outputDevices->setToolTip(tr("Select the audio output device."));
-//  QAudioDeviceInfo currentDevice = settings.outputDevice();
-//  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-//  foreach (auto device, devices) {
-//    _outputDevices->addItem(device.deviceName());
-//    if (device == currentDevice)
-//      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
-//  }
 
   _inputDevices = new QComboBox();
   _inputDevices->setToolTip(tr("Select the audio input device used for decoding CW send by you."));
-//  currentDevice = settings.inputDevice();
-//  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
-//  foreach (auto device, devices) {
-//    _inputDevices->addItem(device.deviceName());
-//    if (device == currentDevice)
-//      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
-//  }
 
   _decoderLevel = new QSpinBox();
   _decoderLevel->setMinimum(-60);
   _decoderLevel->setMaximum(0);
-//  _decoderLevel->setValue(int(settings.decoderLevel()));
   _decoderLevel->setValue(int(_settings->decoderLevel()));
 
   _decoderLevel->setToolTip(tr("Specifies the detector threshold in dB for decoding CW."));
