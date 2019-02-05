@@ -381,7 +381,6 @@ public slots:
 
 protected slots:
   void showHelp();
-  void tabSelected();
 
 protected:
   QTabWidget *_tabs;

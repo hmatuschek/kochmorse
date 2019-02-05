@@ -459,7 +459,13 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
 
-  QObject::connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(tabSelected()));
+  // populating device settings may takes a lot of time so only do if the tab becomes visible
+  QObject::connect(_tabs, &QTabWidget::currentChanged, [this](){
+    if(_tabs->currentIndex()==3) {
+        _devices->populateDeviceSettingsView();
+    }
+  });
+
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -474,13 +480,6 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   QObject::connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
   QObject::connect(bbox, SIGNAL(helpRequested()), this, SLOT(showHelp()));
-}
-
-void
-SettingsDialog::tabSelected() {
-    if(_tabs->currentIndex()==3) {
-        _devices->populateDeviceSettingsView();
-    }
 }
 
 void
