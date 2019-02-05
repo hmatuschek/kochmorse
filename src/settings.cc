@@ -451,8 +451,6 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
-
-  /* TODO: split DeviceSettingsView into a dummy and delay the population of it */
   _devices = new DeviceSettingsView();
 
   _tabs = new QTabWidget();
