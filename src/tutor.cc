@@ -227,7 +227,7 @@ KochTutor::_nextline() {
       if (_prefLastChars) {
         double v = -1;
         while ((v < 0) || (v >= _lesson)) {
-          v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
+             v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX));
         }
         idx = size_t(v);
       } else {
