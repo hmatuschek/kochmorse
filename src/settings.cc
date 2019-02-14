@@ -731,6 +731,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
   connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_prefLastChars, SIGNAL(toggled(bool)), this, SLOT(onPreferLastCharToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
@@ -784,6 +785,10 @@ KochTutorSettingsView::onShowSummaryToggled(bool enabled) {
   _threshold->setEnabled(enabled);
 }
 
+void
+KochTutorSettingsView::onPreferLastCharToggled(bool enabled) {
+  _lastCharFrequencyFactor->setEnabled(enabled);
+}
 
 /* ********************************************************************************************* *
  * Random Tutor Settings Widget

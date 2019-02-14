@@ -218,6 +218,7 @@ protected slots:
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
   void onShowSummaryToggled(bool enabled);
+  void onPreferLastCharToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
