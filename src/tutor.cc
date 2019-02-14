@@ -55,10 +55,11 @@ inline QVector<QChar> _initKochLessons() {
 QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 
-KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool repeatLastChar,
+KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars,  int lastCharFrequencyFactor,
+bool repeatLastChar,
                      size_t minGroupSize, size_t maxGroupSize,
                      int lines, bool showSummary, int successThreshold, QObject *parent)
-  : Tutor(encoder, parent), _lesson(lesson), _prefLastChars(prefLastChars),
+  : Tutor(encoder, parent), _lesson(lesson), _prefLastChars(prefLastChars), _lastCharFrequencyFactor(lastCharFrequencyFactor),
     _repeatLastChar(repeatLastChar), _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)), _lines(lines), _linecount(0),
     _showSummary(showSummary), _threshold(successThreshold), _text(),
@@ -113,6 +114,16 @@ KochTutor::prefLastChars() const {
 void
 KochTutor::setPrefLastChars(bool pref) {
   _prefLastChars = pref;
+}
+
+int
+KochTutor::lastCharFrequencyFactor() const {
+  return _lastCharFrequencyFactor;
+}
+
+void
+KochTutor::setLastCharFrequencyFactor(int lastCharFrequencyFactor) {
+  _lastCharFrequencyFactor = lastCharFrequencyFactor;
 }
 
 bool
@@ -227,7 +238,7 @@ KochTutor::_nextline() {
       if (_prefLastChars) {
         double v = -1;
         while ((v < 0) || (v >= _lesson)) {
-             v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX));
+             v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/_lastCharFrequencyFactor);
         }
         idx = size_t(v);
       } else {
