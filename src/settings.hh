@@ -96,7 +96,9 @@ public:
   bool kochPrefLastChars() const;
   /** Koch totor: Sets if "new" chars are more likely to be picked by the tutor. */
   void setKochPrefLastChars(bool pref);
-
+  /** Koch tutor: Sets the increase in the likelihood of last chars*/
+  void setKochLastCharFrequencyFactor(int lastCharFrequencyFactor);
+  int  KochLastCharFrequencyFactor() const;
   bool kochRepeatLastChar() const;
   void setKochRepeatLastChar(bool enable);
 
@@ -216,10 +218,12 @@ protected slots:
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
   void onShowSummaryToggled(bool enabled);
+  void onPreferLastCharToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
   QCheckBox *_prefLastChars;
+  QSpinBox *_lastCharFrequencyFactor;
   QCheckBox *_repLastChar;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;

@@ -182,6 +182,14 @@ Settings::setKochPrefLastChars(bool pref) {
   this->setValue("koch/prefLastChars", pref);
 }
 
+void Settings::setKochLastCharFrequencyFactor(int lastCharFrequencyFactor) {
+  this->setValue("koch/lastCharFrequencyFactor", lastCharFrequencyFactor);
+}
+
+int Settings::KochLastCharFrequencyFactor() const {
+  return this->value("koch/lastCharFrequencyFactor", 1).toInt();
+}
+
 bool
 Settings::kochRepeatLastChar() const {
   return this->value("koch/repeatLastChar", false).toBool();
@@ -672,6 +680,11 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   _prefLastChars->setChecked(settings.kochPrefLastChars());
   _prefLastChars->setToolTip(tr("If enabled, increases the likelihood of newer symbols."));
 
+  _lastCharFrequencyFactor = new QSpinBox();
+  _lastCharFrequencyFactor->setMinimum(1); _lastCharFrequencyFactor->setMaximum(4);
+  _lastCharFrequencyFactor->setValue(settings.KochLastCharFrequencyFactor());
+  _lastCharFrequencyFactor->setToolTip(tr("Influence the increase in the likelihood of newer symbols."));
+
   _repLastChar = new QCheckBox();
   _repLastChar->setChecked(settings.kochRepeatLastChar());
   _repLastChar->setToolTip(tr("If enabled, repeats the new symbol before the lesson starts."));
@@ -718,10 +731,12 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
   connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_prefLastChars, SIGNAL(toggled(bool)), this, SLOT(onPreferLastCharToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
   layout->addRow(tr("Prefer last chars"), _prefLastChars);
+  layout->addRow(tr("Set last char frequency factor"), _lastCharFrequencyFactor);
   layout->addRow(tr("Repeat last char"), _repLastChar);
   layout->addRow(tr("Min. group size"), _minGroupSize);
   layout->addRow(tr("Max. group size"), _maxGroupSize);
@@ -738,6 +753,7 @@ KochTutorSettingsView::save() {
   Settings settings;
   settings.setKochLesson(_lesson->value());
   settings.setKochPrefLastChars(_prefLastChars->isChecked());
+  settings.setKochLastCharFrequencyFactor(_lastCharFrequencyFactor->value());
   settings.setKochRepeatLastChar(_repLastChar->isChecked());
   settings.setKochMinGroupSize(_minGroupSize->value());
   settings.setKochMaxGroupSize(_maxGroupSize->value());
@@ -769,6 +785,10 @@ KochTutorSettingsView::onShowSummaryToggled(bool enabled) {
   _threshold->setEnabled(enabled);
 }
 
+void
+KochTutorSettingsView::onPreferLastCharToggled(bool enabled) {
+  _lastCharFrequencyFactor->setEnabled(enabled);
+}
 
 /* ********************************************************************************************* *
  * Random Tutor Settings Widget

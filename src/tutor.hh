@@ -60,7 +60,7 @@ public:
    * @param prefLastChars If @c true, specifies the if the symbols of the more recent lessons
    *        should be samples more likely by the tutor.
    * @param parent Specifies the QObject parent. */
-  KochTutor(MorseEncoder *encoder, int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
+  KochTutor(MorseEncoder *encoder, int lesson=2, bool prefLastChars=false, int lastCharFrequencyFactor=1, bool repeatLastChar=false,
             size_t minGroupSize=5, size_t maxGroupSize=5,
             int lines=5, bool showSummary=false, int successThreshold=90, QObject *parent=nullptr);
   /** Destructor. */
@@ -78,6 +78,10 @@ public:
   bool prefLastChars() const;
   /** Enable preferred sampling of recent symbols. */
   void setPrefLastChars(bool pref);
+  /** Return LastCharFrequencyFactor */
+  int lastCharFrequencyFactor() const;
+  void setLastCharFrequencyFactor(int lastCharFrequencyFactor);
+
   /** Repetition of last added char at the beginning of a session. */
   bool repeatLastChar() const;
   /** Enable repetition of last added char at the beginning of a session. */
@@ -111,6 +115,8 @@ protected:
   int _lesson;
   /** The "prefer last chars" flag. */
   bool _prefLastChars;
+  /** The extent to which "last chars" should be preferred*/
+  int _lastCharFrequencyFactor;
   /** The "repeat last char" flag. */
   bool _repeatLastChar;
   /** The minimum group size. */
