@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+
+<chat>
+ <!-- Token definition -->
+ <token id="call"><![CDATA[\b([0-9a-z]?[a-z]+[0-9]+[a-z/1-9]+)\b]]></token>
+ <token id="de"><![CDATA[\b(de)\b]]></token>
+ <token id="cq"><![CDATA[\b(cq)\b]]></token>
+ <token id="rst"><![CDATA[\b(rst)\b]]></token>
+ <token id="name"><![CDATA[\b(name)\b]]></token>
+ <token id="name"><![CDATA[\b(op)\b]]></token>
+ <token id="qth"><![CDATA[\b(qth)\b]]></token>
+ <token id="qrz"><![CDATA[\b(qrz?)\b]]></token>
+ <token id="near"><![CDATA[\b(nr)\b]]></token>
+ <token id="rig"><![CDATA[\b(rig)\b]]></token>
+ <token id="ant"><![CDATA[\b(ant)\b]]></token>
+ <token id="pwr"><![CDATA[\b(pwr)\b]]></token>
+ <token id="pwr"><![CDATA[\b(power)\b]]></token>
+ <token id="wx"><![CDATA[\b(wx)\b]]></token>
+ <token id="is"><![CDATA[\b(is)\b]]></token>
+ <token id="hr"><![CDATA[\b(hr)\b]]></token>
+ <token id="break"><![CDATA[\b([=+])\b]]></token>
+ <token id="73"><![CDATA[\b(73)\b]]></token>
+ <token id="word"><![CDATA[\b([a-z]+)\b]]></token>
+ <token id="number"><![CDATA[\b([0-9]+)\b]]></token>
+
+ <!-- Initial state with name "start" -->
+ <start id="start">
+  <!-- Clears all text generation variables. -->
+  <clear/>
+  <!-- Applies generation rules in "chat-init.xml" -->
+  <load file="chat-init.xml"/>
+  <!-- If a CQ token is received -> switch to state "cq" -->
+  <on token="cq"><goto state="cq"/></on>
+ </start>
+
+ <!-- Once we received a CQ -->
+ <state id="cq">
+  <!-- If another CQ is received -> ignore. -->
+  <on token="cq"><goto state="cq"/></on>
+  <!-- If a DE is received -> switch to state cq-de -->
+  <on token="de"><goto state="cq-de"/></on>
+ </state>
+
+ <!-- Once we received a DE in a CQ call -->
+ <state id="cq-de">
+  <!-- If we received a callsign -->
+  <on token="call">
+    <!-- Store callsign in "dxcall" variable, -->
+    <var id="dxcall"><token-value/></var>
+	<!-- and switch to "cq-call" state. -->
+	<goto state="cq-call"/>
+  </on>
+  <!-- If an unexpeced End-of-Transmission (e.g., "k" or "[BK]") is received -> goto start again. -->
+  <on token="EoT"><goto state="start"/></on>
+ </state>
+
+ <!-- Once we received the callsign of a CQ call -->
+ <state id="cq-call">
+  <!-- Ignore any further callsigns -->
+  <on token="call"><goto state="cq-call"/></on>
+  <!-- If an E-of-Transmission (e.g., "k" or "[BK]") is received, call back. -->
+  <on token="EOC">
+   <!-- send "DXCALL de MYCALL pse k" -->
+   <send file="chat-cq-response.xml"/>
+   <goto state="call-response"/>
+  </on>
+ </state>
+
+ <!-- We called the station. Wait for a response. -->
+ <state id="call-response">
+  <!-- If we got a QRZ?, we resend the cq-response -->
+  <on token="qrz"><send file="chat-cq-response.xml"/></on>
+  <on token="name"><goto state="response-name"/></on>
+  <on token="rst"><goto state="response-rst"/></on>
+  <on token="qth"><goto state="response-qth"/></on>
+  <on token="EOC">
+    <send file="response.xml"/>
+	<goto state="ragchew"/>
+  </on>
+ </state>
+
+ <state id="response-name">
+  <on token="word"><var id="dxname"><token-value/></on>
+  <on token="break"><goto state="call-response"/></on>
+ </state>
+
+ <state id="response-rst">
+  <on token="number"><var id="myrst"><token-value/></on>
+  <on token="break"><goto state="call-response"/></on>
+ </state>
+
+ <state id="response-qth">
+  <on token="word"><var id="dxqth"><token-value/></on>
+  <on token="break"><goto state="call-response"/></on>
+ </state>
+
+ <state id="ragchew">
+  <on token="rig"><goto state="regchew-rig"/></on>
+  <on token="pwr"><goto state="regchew-pwr"/></on>
+  <on token="wx"><goto state="regchew-wx"/></on>
+  <on token="73"><goto state="closing"/></on>
+  <on token="EOC">
+    <send file="chat-ragchew.xml"/>
+	<goto state="ragchew"/>
+  </on>
+ </state>
+
+ <state id="ragchew-rig">
+  <on token="break"><goto state="ragchew"/></on>
+ </state>
+ <state id="ragchew-pwr">
+  <on token="break"><goto state="ragchew"/></on>
+ </state>
+ <state id="ragchew-wx">
+  <on token="break"><goto state="ragchew"/></on>
+ </state>
+
+ <state id="closing">
+   <on token="EOC">
+     <send file="chat-closing.xml"/>
+	 <goto state="start"/>
+   </on>
+ </state>
+</chat>

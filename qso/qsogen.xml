@@ -80,15 +80,15 @@
  </one-of>
 
  <if var="BMissed" matches="rst">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt rst <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt rst<opt>?</opt> <bk/><stop/></t>
   <t><opt>ur </opt>rst <ref var="RSTB"/> <ref var="RSTB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="BMissed" matches="qth">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt qth <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt qth<opt>?</opt> <bk/><stop/></t>
   <t>qth <opt>hr </opt><ref var="CityA"/> <ref var="CityA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="BMissed" matches="name">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt name <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt name<opt>?</opt> <bk/><stop/></t>
   <t>name <opt>hr </opt><ref var="NameA"/> <ref var="NameA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
 
@@ -119,15 +119,15 @@
  </one-of>
 
  <if var="AMissed" matches="rst">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt rst <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt rst<opt>?</opt> <bk/><stop/></t>
   <t><opt>ur </opt>rst <ref var="RSTA"/> <ref var="RSTA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="AMissed" matches="qth">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt qth <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt qth<opt>?</opt> <bk/><stop/></t>
   <t>qth <opt>hr </opt><ref var="CityB"/> <ref var="CityB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="AMissed" matches="name">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt name <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt name<opt>?</opt> <bk/><stop/></t>
   <t>name <opt>hr </opt><ref var="NameB"/> <ref var="NameB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
 

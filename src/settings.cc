@@ -945,7 +945,8 @@ TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
   _defined = new QComboBox();
   _defined->addItem(tr("Generated QSO"), ":/qso/qsogen.xml");
   _defined->addItem(tr("Generated QSO [german]"), ":/qso/qsogen-de.xml");
-  _defined->addItem(tr("Q-Codes/Words"), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Q-Codes/Abbr."), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Words"), ":/qso/words.xml");
   _defined->addItem(tr("Q-Codes/Words [german]"), ":/qso/qcodes-de.xml");
   _defined->addItem(tr("Call signs"),    ":/qso/callsigns.xml");
   _defined->addItem(tr("User defined ..."));
@@ -966,12 +967,14 @@ TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
     _defined->setCurrentIndex(1);
   } else if (":/qso/qcodes.xml" == selected) {
     _defined->setCurrentIndex(2);
-  } else if (":/qso/qcodes-de.xml" == selected) {
+  } else if (":/qso/words.xml" == selected) {
     _defined->setCurrentIndex(3);
-  } else if (":/qso/callsigns.xml" == selected) {
+  } else if (":/qso/qcodes-de.xml" == selected) {
     _defined->setCurrentIndex(4);
-  } else {
+  } else if (":/qso/callsigns.xml" == selected) {
     _defined->setCurrentIndex(5);
+  } else {
+    _defined->setCurrentIndex(6);
     _filename->setText(selected);
     _filename->setEnabled(true);
     _selectFile->setEnabled(true);
@@ -1020,7 +1023,7 @@ TextGenTutorSettingsView::onSelectFile() {
 
 void
 TextGenTutorSettingsView::onPreDefinedSelected(int idx) {
-  if (3 == idx) {
+  if (6 == idx) {
     _filename->setEnabled(true);
     _selectFile->setEnabled(true);
   } else {

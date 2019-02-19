@@ -14,11 +14,11 @@
    <one-of>
     <i>
 	 <opt>yaesu </opt>
-	 <one-of> <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> <t>ts590</t> <t>ts2000</t> </one-of>
+	 <one-of> <t>ft450</t> <t>ft991</t> <t>ft891</t> <t>ft857</t> </one-of>
 	</i>
 	<i>
 	 <opt>kenwood </opt>
-	 <one-of> <t>ts990</t> <t>ts480</t> </one-of>
+	 <one-of> <t>ts990</t> <t>ts480</t> <t>ts590</t> <t>ts2000</t> </one-of>
 	</i>
 	<i>
 	 <opt>icom </opt>
@@ -64,29 +64,29 @@
  <rule id="pwr">
   <if var="rig-type" matches="qro">
    <one-of>
-    <t w="40">100w</t>
-	<t w="20">50w</t>
-	<t w="20">30w</t>
-	<t w="10">25w</t>
-	<t w="10">20w</t>
+    <t w="40">100w<opt>atts</opt></t>
+	<t w="20">50w<opt>atts</opt></t>
+	<t w="20">30w<opt>atts</opt></t>
+	<t w="10">25w<opt>atts</opt></t>
+	<t w="10">20w<opt>atts</opt></t>
    </one-of>
   </if>
   <if var="rig-type" matches="mobile">
    <one-of>
-    <t w="40">100w</t>
-	<t w="20">50w</t>
-	<t w="20">30w</t>
-	<t w="10">25w</t>
-	<t w="10">20w</t>
+    <t w="40">100w<opt>atts</opt></t>
+	<t w="20">50w<opt>atts</opt></t>
+	<t w="20">30w<opt>atts</opt></t>
+	<t w="10">25w<opt>atts</opt></t>
+	<t w="10">20w<opt>atts</opt></t>
    </one-of>
   </if>
   <if var="rig-type" matches="qrp">
    <one-of>
-    <t w="5">10w</t>
-    <t w="50">5w</t>
-    <t w="20">3w</t>
-    <t w="20">2w</t>
-	<t w="5">1w</t>
+    <t w="5">10w<opt>atts</opt></t>
+    <t w="50">5w<opt>atts</opt></t>
+    <t w="20">3w<opt>atts</opt></t>
+    <t w="20">2w<opt>atts</opt></t>
+	<t w="5">1w<opt>atts</opt></t>
    </one-of>
   </if>
  </rule>

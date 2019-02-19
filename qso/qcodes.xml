@@ -44,7 +44,7 @@
     <i w="10"><apply rule="qcode"/></i>
 	<i w="50"><apply rule="abbr"/></i>
    </one-of>
-   <t> </t>
+   <p/><p/>
   </rep>
   <bt/><stop/>
  </rep>

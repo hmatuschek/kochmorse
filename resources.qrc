@@ -52,5 +52,7 @@
         <file>qso/qcodes-de.xml</file>
         <file>qso/qsogen-de.xml</file>
         <file>qso/wx-de.xml</file>
+        <file>chat/chat.xml</file>
+        <file>qso/words.xml</file>
     </qresource>
 </RCC>

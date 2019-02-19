@@ -6,25 +6,25 @@
 #include <QRegExp>
 #include <QVector>
 #include <QPair>
+#include <QXmlStreamReader>
 
 
 class Token
 {
 public:
-  typedef enum {
-    T_CALL, T_DE, T_CQ, T_QRZ, T_RST, T_NAME, T_IS, T_HERE, T_NEAR, T_QTH, T_RIG, T_ANT, T_PWR, T_WX,
-    T_WORD, T_NUMBER, T_BREAK, T_73, T_EOS
-  } Type;
+  Token();
+  Token(const QString &id, const QString &value=0);
+  Token(const Token &other);
 
-public:
-  Token(Type type);
-  Token(Type type, const QString &value);
+  Token &operator=(const Token &other);
 
-  inline Type type() const { return _type; }
+  const QString &id() const;
+  bool isNull() const;
+
   inline const QString &value() const { return _value; }
 
 protected:
-  Type _type;
+  QString _id;
   QString _value;
 };
 
@@ -32,14 +32,18 @@ protected:
 class Lexer
 {
 public:
-  Lexer(const QString &text);
+  Lexer();
 
+  void addPattern(const QRegExp &regex, const QString &id);
+  void addPattern(const QString &regex, const QString &id);
+
+  void start(const QString &text);
   Token next();
 
 protected:
   int _offset;
-  const QString &_text;
-  QVector< QPair<QRegExp, Token::Type> > _pattern;
+  QString _text;
+  QList< QPair<QRegExp, QString> > _pattern;
 };
 
 
@@ -60,6 +64,132 @@ public:
 protected:
   QHash<QString, QString> &_context;
   State _state;
+};
+
+class ChatMachine;
+class ChatMachineState;
+
+class ChatMachineCode: public QObject
+{
+  Q_OBJECT
+
+protected:
+  explicit ChatMachineCode(QObject *parent);
+
+public:
+  virtual bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream) = 0;
+
+  void addCommand(ChatMachineCode *cmd);
+
+protected:
+  QVector<ChatMachineCode *> _commands;
+};
+
+class ChatMachineClear: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  explicit ChatMachineClear(ChatMachineCode *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+};
+
+class ChatMachineSend: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  ChatMachineSend(bool send, const QString &filename, ChatMachineCode *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+
+protected:
+  bool _send;
+  QString _filename;
+};
+
+class ChatMachineOn: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  ChatMachineOn(const QString &token, ChatMachineCode *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+
+protected:
+  QString _token;
+};
+
+class ChatMachineGoto: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  ChatMachineGoto(const QString &state, ChatMachineCode *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+
+protected:
+  QString _state;
+};
+
+class ChatMachineStoreToken: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  ChatMachineStoreToken(const QString &var, ChatMachineCode *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+
+protected:
+  QString _var;
+};
+
+
+class ChatMachineState: public ChatMachineCode
+{
+  Q_OBJECT
+
+public:
+  explicit ChatMachineState(ChatMachine *parent);
+
+  bool exec(const QString &token, const QString &value, ChatMachine *machine, QTextStream &stream);
+};
+
+
+class ChatMachine: public QObject
+{
+  Q_OBJECT
+
+public:
+  explicit ChatMachine(QObject *parent=nullptr);
+
+  bool load(const QString &file);
+  bool process(const QString &text, QTextStream &response);
+
+  QHash<QString, QString> &context();
+  const QHash<QString, QString> &context() const;
+  void clear();
+
+  ChatMachineState *state();
+  void setState(const QString &state);
+  void setState(ChatMachineState *state);
+
+protected:
+  bool preParse(QXmlStreamReader &reader);
+  bool parse(QXmlStreamReader &reader);
+  void parseToken(QXmlStreamReader &reader);
+  void parseCode(ChatMachineCode *code, QXmlStreamReader &reader);
+
+protected:
+  Lexer _lexer;
+  ChatMachineState *_start;
+  ChatMachineState *_state;
+  QMap<QString, ChatMachineState *> _states;
+  QHash<QString, QString> _context;
 };
 
 
