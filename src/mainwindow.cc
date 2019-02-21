@@ -28,7 +28,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _text->document()->setDefaultFont(settings.textFont());
   _text->setReadOnly(true);
   _text->setTextInteractionFlags(Qt::NoTextInteraction);
-  _text->setTabStopDistance(35);
+  //_text->setTabStopDistance(35);
 
   // Play button
   _play = new QAction(
