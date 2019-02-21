@@ -734,7 +734,7 @@ TextGen::parseSK(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
 
 void
 TextGen::parsePause(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
-  rules.append(new TextGenTextRule("   ", this));
+  rules.append(new TextGenTextRule("\t", this));
   while (! reader.atEnd()) {
     reader.readNext();
     if (reader.isEndElement())

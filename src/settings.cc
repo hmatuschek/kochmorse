@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QAudioDeviceInfo>
 #include <QDesktopServices>
+#include <QFontComboBox>
 
 
 /* ********************************************************************************************* *
@@ -64,14 +65,24 @@ Settings::setSpeed(int speed) {
   this->setValue("speed", speed);
 }
 
-int
-Settings::effSpeed() const {
-  return this->value("effSpeed", 15).toInt();
+double
+Settings::icPauseFactor() const {
+  return this->value("icPauseFactor", 1).toDouble();
 }
 void
-Settings::setEffSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 100));
-  this->setValue("effSpeed", speed);
+Settings::setICPauseFactor(double factor) {
+  factor = std::max(1.0, std::min(factor, 10.0));
+  this->setValue("icPauseFactor", factor);
+}
+
+double
+Settings::iwPauseFactor() const {
+  return this->value("iwPauseFactor", 1).toDouble();
+}
+void
+Settings::setIWPauseFactor(double factor) {
+  factor = std::max(1.0, std::min(factor, 10.0));
+  this->setValue("iwPauseFactor", factor);
 }
 
 int
@@ -439,6 +450,47 @@ Settings::setQRMSNR(double db) {
   setValue("qrm/snr", db);
 }
 
+QFont
+Settings::textFont() const {
+  QString family = value("textFontFamily", "Courier").toString();
+  int size = value("textFontSize", 14).toInt();
+  QFont font(family, size);
+  font.setStyleHint(QFont::Monospace);
+  return font;
+}
+void
+Settings::setTextFont(const QFont &font) {
+  setValue("textFontFamily", font.family());
+  setValue("testFontSize", font.pointSize());
+}
+
+QColor
+Settings::rxTextColor() const {
+  return value("textRXColor", QColor("black")).value<QColor>();
+}
+void
+Settings::setRXTextColor(const QColor &color) {
+  setValue("textRXColor", color);
+}
+
+QColor
+Settings::txTextColor() const {
+  return value("textTXColor", QColor("red")).value<QColor>();
+}
+void
+Settings::setTXTextColor(const QColor &color) {
+  setValue("textTXColor", color);
+}
+
+QColor
+Settings::summaryTextColor() const {
+  return value("textSummaryColor", QColor("blue")).value<QColor>();
+}
+void
+Settings::setSummaryTextColor(const QColor &color) {
+  setValue("textSummaryColor", color);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -452,12 +504,14 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
   _devices = new DeviceSettingsView();
+  _appearance = new AppearanceSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
   _tabs->addTab(_code, tr("Morse Code"));
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
+  _tabs->addTab(_appearance, tr("Appearance"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -502,10 +556,18 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   _speed->setValue(settings.speed());
   _speed->setToolTip(tr("Specifies the speed (in WPM) for the symbols."));
 
-  _effSpeed = new QSpinBox();
-  _effSpeed->setMinimum(5); _speed->setMaximum(100);
-  _effSpeed->setValue(settings.effSpeed());
-  _effSpeed->setToolTip(tr("Specifies the pause lengths between symbols and words."));
+  _icpFactor = new QSpinBox();
+  _icpFactor->setMinimum(100); _icpFactor->setMaximum(1000); _icpFactor->setSingleStep(10);
+  _icpFactor->setValue(int(settings.icPauseFactor()*100));
+  _icpFactor->setToolTip(tr("Specifies the relative pause lengths between symbols."));
+
+  _iwpFactor = new QSpinBox();
+  _iwpFactor->setMinimum(100); _iwpFactor->setMaximum(1000); _iwpFactor->setSingleStep(10);
+  _iwpFactor->setValue(int(settings.iwPauseFactor()*100));
+  _iwpFactor->setToolTip(tr("Specifies the relative pause lengths between words."));
+
+  _effSpeed = new QLabel();
+  _onEffSpeedChanged();
 
   _tone = new QLineEdit(QString::number(settings.tone()));
   QIntValidator *tone_val = new QIntValidator(20,20000);
@@ -540,26 +602,53 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
     case MorseEncoder::JITTER_STRAIGHT: _jitter->setCurrentIndex(2); break;
   }
 
-  QFormLayout *layout = new QFormLayout();
-  layout->addRow(tr("Speed (WPM)"), _speed);
-  layout->addRow(tr("Eff. speed (WPM)"), _effSpeed);
-  layout->addRow(tr("Tone (Hz)"), _tone);
-  layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
-  layout->addRow(tr("Sound"), _sound);
-  layout->addRow(tr("Jitter"), _jitter);
+  QVBoxLayout *layout = new QVBoxLayout();
+
+  QGroupBox *speedBox = new QGroupBox(tr("Speed"));
+  QFormLayout *form = new QFormLayout();
+  form->addRow(tr("Speed (WPM)"), _speed);
+  form->addRow(tr("Inter-symbol Pause (%)"), _icpFactor);
+  form->addRow(tr("Inter-word Pause (%)"), _iwpFactor);
+  form->addRow(tr("Eff. Speed (WPM)"), _effSpeed);
+  speedBox->setLayout(form);
+  layout->addWidget(speedBox);
+
+  QGroupBox *soundBox = new QGroupBox(tr("Sound"));
+  form = new QFormLayout();
+  form->addRow(tr("Tone (Hz)"), _tone);
+  form->addRow(tr("Dash pitch (Hz)"), _daPitch);
+  form->addRow(tr("Sound"), _sound);
+  form->addRow(tr("Jitter"), _jitter);
+  soundBox->setLayout(form);
+  layout->addWidget(soundBox);
 
   this->setLayout(layout);
+
+  connect(_speed, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
+  connect(_icpFactor, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
+  connect(_iwpFactor, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
 }
 
 void
 CodeSettingsView::save() {
   Settings settings;
   settings.setSpeed(_speed->value());
-  settings.setEffSpeed(_effSpeed->value());
+  settings.setICPauseFactor(double(_icpFactor->value())/100);
+  settings.setIWPauseFactor(double(_iwpFactor->value())/100);
   settings.setTone(_tone->text().toInt());
   settings.setDashPitch(_daPitch->text().toInt());
   settings.setSound(MorseEncoder::Sound(_sound->currentIndex()));
   settings.setJitter(MorseEncoder::Jitter(_jitter->currentIndex()));
+}
+
+void
+CodeSettingsView::_onEffSpeedChanged() {
+  double wpm = _speed->value();
+  double icp = double(_icpFactor->value())/100;
+  double iwp = double(_iwpFactor->value())/100;
+
+  int ewpm = 50.*wpm/(35+10*icp+5*iwp);
+  _effSpeed->setText(tr("%1").arg(ewpm));
 }
 
 
@@ -1262,4 +1351,46 @@ DeviceSettingsView::save() {
   settings.setOutputDevice(_outputDevices->currentText());
   settings.setInputDevice(_inputDevices->currentText());
   settings.setDecoderLevel(_decoderLevel->value());
+}
+
+
+/* ********************************************************************************************* *
+ * Appearance Settings Widget
+ * ********************************************************************************************* */
+AppearanceSettingsView::AppearanceSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _font = new QFontComboBox();
+  _font->setFontFilters(QFontComboBox::MonospacedFonts);
+  _font->setCurrentFont(settings.textFont());
+
+  _size = new QSpinBox();
+  _size->setRange(3, 120);
+  _size->setValue(_font->currentFont().pointSize());
+
+  _rxColor = new ColorButton(settings.rxTextColor());
+  _txColor = new ColorButton(settings.txTextColor());
+  _sumColor = new ColorButton(settings.summaryTextColor());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Text Font"), _font);
+  layout->addRow(tr("Font Size (pt)"), _size);
+  layout->addRow(tr("RX Text Color"), _rxColor);
+  layout->addRow(tr("TX Text Color"), _txColor);
+  layout->addRow(tr("Summary Text Color"), _sumColor);
+
+  setLayout(layout);
+}
+
+void
+AppearanceSettingsView::save() {
+  Settings settings;
+  QFont font = _font->currentFont();
+  font.setPointSize(_size->value());
+  settings.setTextFont(font);
+  settings.setRXTextColor(_rxColor->color());
+  settings.setTXTextColor(_txColor->color());
+  settings.setSummaryTextColor(_sumColor->color());
 }

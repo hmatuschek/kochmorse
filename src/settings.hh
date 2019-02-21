@@ -8,11 +8,14 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QLabel>
 #include <QSettings>
 #include <QDateTime>
 #include "listwidget.hh"
 #include <QGroupBox>
+#include <QFontComboBox>
 #include "morseencoder.hh"
+#include "colorbutton.hh"
 
 
 /** Represents the global persistent settings. */
@@ -48,10 +51,15 @@ public:
   /** Sets the character speed. */
   void setSpeed(int speed);
 
-  /** Retunrs the current effective (pause) speed. */
-  int effSpeed() const;
-  /** Sets the effective (pause) speed. */
-  void setEffSpeed(int speed);
+  /** Returns the inter-symbol pause-length factor. */
+  double icPauseFactor() const;
+  /** Sets the inter-symbol pause-length factor. */
+  void setICPauseFactor(double factor);
+
+  /** Returns the inter-word pause-length factor. */
+  double iwPauseFactor() const;
+  /** Sets the inter-word pause-length factor. */
+  void setIWPauseFactor(double factor);
 
   /** Returns the current tone frequency. */
   int tone() const;
@@ -173,6 +181,17 @@ public:
   /** QRM effect: signal to "noise" ratio. */
   double qrmSNR() const;
   void setQRMSNR(double db);
+
+  QFont textFont() const;
+  void setTextFont(const QFont &font);
+
+  QColor rxTextColor() const;
+  void setRXTextColor(const QColor &color);
+  QColor txTextColor() const;
+  void setTXTextColor(const QColor &color);
+  QColor summaryTextColor() const;
+  void setSummaryTextColor(const QColor &color);
+
 };
 
 
@@ -314,9 +333,14 @@ public:
 
   void save();
 
+protected slots:
+  void _onEffSpeedChanged();
+
 protected:
   QSpinBox *_speed;
-  QSpinBox *_effSpeed;
+  QSpinBox *_icpFactor;
+  QSpinBox *_iwpFactor;
+  QLabel *_effSpeed;
   QLineEdit *_tone;
   QLineEdit *_daPitch;
   QComboBox *_sound;
@@ -368,6 +392,25 @@ protected:
   QSpinBox  *_decoderLevel;
 };
 
+
+class AppearanceSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit AppearanceSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QFontComboBox *_font;
+  QSpinBox *_size;
+  ColorButton *_rxColor;
+  ColorButton *_txColor;
+  ColorButton *_sumColor;
+};
+
+
 /** The preferences dialog. */
 class SettingsDialog : public QDialog
 {
@@ -387,6 +430,7 @@ protected:
   CodeSettingsView *_code;
   EffectSettingsView *_effects;
   DeviceSettingsView *_devices;
+  AppearanceSettingsView *_appearance;
 };
 
 #endif // SETTINGSCTRL_HH

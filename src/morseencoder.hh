@@ -37,10 +37,11 @@ public:
    * @param ditFreq Specifies the tone freqency of a dot (dit).
    * @param daFreq Specifies the tone frequency of a dash (da).
    * @param speed Specifies the character speed (in WPM).
-   * @param effSpeed Specifies the pause speed (in WPM).
+   * @param icpFac Specifies the inter-char pause factor (>=1).
+   * @param iwpFac Specifies the inter-word pause factor (>=1).
    * @param jitter Specifies the dit/da length jitter.
    * @param parent Specifies the @c QObject parent. */
-  explicit MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
+  explicit MorseEncoder(double ditFreq, double daFreq, double speed, double icpFac, double iwpFac,
       Sound sound, Jitter jitter=JITTER_EXACT, QObject *parent=nullptr);
 
   /** Sends the given text. */
@@ -59,8 +60,10 @@ public:
   void resetTime();
   /** (Re-) Sets the character speed. */
   void setSpeed(int speed);
-  /** (Re-) Sets the effective (pause) speed. */
-  void setEffSpeed(int speed);
+  /** (Re-) Sets the inter-char pause factor. */
+  void setICPFactor(double factor);
+  /** (Re-) Sets the inter-word pause factor. */
+  void setIWPFactor(double factor);
   /** (Re-) Sets the dot-tone (dit) frequency. */
   void setDotTone(double freq);
   /** (Re-) Sets the dash-tone (da) frequency. */
@@ -98,8 +101,10 @@ protected:
 
   /** Char speed in WPM. */
   double _speed;
-  /** Effective speed (pauses) in WPM. */
-  double _effSpeed;
+  /** Inter-char pause factor. */
+  double _icpfac;
+  /** Inter-word pause factor. */
+  double _iwpfac;
   /** The sound variant. */
   Sound _sound;
   /** The jitter. */
@@ -107,8 +112,6 @@ protected:
 
   /** Length of a "dit" in samples. */
   size_t _unitLength;
-  /** Pause length in samples. */
-  size_t _effUnitLength;
 
   /** A "dit" incl. inter-symbol pause. */
   QVector<QByteArray> _ditSamples;

@@ -33,8 +33,8 @@ Application::Application(int &argc, char *argv[])
                                    settings.fadingMaxDamp(), settings.fadingRate(), this);
 
   _encoder = new MorseEncoder(settings.tone(), settings.tone()+settings.dashPitch(),
-                              settings.speed(), settings.effSpeed(), settings.sound(),
-                              settings.jitter(), this);
+                              settings.speed(), settings.icPauseFactor(), settings.iwPauseFactor(),
+                              settings.sound(), settings.jitter(), this);
 
   _audio_sink->setSource(_noiseEffect);
   _noiseEffect->setSource(_qrm);
@@ -155,7 +155,8 @@ Application::applySettings()
 
   // Reconfigure encoder
   _encoder->setSpeed(settings.speed());
-  _encoder->setEffSpeed(settings.effSpeed());
+  _encoder->setICPFactor(settings.icPauseFactor());
+  _encoder->setIWPFactor(settings.iwPauseFactor());
   _encoder->setDotTone(settings.tone());
   _encoder->setDashTone(settings.tone()+settings.dashPitch());
   _encoder->setSound(settings.sound());

@@ -5,10 +5,10 @@
 #include <QByteArray>
 
 
-MorseEncoder::MorseEncoder(double ditFreq, double daFreq, double speed, double effSpeed,
+MorseEncoder::MorseEncoder(double ditFreq, double daFreq, double speed, double icpFac, double iwpFac,
                            Sound sound, Jitter jitter, QObject *parent)
-  : QIODevice(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _effSpeed(effSpeed),
-    _sound(sound), _jitter(jitter), _unitLength(0), _effUnitLength(0), _ditSamples(4), _daSamples(4),
+  : QIODevice(parent), _ditFreq(ditFreq), _daFreq(daFreq), _speed(speed), _icpfac(icpFac), _iwpfac(iwpFac),
+    _sound(sound), _jitter(jitter), _unitLength(0), _ditSamples(4), _daSamples(4),
     _icPause(), _iwPause(), _current(0), _queue(), _tsend(0), _played(0)
 {
   _createSamples();
@@ -18,12 +18,14 @@ MorseEncoder::MorseEncoder(double ditFreq, double daFreq, double speed, double e
 void
 MorseEncoder::_createSamples()
 {
-  // ensure effective speed is <= speed
-  _effSpeed = std::min(_speed, _effSpeed);
+  // ensure effective pause factors are >= 1
+  _icpfac = std::max(1.0, _icpfac);
+  _iwpfac = std::max(1.0, _iwpfac);
 
   // Compute unit (dit) length (PARIS std. = 50 units per word) in samples
+  // including 10 dits inter-character pauses (excl. 1 dit pause after last symbol) and
+  // and 5 dits inter-word pause (excl. 1+2 dit pause after last char).
   _unitLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
-  _effUnitLength = size_t((60.*Globals::sampleRate)/(50.*_effSpeed));
 
   // The first and last epsilon samples are windowed
   size_t epsilon = 0;
@@ -92,15 +94,15 @@ MorseEncoder::_createSamples()
       daData[i] = 0;
   }
 
-  // Compute inter-char pause (3 x effUnit, not incl. pause after symbol (dit or da))
-  size_t icPauseLength = 3*_effUnitLength-_unitLength;
+  // Compute inter-char pause (3 x dit, not incl. pause after symbol (dit or da))
+  size_t icPauseLength = (3*_icpfac*_unitLength)-_unitLength;
   _icPause.resize(icPauseLength*sizeof(int16_t));
   int16_t *icPauseData = reinterpret_cast<int16_t *>(_icPause.data());
   for (size_t i=0; i<icPauseLength; i++)
     icPauseData[i] = 0;
 
   // Compute inter-word pause (7 x effUnit, not incl. pause after last char)
-  size_t iwPauseLength = 7*_effUnitLength - icPauseLength;
+  size_t iwPauseLength = (7*_iwpfac*_unitLength) - 2*_unitLength;
   _iwPause.resize(iwPauseLength*sizeof(int16_t));
   int16_t *iwPauseData = reinterpret_cast<int16_t *>(_iwPause.data());
   for (size_t i=0; i<iwPauseLength; i++)
@@ -123,7 +125,7 @@ MorseEncoder::send(const QString &text) {
 
 void
 MorseEncoder::send(QChar ch) {
-  if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch))
+  if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch) && ('\t'!=ch))
     return;
   bool empty = _queue.isEmpty();
   _queue.append(ch);
@@ -163,8 +165,12 @@ MorseEncoder::setSpeed(int speed) {
 }
 
 void
-MorseEncoder::setEffSpeed(int speed) {
-  _effSpeed = speed; _createSamples();
+MorseEncoder::setICPFactor(double factor) {
+  _icpfac = factor; _createSamples();
+}
+void
+MorseEncoder::setIWPFactor(double factor) {
+  _iwpfac = factor; _createSamples();
 }
 
 
@@ -211,6 +217,14 @@ MorseEncoder::_send()
     _buffer.append(_iwPause);
     // Update time
     _tsend += double(1000*_iwPause.size())/(2*Globals::sampleRate);
+    return;
+  } else if ('\t' == _current) {
+    // "play" inter-word pause 3x
+    _buffer.append(_iwPause);
+    _buffer.append(_iwPause);
+    _buffer.append(_iwPause);
+    // Update time
+    _tsend += double(1000*3*_iwPause.size())/(2*Globals::sampleRate);
     return;
   }
 

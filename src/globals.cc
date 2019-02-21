@@ -127,6 +127,7 @@ inline QHash<QChar, QString> _initProsignTable() {
   table[QChar(0x2403)] = "SK"; // SK -> ETX
   table[QChar(0x2406)] = "SN"; // SN -> ACK
   table[QChar(0x2407)] = "KN"; // KN -> BEL
+  table[QChar('\t')] = "  ";   // TAB -> "  "
   return table;
 }
 

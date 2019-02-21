@@ -25,13 +25,10 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   // Assemble text view
   _text = new QTextEdit();
   _text->setMinimumSize(640,230);
-  QFont f = _text->document()->defaultFont();
-  f.setFamily("Courier");
-  f.setPointSize(14);
-  f.setStyleHint(QFont::Monospace);
-  _text->document()->setDefaultFont(f);
+  _text->document()->setDefaultFont(settings.textFont());
   _text->setReadOnly(true);
   _text->setTextInteractionFlags(Qt::NoTextInteraction);
+  _text->setTabStopDistance(35);
 
   // Play button
   _play = new QAction(
@@ -118,7 +115,12 @@ MainWindow::onSessionFinished() {
 void
 MainWindow::onCharSend(QString ch) {
   // Update text-field
+  QTextCharFormat old = _text->currentCharFormat();
+  QTextCharFormat fmt = old;
+  fmt.setForeground(QColor("black"));
+  _text->setCurrentCharFormat(fmt);
   _text->insertPlainText(ch);
+  _text->setCurrentCharFormat(old);
 }
 
 void
@@ -134,8 +136,10 @@ MainWindow::onCharReceived(QString ch) {
 
 void
 MainWindow::onPlayToggled(bool play) {
+  Settings settings;
   if (play) {
     _text->document()->clear();
+    _text->document()->setDefaultFont(settings.textFont());
     _app.startSession();
   } else {
     _app.stopSession();
