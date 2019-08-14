@@ -209,7 +209,8 @@ MorseEncoder::_send()
   }
 
   // ensure lower-case letter
-  _current = _queue.front().toLower(); _queue.pop_front();
+  _current = _queue.front().toLower();
+  _queue.pop_front();
 
   // If space -> send inter-word pause
   if ((' ' == _current) || ('\n') == _current){

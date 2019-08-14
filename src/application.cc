@@ -44,42 +44,15 @@ Application::Application(int &argc, char *argv[])
   _decoder = new MorseDecoder(settings.speed(), std::pow(10.,settings.decoderLevel()/20), this);
   _audio_src = new QAudioSource(_decoder, this);
 
-  switch (settings.tutor()) {
-  case Settings::TUTOR_KOCH:
-    _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(), settings.kochRepeatLastChar(),
-                           settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
-                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                           settings.kochSummary(), settings.kochSuccessThreshold(), this);
-    break;
+  _highscore = new HighScore(this);
 
-  case Settings::TUTOR_RANDOM:
-    _tutor = new RandomTutor(_encoder, settings.randomChars(),
-                             settings.randomMinGroupSize(), settings.randomMaxGroupSize(),
-                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
-                             settings.randomSummary(), this);
-    break;
-
-  case Settings::TUTOR_TX:
-    _tutor = new TXTutor(this);
-    break;
-
-  case Settings::TUTOR_CHAT:
-    _tutor = new ChatTutor(_encoder, this);
-    break;
-
-  case Settings::TUTOR_TEXTGEN:
-  default:
-    _tutor = new GenTextTutor(_encoder, settings.textGenFilename());
-    break;
-  }
+  applySettings();
 
   // Connect singals
   connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 
   connect(_decoder, SIGNAL(charReceived(QChar)), this, SLOT(onCharReceived(QChar)));
   connect(_decoder, SIGNAL(unknownCharReceived(QString)), this, SLOT(onUnknownCharReceived(QString)));
-
-  connect(_tutor, SIGNAL(sessionComplete()), this, SIGNAL(sessionComplete()));
 
   connect(&_checkUpdate, SIGNAL(updateAvailable(QString)), this, SLOT(onUpdateAvailable(QString)));
 
@@ -94,12 +67,14 @@ Application::Application(int &argc, char *argv[])
 }
 
 Application::~Application() {
-  _audio_src->stop();
+  if (_audio_src)
+    _audio_src->stop();
 }
 
 void
 Application::setVolume(double factor) {
-  _audio_sink->setVolume(factor);
+  if (_audio_sink)
+    _audio_sink->setVolume(factor);
 }
 
 QString
@@ -107,6 +82,11 @@ Application::summary() const {
   if (nullptr == _tutor)
     return "";
   return _tutor->summary();
+}
+
+Tutor *
+Application::currentTutor() const {
+  return _tutor;
 }
 
 void
@@ -122,9 +102,11 @@ void
 Application::stopSession() {
   /// @todo Reenable hybernation
   _running = false;
-  _tutor->stop();
-  if (_tutor->needsDecoder())
-    _audio_src->stop();
+  if (_tutor) {
+    _tutor->stop();
+    if (_audio_src && _tutor->needsDecoder())
+      _audio_src->stop();
+  }
 }
 
 void
@@ -198,7 +180,9 @@ Application::applySettings()
       break;
   }
 
-  connect(_tutor, SIGNAL(sessionComplete()), this, SIGNAL(sessionComplete()));
+  connect(_tutor, SIGNAL(sessionFinished()), this, SIGNAL(sessionFinished()));
+  connect(_tutor, SIGNAL(sessionComplete()), this, SLOT(onSessionComplete()));
+  emit tutorChanged();
 }
 
 
@@ -216,6 +200,26 @@ Application::onCharReceived(QChar ch) {
 void
 Application::onUnknownCharReceived(QString ch) {
   emit charReceived(QString("<%1>").arg(ch));
+}
+
+void
+Application::onSessionComplete() {
+  QString tutor;
+  int lesson = 0;
+  if (KochTutor *koch = dynamic_cast<KochTutor *>(_tutor)) {
+    tutor = "koch";
+    lesson = koch->lesson();
+  } else if (dynamic_cast<RandomTutor *>(_tutor)) {
+    tutor = "rand";
+  } if (dynamic_cast<ChatTutor *>(_tutor)) {
+    tutor = "chat";
+  }
+  Settings settings;
+  double wpm = settings.speed();
+  double icp = double(settings.icPauseFactor())/100;
+  double iwp = double(settings.icPauseFactor())/100;
+  int ewpm = 50.*wpm/(35+10*icp+5*iwp);
+  _highscore->emitScore(tutor, wpm, ewpm, lesson, 0);
 }
 
 void

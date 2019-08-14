@@ -14,7 +14,7 @@
    <t w="01">anr</t> <t w="20">ant</t> <t w="01">arnd</t> <t w="10">bci</t> <t w="01">bcnu</t>
    <t w="10">bk</t> <t w="01">bn</t> <t w="10">btr</t> <t w="20">btu</t> <t w="05">bug</t>
    <t w="20">buro</t> <t w="10">b4</t> <t w="30">c</t> <t w="01">cba</t> <t w="10">cfm</t>
-   <t w="01">ck</t> <t w="05">cl</t> <t w="10">condx</t> <t w="01">cos</t> <t w="30">cq</t>
+   <t w="01">ck</t> <t w="05">cl</t> <t w="10">condx</t> <t w="01">cos</t> <t w="10">cpy</t> <t w="30">cq</t>
    <t w="01">cs</t> <t w="10">ctl</t> <t w="05">cud</t> <t w="20">cul</t> <t w="20">cw</t>
    <t w="01">cx</t> <t w="30">de</t> <t w="01">dn</t> <t w="30">dr</t> <t w="01">dsw</t>
    <t w="20">dx</t> <t w="01">emrg</t> <t w="01">enuf</t> <t w="30">es</t> <t w="30">fb</t>
@@ -23,16 +23,16 @@
    <t w="01">gud</t> <t w="10">hee</t> <t w="30">hi</t> <t w="30">hr</t> <t w="10">hv</t>
    <t w="30">hw</t> <t w="20">ii</t> <t w="01">imp</t> <t w="30">k</t> <t w="01">lid</t>
    <t w="01">mh</t> <t w="01">mils</t> <t w="10">mni</t> <t w="10">msg</t> <t w="10">n</t>
-   <t w="01">nil</t> <t w="30">nr</t> <t w="01">nw</t> <t w="10">ok</t> <t w="30">om</t>
+   <t w="10">nil</t> <t w="30">nr</t> <t w="01">nw</t> <t w="10">ok</t> <t w="30">om</t>
    <t w="30">op</t> <t w="10">pls</t> <t w="30">pse</t> <t w="20">pwr</t> <t w="01">px</t>
    <t w="20">rr</t> <t w="10">rx</t> <t w="01">rfi</t> <t w="20">rig</t> <t w="20">rpt</t>
    <t w="10">rprt</t> <t w="30">rst</t> <t w="10">sae</t> <t w="10">sase</t> <t w="01">sed</t>
-   <t w="01">sfr</t> <t w="10">sig</t> <t w="10">sigs</t> <t w="05">sk</t> <t w="10">sked</t>
+   <t w="01">sfr</t> <t w="10">sig</t> <t w="10">sigs</t> <t w="10">sk</t> <t w="10">sked</t>
    <t w="05">snr</t> <t w="20">sri</t> <t w="05">ssb</t> <t w="10">stn</t> <t w="20">temp</t>
    <t w="01">tfc</t> <t w="10">tks</t> <t w="01">tmw</t> <t w="20">tnx</t> <t w="01">tre</t>
    <t w="01">tt</t> <t w="30">tu</t> <t w="05">tvi</t> <t w="10">tx</t> <t w="10">trx</t>
-   <t w="10">ufb</t> <t w="20">ur</t> <t w="10">urs</t> <t w="01">vx</t> <t w="20">vy</t>
-   <t w="01">wa</t> <t w="01">wb</t> <t w="10">wkd</t> <t w="20">wx</t> <t w="10">xyl</t>
+   <t w="10">ufb</t> <t w="20">ur</t> <t w="10">urs</t> <t w="10">via</t> <t w="01">vx</t> <t w="20">vy</t>
+   <t w="01">wa</t> <t w="01">wb</t> <t w="10">wkd</t> <t w="20">wtts</t> <t w="20">wx</t> <t w="10">xyl</t>
    <t w="10">yl</t> <t w="10">yr</t> <t w="20">73</t> <t w="10">88</t> <t w="10">55</t>
   </one-of>
  </rule>

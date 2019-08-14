@@ -14,6 +14,7 @@
 #include <QAudioDeviceInfo>
 #include <QDesktopServices>
 #include <QFontComboBox>
+#include <QUuid>
 
 
 /* ********************************************************************************************* *
@@ -61,7 +62,7 @@ Settings::speed() const {
 }
 void
 Settings::setSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 100));
+  speed = std::max(15, std::min(speed, 100));
   this->setValue("speed", speed);
 }
 
@@ -261,6 +262,27 @@ void
 Settings::setKochSuccessThreshold(int thres) {
   this->setValue("koch/thres", thres);
 }
+
+bool
+Settings::kochVerify() const {
+  return this->value("koch/verify", true).toBool();
+}
+
+void
+Settings::setKochVerify(bool verify) {
+  this->setValue("koch/verify", verify);
+}
+
+bool
+Settings::kochHideOutput() const {
+  return kochVerify() && this->value("koch/hideOutput", false).toBool();
+}
+
+void
+Settings::setKochHideOutput(bool hide) {
+  this->setValue("koch/hideOutput", hide);
+}
+
 
 
 QSet<QChar>
@@ -491,6 +513,32 @@ Settings::setSummaryTextColor(const QColor &color) {
   setValue("textSummaryColor", color);
 }
 
+bool
+Settings::sendHighScore() const {
+  return value("hsEnable", false).toBool();
+}
+void
+Settings::setSendHighScore(bool send) {
+  return setValue("hsEnable", send);
+}
+
+QString
+Settings::hsID() {
+  if (contains("hsID"))
+    return value("hsID").toString();
+  setValue("hsID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+  return value("hsID").toString();
+}
+
+QString
+Settings::hsCall() const {
+  return value("hsCall").toString();
+}
+void
+Settings::setHSCall(const QString &call) {
+  setValue("hsCall", call);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -505,6 +553,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _effects = new EffectSettingsView();
   _devices = new DeviceSettingsView();
   _appearance = new AppearanceSettingsView();
+  _highscore = new HighScoreSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
@@ -512,6 +561,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
   _tabs->addTab(_appearance, tr("Appearance"));
+  _tabs->addTab(_highscore, tr("Highscore"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -534,6 +584,8 @@ SettingsDialog::accept() {
   _code->save();
   _effects->save();
   _devices->save();
+  _appearance->save();
+  _highscore->save();
   QDialog::accept();
 }
 
@@ -552,7 +604,7 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   Settings settings;
 
   _speed = new QSpinBox();
-  _speed->setMinimum(5); _speed->setMaximum(100);
+  _speed->setMinimum(15); _speed->setMaximum(100);
   _speed->setValue(settings.speed());
   _speed->setToolTip(tr("Specifies the speed (in WPM) for the symbols."));
 
@@ -786,6 +838,16 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   if (settings.kochInfiniteLineCount())
     _summary->setEnabled(false);
 
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.kochVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received chars using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.kochHideOutput());
+  _hideOutput->setEnabled(settings.kochLesson());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
   _threshold = new QSpinBox();
   _threshold->setMinimum(75);
   _threshold->setMaximum(100);
@@ -799,6 +861,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
   connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
@@ -808,6 +871,8 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   layout->addRow(tr("Max. group size"), _maxGroupSize);
   layout->addRow(tr("Infinite lines"), _infinite);
   layout->addRow(tr("Line count"), _lineCount);
+  layout->addRow(tr("Verify"), _verify);
+  layout->addRow(tr("Hide send text"), _hideOutput);
   layout->addRow(tr("Show summary"), _summary);
   layout->addRow(tr("Lesson target"), _threshold);
 
@@ -824,6 +889,8 @@ KochTutorSettingsView::save() {
   settings.setKochMaxGroupSize(_maxGroupSize->value());
   settings.setKochInifiniteLineCount(_infinite->isChecked());
   settings.setKochLineCount(_lineCount->value());
+  settings.setKochVerify(_verify->isChecked());
+  settings.setKochHideOutput(_hideOutput->isChecked());
   settings.setKochSummary(_summary->isChecked());
   settings.setKochSuccessThreshold(_threshold->value());
 }
@@ -850,6 +917,10 @@ KochTutorSettingsView::onShowSummaryToggled(bool enabled) {
   _threshold->setEnabled(enabled);
 }
 
+void
+KochTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
+}
 
 /* ********************************************************************************************* *
  * Random Tutor Settings Widget
@@ -1393,4 +1464,31 @@ AppearanceSettingsView::save() {
   settings.setRXTextColor(_rxColor->color());
   settings.setTXTextColor(_txColor->color());
   settings.setSummaryTextColor(_sumColor->color());
+}
+
+
+/* ********************************************************************************************* *
+ * HighScore Settings Widget
+ * ********************************************************************************************* */
+HighScoreSettingsView::HighScoreSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _enable = new QCheckBox();
+  _enable->setChecked(settings.sendHighScore());
+  _call   = new QLineEdit(settings.hsCall());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Send highscore"), _enable);
+  layout->addRow(tr("Your call"), _call);
+
+  setLayout(layout);
+}
+
+void
+HighScoreSettingsView::save() {
+  Settings settings;
+  settings.setSendHighScore(_enable->isChecked());
+  settings.setHSCall(_call->text().simplified());
 }

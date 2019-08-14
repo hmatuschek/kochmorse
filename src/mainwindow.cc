@@ -28,7 +28,18 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _text->document()->setDefaultFont(settings.textFont());
   _text->setReadOnly(true);
   _text->setTextInteractionFlags(Qt::NoTextInteraction);
-  //_text->setTabStopDistance(35);
+  if (_app.currentTutor() && _app.currentTutor()->isOutputHidden())
+    _text->setVisible(false);
+
+  _input = new QTextEdit();
+  _input->setMinimumSize(640,230);
+  _input->document()->setDefaultFont(settings.textFont());
+  _input->setReadOnly(false);
+  _input->setTextInteractionFlags(Qt::TextEditable);
+  if (_app.currentTutor() && _app.currentTutor()->isVerifying())
+    _input->setVisible(true);
+  else
+    _input->setVisible(false);
 
   // Play button
   _play = new QAction(
@@ -37,6 +48,10 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   _play->setToolTip(tr("Start/Stop"));
   _play->setCheckable(true);
   _play->setChecked(false);
+
+  _check = new QPushButton(tr("check"));
+  _check->setEnabled(false);
+  _check->setVisible(app.currentTutor() && app.currentTutor()->isVerifying());
 
   // Preferences button
   _pref = new QAction(QIcon(":/icons/preferences.svg"), "", this);
@@ -81,15 +96,24 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
   tbox->addAction(_quit);
   this->addToolBar(tbox);
 
-  this->setCentralWidget(_text);
+  QWidget *panel = new QWidget();
+  QVBoxLayout *vbox = new QVBoxLayout();
+  vbox->setMargin(0);
+  vbox->addWidget(_text);
+  vbox->addWidget(_input);
+  vbox->addWidget(_check);
+  panel->setLayout(vbox);
+  this->setCentralWidget(panel);
 
   //set shortcut
   playShortcut = new QShortcut(QKeySequence("Ctrl+X"), this);
 
-  QObject::connect(&_app, SIGNAL(sessionComplete()), this, SLOT(onSessionFinished()));
+  QObject::connect(&_app, SIGNAL(sessionFinished()), this, SLOT(onSessionFinished()));
   QObject::connect(&_app, SIGNAL(charSend(QString)), this, SLOT(onCharSend(QString)));
   QObject::connect(&_app, SIGNAL(charReceived(QString)), this, SLOT(onCharReceived(QString)));
+  QObject::connect(&_app, SIGNAL(tutorChanged()), this, SLOT(onTutorChanged()));
   QObject::connect(_play, SIGNAL(triggered(bool)), this, SLOT(onPlayToggled(bool)));
+  QObject::connect(_check, SIGNAL(clicked()), this, SLOT(onCheck()));
   QObject::connect(_pref, SIGNAL(triggered()), this, SLOT(onPrefClicked()));
   QObject::connect(_info, SIGNAL(triggered()), this, SLOT(onAboutClicked()));
   QObject::connect(_quit, SIGNAL(triggered()), this, SLOT(onQuit()));
@@ -110,11 +134,12 @@ MainWindow::onSessionFinished() {
   _text->insertPlainText(_app.summary());
   _text->setCurrentCharFormat(old);
   _play->setChecked(false);
+  _check->setEnabled(true);
 }
 
 void
 MainWindow::onCharSend(QString ch) {
-  // Update text-field
+  // Update text-field if tutor is not verifying
   QTextCharFormat old = _text->currentCharFormat();
   QTextCharFormat fmt = old;
   fmt.setForeground(QColor("black"));
@@ -140,8 +165,12 @@ MainWindow::onPlayToggled(bool play) {
   if (play) {
     _text->document()->clear();
     _text->document()->setDefaultFont(settings.textFont());
+    _input->document()->clear();
+    _input->document()->setDefaultFont(settings.textFont());
+    _check->setEnabled(false);
     _app.startSession();
   } else {
+    _check->setEnabled(false);
     _app.stopSession();
   }
 }
@@ -179,4 +208,29 @@ void
 MainWindow::onQuit() {
   _app.stopSession();
   this->close();
+}
+
+void
+MainWindow::onCheck() {
+  if (!_app.currentTutor())
+    return;
+  QString result;
+  _app.currentTutor()->verify(_input->document()->toRawText(), result);
+  _input->document()->setHtml(result);
+  _check->setEnabled(false);
+}
+
+void
+MainWindow::onTutorChanged() {
+  if (_app.currentTutor() && _app.currentTutor()->isOutputHidden())
+    _text->setVisible(false);
+  else
+    _text->setVisible(true);
+  if (_app.currentTutor() && _app.currentTutor()->isVerifying()) {
+    _input->setVisible(true);
+    _check->setVisible(true);
+  } else {
+    _input->setVisible(false);
+    _check->setVisible(false);
+  }
 }

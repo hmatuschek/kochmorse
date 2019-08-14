@@ -25,6 +25,12 @@ public:
 
   /** Returns true if the tutor requires a decoder (has user input). */
   virtual bool needsDecoder() const = 0;
+  /** Returns true if the tutor requires an input text field. */
+  virtual bool isVerifying() const;
+  /** Returns true if the tutor requires a hidden output field. */
+  virtual bool isOutputHidden() const;
+  /** Verifies the received text once the session is finished. */
+  virtual int verify(const QString &input, QString &summary) const;
   /** Returns a summary of the lesson. */
   virtual QString summary() const;
   /** Gets the next char from a session. */
@@ -33,6 +39,7 @@ public:
   virtual bool atEnd() = 0;
 
 signals:
+  void sessionFinished();
   void sessionComplete();
 
 public slots:
@@ -69,6 +76,13 @@ public:
   QString summary() const;
   /** Returns @c false. */
   bool needsDecoder() const;
+
+  /** Returns @c true. */
+  bool isVerifying() const;
+  /** Returns @c true. */
+  bool isOutputHidden() const;
+  /** Verifies the received text. */
+  int verify(const QString &text, QString &summary) const;
 
   /** Returns the current lesson. */
   int lesson() const;
@@ -131,6 +145,7 @@ protected:
   size_t _chars_send;
   size_t _words_send;
   size_t _lines_send;
+  QString _sendText;
 };
 
 
@@ -211,6 +226,7 @@ public:
   virtual ~GenTextTutor();
 
   bool needsDecoder() const;
+
   QChar next();
   bool atEnd();
 
@@ -237,6 +253,7 @@ public:
   virtual ~TXTutor();
 
   bool needsDecoder() const;
+
   QChar next();
   bool atEnd();
 
@@ -254,6 +271,7 @@ public:
   virtual ~ChatTutor();
 
   bool needsDecoder() const;
+
   void handle(const QChar &ch);
   QChar next();
   bool atEnd();

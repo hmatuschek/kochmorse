@@ -121,6 +121,10 @@ public:
   void setKochSummary(bool show);
   int kochSuccessThreshold() const;
   void setKochSuccessThreshold(int thres);
+  bool kochVerify() const;
+  void setKochVerify(bool verify);
+  bool kochHideOutput() const;
+  void setKochHideOutput(bool hide);
 
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
@@ -192,6 +196,13 @@ public:
   QColor summaryTextColor() const;
   void setSummaryTextColor(const QColor &color);
 
+  bool sendHighScore() const;
+  void setSendHighScore(bool send);
+
+  QString hsID();
+
+  QString hsCall() const;
+  void setHSCall(const QString &call);
 };
 
 
@@ -235,6 +246,7 @@ protected slots:
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
   void onShowSummaryToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
@@ -244,6 +256,8 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
   QCheckBox *_summary;
   QSpinBox *_threshold;
 };
@@ -410,6 +424,19 @@ protected:
   ColorButton *_sumColor;
 };
 
+class HighScoreSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit HighScoreSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QCheckBox *_enable;
+  QLineEdit *_call;
+};
 
 /** The preferences dialog. */
 class SettingsDialog : public QDialog
@@ -431,6 +458,7 @@ protected:
   EffectSettingsView *_effects;
   DeviceSettingsView *_devices;
   AppearanceSettingsView *_appearance;
+  HighScoreSettingsView *_highscore;
 };
 
 #endif // SETTINGSCTRL_HH

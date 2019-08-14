@@ -3,6 +3,8 @@
 #include <QFile>
 #include <time.h>
 #include <QDebug>
+#include "textcompare.hh"
+#include "settings.hh"
 
 
 /* ********************************************************************************************* *
@@ -16,6 +18,21 @@ Tutor::Tutor(MorseEncoder *encoder, QObject *parent)
 
 Tutor::~Tutor() {
   // pass...
+}
+
+bool
+Tutor::isVerifying() const {
+  return false;
+}
+
+bool
+Tutor::isOutputHidden() const {
+  return false;
+}
+
+int
+Tutor::verify(const QString & text, QString &summary) const {
+  return 0;
 }
 
 QString
@@ -81,13 +98,8 @@ KochTutor::next() {
   else if (0 == _text.size())
     _nextline();
 
-  QChar ch = _text.first(); _text.pop_front();
-  if ('\n' == ch)
-    _lines_send++;
-  else if (' ' == ch)
-    _words_send++;
-  else
-    _chars_send++;
+  QChar ch = _text.first();
+  _text.pop_front();
   return ch;
 }
 
@@ -139,24 +151,15 @@ QString
 KochTutor::summary() const {
   if (! _showSummary)
     return "";
-  int chars_send = int(_chars_send); chars_send -= 3; // - "vvv\n"
-  int words_send = int(_words_send);
-  int lines_send = int(_lines_send); lines_send -= 1; // - "vvv\n"
-  if (_repeatLastChar) {
-    chars_send -= 5;
-    words_send -= 5;
-    lines_send -= 1;
-  }
-  chars_send -= lines_send; // - " =\n" at end of each line
-  int threshold = int(chars_send*(100-_threshold))/100;
-  if (_lesson < _lessons.size())
+  int threshold = int(_chars_send*(100-_threshold))/100;
+  if (_lesson < (_lessons.size()-1))
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you can proceed to lesson %5.")
-        .arg(chars_send).arg(words_send).arg(lines_send).arg(threshold).arg(_lesson+1);
+        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold).arg(_lesson+1);
   else
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you completed the course!")
-        .arg(chars_send).arg(words_send).arg(lines_send).arg(threshold);
+        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold);
 }
 
 void
@@ -194,11 +197,12 @@ KochTutor::reset()
     }
     _text.push_back('\n');
   }
-  // sample a line of text.
-  _nextline();
+  _sendText.clear();
   _chars_send = 0;
   _words_send = 0;
   _lines_send = 0;
+  // sample a line of text.
+  _nextline();
 }
 
 bool
@@ -206,12 +210,56 @@ KochTutor::needsDecoder() const {
   return false;
 }
 
+bool
+KochTutor::isVerifying() const {
+  Settings settings;
+  return settings.kochVerify();
+}
+
+bool
+KochTutor::isOutputHidden() const {
+  Settings settings;
+  return settings.kochHideOutput();
+}
+
+int
+KochTutor::verify(const QString &text, QString &summary) const {
+  QVector<int> mistakes;
+  int err = textCompare(_sendText, text, mistakes);
+  // Format Send text
+  QString tx, rx;
+  QTextStream buffer(&tx);
+  for (int i=0; i<_sendText.size(); i++) {
+    if ('\n' == _sendText.at(i))
+      buffer << "<br>";
+    else if (mistakes.contains(i))
+      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+    else
+      buffer << _sendText.at(i);
+  }
+  buffer.setString(&rx);
+  for (int i=0; i<text.size(); i++) {
+    if ('\n' == text.at(i))
+      buffer << "<br>";
+    else
+      buffer << text.at(i);
+  }
+  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+               "<h3>Text entered:</h3><p>%2</p>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "Mistakes: %6<br>"
+               "Accuracy: <b>%7%</b></p></html>").arg(tx).arg(rx).arg(_chars_send)
+      .arg(_words_send).arg(_lines_send).arg(err).arg(int(100*double(_chars_send-err)/_chars_send));
+
+  return err;
+}
+
 void KochTutor::onCharSend(QChar c) {
   Q_UNUSED(c);
   if ((! this->atEnd()) && _running)
     _encoder->send(next());
   else if (atEnd())
-    emit sessionComplete();
+    emit sessionFinished();
 }
 
 void
@@ -234,13 +282,21 @@ KochTutor::_nextline() {
         idx = _lesson*double(rand())/RAND_MAX;
       }
       _text.push_back(_lessons[idx]);
+      _sendText.push_back(_lessons[idx]);
+      _chars_send++;
     }
     i += n;
     _text.push_back(' ');
+    _sendText.push_back(' ');
+    _words_send++;
   }
   _text.push_back('=');
+  _text.push_back(' ');
+  _text.push_back(' ');
   _text.push_back('\n');
+  _sendText.push_back('\n');
   _linecount++;
+  _lines_send++;
 }
 
 
@@ -356,10 +412,11 @@ RandomTutor::reset()
 }
 
 void RandomTutor::onCharSend(QChar c) {
+  Q_UNUSED(c);
   if ((! this->atEnd()) && _running)
     _encoder->send(next());
   else if (atEnd())
-    emit sessionComplete();
+    emit sessionFinished();
 }
 
 bool
@@ -475,7 +532,7 @@ GenTextTutor::onCharSend(QChar ch) {
   if ((! atEnd()) && _running)
     _encoder->send(next());
   else if (atEnd())
-    emit sessionComplete();
+    emit sessionFinished();
 }
 
 /* ********************************************************************************************* *
