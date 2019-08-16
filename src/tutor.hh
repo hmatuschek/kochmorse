@@ -30,7 +30,7 @@ public:
   /** Returns true if the tutor requires a hidden output field. */
   virtual bool isOutputHidden() const;
   /** Verifies the received text once the session is finished. */
-  virtual int verify(const QString &input, QString &summary) const;
+  virtual int verify(const QString &input, QString &summary);
   /** Returns a summary of the lesson. */
   virtual QString summary() const;
   /** Gets the next char from a session. */
@@ -40,7 +40,7 @@ public:
 
 signals:
   void sessionFinished();
-  void sessionComplete();
+  void sessionVerified(const QString &tutor, int lesson, int score);
 
 public slots:
   /** Handles the received char. */
@@ -82,7 +82,7 @@ public:
   /** Returns @c true. */
   bool isOutputHidden() const;
   /** Verifies the received text. */
-  int verify(const QString &text, QString &summary) const;
+  int verify(const QString &text, QString &summary);
 
   /** Returns the current lesson. */
   int lesson() const;
@@ -168,6 +168,12 @@ public:
 
   /** Returns @c false. */
   bool needsDecoder() const;
+  /** Returns @c true. */
+  bool isVerifying() const;
+  /** Returns @c true. */
+  bool isOutputHidden() const;
+  /** Verifies the received text. */
+  int verify(const QString &text, QString &summary);
 
   /** Returns the set of characters to practice. */
   QSet<QChar> chars() const;
@@ -210,6 +216,7 @@ protected:
   QList<QChar> _text;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
+  QString _sendText;
   size_t _chars_send;
   size_t _words_send;
   size_t _lines_send;

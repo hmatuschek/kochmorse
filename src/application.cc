@@ -181,7 +181,7 @@ Application::applySettings()
   }
 
   connect(_tutor, SIGNAL(sessionFinished()), this, SIGNAL(sessionFinished()));
-  connect(_tutor, SIGNAL(sessionComplete()), this, SLOT(onSessionComplete()));
+  connect(_tutor, SIGNAL(sessionVerified(const QString &, int, int)), this, SLOT(onSessionVerified(const QString &, int, int)));
   emit tutorChanged();
 }
 
@@ -203,23 +203,14 @@ Application::onUnknownCharReceived(QString ch) {
 }
 
 void
-Application::onSessionComplete() {
-  QString tutor;
-  int lesson = 0;
-  if (KochTutor *koch = dynamic_cast<KochTutor *>(_tutor)) {
-    tutor = "koch";
-    lesson = koch->lesson();
-  } else if (dynamic_cast<RandomTutor *>(_tutor)) {
-    tutor = "rand";
-  } if (dynamic_cast<ChatTutor *>(_tutor)) {
-    tutor = "chat";
-  }
+Application::onSessionVerified(const QString &tutor, int lesson, int score) {
+  qDebug() << "Application: Session verified. Send highscore if enabled...";
   Settings settings;
   double wpm = settings.speed();
   double icp = double(settings.icPauseFactor())/100;
   double iwp = double(settings.icPauseFactor())/100;
   int ewpm = 50.*wpm/(35+10*icp+5*iwp);
-  _highscore->emitScore(tutor, wpm, ewpm, lesson, 0);
+  _highscore->emitScore(tutor, wpm, ewpm, lesson, score);
 }
 
 void

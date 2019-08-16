@@ -54,7 +54,7 @@ protected slots:
   /** Gets called if the morse-decoder received an unknown char. */
   void onUnknownCharReceived(QString ch);
   void onUpdateAvailable(QString version);
-  void onSessionComplete();
+  void onSessionVerified(const QString &tutor, int lesson, int score);
 
 protected:
   /** If @c true a session is running. */

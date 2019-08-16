@@ -19,7 +19,7 @@ QRMGenerator::QRMGenerator(QIODevice *source, size_t num, double snr, QObject *p
 		_encoder[i] = new MorseEncoder(f, f, wpm, 1., 1., MorseEncoder::SOUND_SHARP, jitter, this);
     _encoder[i]->open(QIODevice::ReadOnly);
 		_generator[i] = new GenTextTutor(_encoder[i], ":/qso/qsogen.xml", this);
-    connect(_generator[i], SIGNAL(sessionComplete()), _generator[i], SLOT(start()));
+    connect(_generator[i], SIGNAL(sessionFinished()), _generator[i], SLOT(start()));
     _generator[i]->start();
 	}
 
@@ -62,7 +62,7 @@ QRMGenerator::setStations(int num) {
 		_encoder[i] = new MorseEncoder(f, f, wpm, 1.0, 1.0, MorseEncoder::SOUND_SHARP, jitter, this);
     _encoder[i]->open(QIODevice::ReadOnly);
 		_generator[i] = new GenTextTutor(_encoder[i], ":/qso/qsogen.xml", this);
-    connect(_generator[i], SIGNAL(sessionComplete()), _generator[i], SLOT(start()));
+    connect(_generator[i], SIGNAL(sessionFinished()), _generator[i], SLOT(start()));
     _generator[i]->start();
 	}
 }

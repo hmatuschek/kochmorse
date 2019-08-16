@@ -265,7 +265,7 @@ Settings::setKochSuccessThreshold(int thres) {
 
 bool
 Settings::kochVerify() const {
-  return this->value("koch/verify", true).toBool();
+  return this->value("koch/verify", false).toBool();
 }
 
 void
@@ -357,6 +357,26 @@ Settings::randomLineCount() const {
 void
 Settings::setRandomLineCount(int lines) {
   this->setValue("random/linecount", lines);
+}
+
+bool
+Settings::randomVerify() const {
+  return this->value("random/verify", false).toBool();
+}
+
+void
+Settings::setRandomVerify(bool verify) {
+  this->setValue("random/verify", verify);
+}
+
+bool
+Settings::randomHideOutput() const {
+  return randomVerify() && this->value("random/hideOutput", false).toBool();
+}
+
+void
+Settings::setRandomHideOutput(bool hide) {
+  this->setValue("random/hideOutput", hide);
 }
 
 bool
@@ -845,7 +865,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
 
   _hideOutput = new QCheckBox();
   _hideOutput->setChecked(settings.kochHideOutput());
-  _hideOutput->setEnabled(settings.kochLesson());
+  _hideOutput->setEnabled(settings.kochVerify());
   _hideOutput->setToolTip("If verification is enabled, hide the send text.");
 
   _threshold = new QSpinBox();
@@ -1013,6 +1033,16 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   if (settings.randomInfiniteLineCount())
     _lineCount->setEnabled(false);
 
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.randomVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received chars using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.randomHideOutput());
+  _hideOutput->setEnabled(settings.randomVerify());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
   _summary = new QCheckBox();
   _summary->setChecked(settings.randomSummary());
   _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
@@ -1024,6 +1054,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
 
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(tabs);
@@ -1032,6 +1063,8 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   box->addRow(tr("Max. group size"), _maxGroupSize);
   box->addRow(tr("Infinite lines"), _infinite);
   box->addRow(tr("Line count"), _lineCount);
+  box->addRow(tr("Verify"), _verify);
+  box->addRow(tr("Hide output"), _hideOutput);
   box->addRow(tr("Show summary"), _summary);
 
   layout->addLayout(box);
@@ -1072,6 +1105,8 @@ RandomTutorSettingsView::save() {
   Settings().setRandomMaxGroupSize(_maxGroupSize->value());
   Settings().setRandomInifiniteLineCount(_infinite->isChecked());
   Settings().setRandomLineCount(_lineCount->value());
+  Settings().setRandomVerify(_verify->isChecked());
+  Settings().setRandomHideOutput(_hideOutput->isChecked());
   Settings().setRandomSummary(_summary->isChecked());
 }
 
@@ -1089,6 +1124,11 @@ void
 RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
   _lineCount->setEnabled(! enabled);
   _summary->setEnabled(! enabled);
+}
+
+void
+RandomTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
 }
 
 
@@ -1480,8 +1520,14 @@ HighScoreSettingsView::HighScoreSettingsView(QWidget *parent)
   _call   = new QLineEdit(settings.hsCall());
 
   QFormLayout *layout = new QFormLayout();
-  layout->addRow(tr("Send highscore"), _enable);
-  layout->addRow(tr("Your call"), _call);
+  layout->addRow(tr("Submit highscore"), _enable);
+  layout->addRow(tr("Your call/nickname"), _call);
+  QLabel *hint = new QLabel(tr("Your learning progrss will be sumitted to "
+                               "<a href=\"https://dm3mat.darc.de/kochmorse/highscore.php\">https://dm3mat.darc.de/kochmorse/highscore.php</a>"
+                               ". This allows you to compare your progress with other KochMorse users. "));
+  hint->setWordWrap(true);
+  hint->setOpenExternalLinks(true);
+  layout->addWidget(hint);
 
   setLayout(layout);
 }

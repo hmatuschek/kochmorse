@@ -140,6 +140,10 @@ public:
   void setRandomInifiniteLineCount(bool enable);
   int randomLineCount() const;
   void setRandomLineCount(int lines);
+  bool randomVerify() const;
+  void setRandomVerify(bool verify);
+  bool randomHideOutput() const;
+  void setRandomHideOutput(bool hide);
   bool randomSummary() const;
   void setRandomSummary(bool show);
 
@@ -278,6 +282,7 @@ protected slots:
   void onMinSet(int value);
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
 
 protected:
   ListWidget *_alpha;
@@ -289,6 +294,8 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
   QCheckBox *_summary;
 };
 

@@ -31,7 +31,8 @@ Tutor::isOutputHidden() const {
 }
 
 int
-Tutor::verify(const QString & text, QString &summary) const {
+Tutor::verify(const QString & text, QString &summary) {
+  Q_UNUSED(text); Q_UNUSED(summary);
   return 0;
 }
 
@@ -223,7 +224,7 @@ KochTutor::isOutputHidden() const {
 }
 
 int
-KochTutor::verify(const QString &text, QString &summary) const {
+KochTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
   int err = textCompare(_sendText, text, mistakes);
   // Format Send text
@@ -244,13 +245,25 @@ KochTutor::verify(const QString &text, QString &summary) const {
     else
       buffer << text.at(i);
   }
+  int correct = 100*double(_chars_send-err)/_chars_send;
   summary = tr("<html><h3>Text send:</h3><p>%1</p>"
                "<h3>Text entered:</h3><p>%2</p>"
                "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
                "Mistakes: %6<br>"
-               "Accuracy: <b>%7%</b></p></html>").arg(tx).arg(rx).arg(_chars_send)
-      .arg(_words_send).arg(_lines_send).arg(err).arg(int(100*double(_chars_send-err)/_chars_send));
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
+      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+  if (correct >= _threshold) {
+    summary.append(tr("<p><b>You achieved an accuracy of %1% &gt;= %2%. "
+                      "You may advance to the next lesson!</b></p></html>").arg(correct).arg(_threshold));
+  } else {
+    summary.append(tr("<p><b>You achieved an accuracy of %1% &lt; %2%. "
+                      "Keep on practicing!</b> Have a look at the mistakes you made above. "
+                      "If you confused some characters (e.g., s, h & 5) frequently, consider "
+                      "using the Random tutor to practice only those characters you "
+                      "confused.</p></html>").arg(correct).arg(_threshold));
+  }
 
+  emit sessionVerified("koch", _lesson, correct);
   return err;
 }
 
@@ -365,13 +378,8 @@ RandomTutor::next() {
   else if (0 == _text.size())
     _nextline();
 
-  QChar ch = _text.first(); _text.pop_front();
-  if ('\n' == ch)
-    _lines_send++;
-  else if (' ' == ch)
-    _words_send++;
-  else
-    _chars_send++;
+  QChar ch = _text.first();
+  _text.pop_front();
   return ch;
 }
 
@@ -424,6 +432,52 @@ RandomTutor::needsDecoder() const {
   return false;
 }
 
+bool
+RandomTutor::isVerifying() const {
+  Settings settings;
+  return settings.kochVerify();
+}
+
+bool
+RandomTutor::isOutputHidden() const {
+  Settings settings;
+  return settings.kochHideOutput();
+}
+
+int
+RandomTutor::verify(const QString &text, QString &summary) {
+  QVector<int> mistakes;
+  int err = textCompare(_sendText, text, mistakes);
+  // Format Send text
+  QString tx, rx;
+  QTextStream buffer(&tx);
+  for (int i=0; i<_sendText.size(); i++) {
+    if ('\n' == _sendText.at(i))
+      buffer << "<br>";
+    else if (mistakes.contains(i))
+      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+    else
+      buffer << _sendText.at(i);
+  }
+  buffer.setString(&rx);
+  for (int i=0; i<text.size(); i++) {
+    if ('\n' == text.at(i))
+      buffer << "<br>";
+    else
+      buffer << text.at(i);
+  }
+  int correct = 100*double(_chars_send-err)/_chars_send;
+  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+               "<h3>Text entered:</h3><p>%2</p>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "Mistakes: %6<br>"
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
+      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+
+  emit sessionVerified("rand", _chars.size(), correct);
+  return err;
+}
+
 void
 RandomTutor::_nextline() {
   for (size_t i=0; i<25;) {
@@ -433,13 +487,19 @@ RandomTutor::_nextline() {
       // Sample char from chars
       size_t idx = _chars.size()*double(rand())/RAND_MAX;
       _text.push_back(_chars[idx]);
+      _sendText.push_back(_chars[idx]);
+      _chars_send++;
     }
     i += n;
     _text.push_back(' ');
+    _sendText.push_back(' ');
+    _words_send++;
   }
   _text.push_back('=');
   _text.push_back('\n');
+  _sendText.push_back('\n');
   _linecount++;
+  _lines_send++;
 }
 
 QSet<QChar>
@@ -529,6 +589,7 @@ GenTextTutor::needsDecoder() const {
 
 void
 GenTextTutor::onCharSend(QChar ch) {
+  Q_UNUSED(ch);
   if ((! atEnd()) && _running)
     _encoder->send(next());
   else if (atEnd())
