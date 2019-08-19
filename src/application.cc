@@ -156,14 +156,16 @@ Application::applySettings()
       _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(),
                              settings.kochRepeatLastChar(), settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
                              (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                             settings.kochSummary(), settings.kochSuccessThreshold(), this);
+                             settings.kochSummary(), settings.kochVerify(),
+                             settings.kochHideOutput(), settings.kochSuccessThreshold(), this);
       break;
 
     case Settings::TUTOR_RANDOM:
       _tutor = new RandomTutor(_encoder, settings.randomChars(), settings.randomMinGroupSize(),
                                settings.randomMaxGroupSize(),
                                (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
-                               settings.randomSummary(), this);
+                               settings.randomSummary(), settings.randomVerify(),
+                               settings.randomHideOutput(), this);
       break;
 
     case Settings::TUTOR_TEXTGEN:

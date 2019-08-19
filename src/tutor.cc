@@ -75,12 +75,13 @@ QVector<QChar> KochTutor::_lessons = _initKochLessons();
 
 KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool repeatLastChar,
                      size_t minGroupSize, size_t maxGroupSize,
-                     int lines, bool showSummary, int successThreshold, QObject *parent)
+                     int lines, bool showSummary, bool verify, bool hideOutput,
+                     int successThreshold, QObject *parent)
   : Tutor(encoder, parent), _lesson(lesson), _prefLastChars(prefLastChars),
     _repeatLastChar(repeatLastChar), _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)), _lines(lines), _linecount(0),
-    _showSummary(showSummary), _threshold(successThreshold), _text(),
-    _chars_send(0), _words_send(0), _lines_send(0)
+    _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput),
+    _threshold(successThreshold), _text(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -213,14 +214,12 @@ KochTutor::needsDecoder() const {
 
 bool
 KochTutor::isVerifying() const {
-  Settings settings;
-  return settings.kochVerify();
+  return _verify;
 }
 
 bool
 KochTutor::isOutputHidden() const {
-  Settings settings;
-  return settings.kochHideOutput();
+  return _hideOutput;
 }
 
 int
@@ -287,7 +286,7 @@ KochTutor::_nextline() {
       size_t idx = 0;
       if (_prefLastChars) {
         double v = -1;
-        while ((v < 0) || (v >= _lesson)) {
+        while ((v < 0) || (v > _lesson)) {
           v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
         }
         idx = size_t(v);
@@ -316,9 +315,10 @@ KochTutor::_nextline() {
 /* ********************************************************************************************* *
  * RandomTutor
  * ********************************************************************************************* */
-RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
+RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, bool verify, bool hideOutput, QObject *parent)
   : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
-    _lines(lines), _linecount(0), _showSummary(showSummary), _text(), _chars()
+    _lines(lines), _linecount(0), _showSummary(showSummary), _verify(verify),
+    _hideOutput(hideOutput), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -339,9 +339,12 @@ RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxG
   connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
 }
 
-RandomTutor::RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, QObject *parent)
+RandomTutor::RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t minGroupSize,
+                         size_t maxGroupSize, int lines, bool showSummary, bool verify,
+                         bool hideOutput, QObject *parent)
   : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
-    _showSummary(showSummary), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
+    _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput), _text(), _chars(),
+    _chars_send(0), _words_send(0), _lines_send(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -407,11 +410,12 @@ RandomTutor::reset()
 {
   // Empty current session
   _text.clear();
+  _sendText.clear();
   // If empty char set -> done.
   if (0 == _chars.size()) { return; }
   // Reset linecount
   _linecount = 0;
-  //
+  // reset char, word & line count
   _chars_send = _words_send = _lines_send = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
@@ -434,14 +438,12 @@ RandomTutor::needsDecoder() const {
 
 bool
 RandomTutor::isVerifying() const {
-  Settings settings;
-  return settings.kochVerify();
+  return _verify;
 }
 
 bool
 RandomTutor::isOutputHidden() const {
-  Settings settings;
-  return settings.kochHideOutput();
+  return _hideOutput;
 }
 
 int
@@ -526,6 +528,253 @@ RandomTutor::lines() const {
 void
 RandomTutor::setLines(int lines) {
   _lines = lines;
+}
+
+
+/* ********************************************************************************************* *
+ * WordsworthTutor
+ * ********************************************************************************************* */
+inline QVector<QString> _initWordsworthLessons() {
+  QVector<QString> words;
+  words << "cq" << "de" << "k";
+  return words;
+}
+// The vector of all chars ordered by lesson
+QVector<QString> WordsworthTutor::_lessons = _initWordsworthLessons();
+
+
+WordsworthTutor::WordsworthTutor(
+    MorseEncoder *encoder, int lesson, bool prefLastWords, bool repeatLastWord,
+    int lines, bool showSummary, bool verify, bool hideOutput,
+    int successThreshold, QObject *parent)
+  : Tutor(encoder, parent), _lesson(lesson), _prefLastWords(prefLastWords),
+    _repeatLastWord(repeatLastWord), _lines(lines), _linecount(0),
+    _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput),
+    _threshold(successThreshold), _text(), _chars_send(0), _words_send(0), _lines_send(0)
+{
+  // Init random number generator
+  srand(time(nullptr));
+
+  connect(_encoder, SIGNAL(charSend(QChar)), this, SLOT(onCharSend(QChar)));
+}
+
+WordsworthTutor::~WordsworthTutor() {
+  // pass...
+}
+
+QChar
+WordsworthTutor::next() {
+  if (atEnd())
+    reset();
+  else if (0 == _text.size())
+    _nextline();
+
+  QChar ch = _text.first();
+  _text.pop_front();
+  return ch;
+}
+
+bool
+WordsworthTutor::atEnd() {
+  return ((0 == _text.size()) && (_lines == _linecount));
+}
+
+int
+WordsworthTutor::lesson() const {
+  return _lesson;
+}
+void
+WordsworthTutor::setLesson(int lesson) {
+  _lesson = std::max(2, std::min(lesson, _lessons.size()));
+}
+
+bool
+WordsworthTutor::prefLastWords() const {
+  return _prefLastWords;
+}
+
+void
+WordsworthTutor::setPrefLastWords(bool pref) {
+  _prefLastWords = pref;
+}
+
+bool
+WordsworthTutor::repeatLastWord() const {
+  return _repeatLastWord;
+}
+
+void
+WordsworthTutor::setRepeatLastWord(bool enable) {
+  _repeatLastWord = enable;
+}
+
+int
+WordsworthTutor::lines() const {
+  return _lines;
+}
+
+void
+WordsworthTutor::setLines(int lines) {
+  _lines = lines;
+}
+
+QString
+WordsworthTutor::summary() const {
+  if (! _showSummary)
+    return "";
+  int threshold = int(_chars_send*(100-_threshold))/100;
+  if (_lesson < (_lessons.size()-1))
+    return tr("\n\nSent %1 chars in %2 words and %3 lines. "
+              "If you have less than %4 mistakes, you can proceed to lesson %5.")
+        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold).arg(_lesson+1);
+  else
+    return tr("\n\nSent %1 chars in %2 words and %3 lines. "
+              "If you have less than %4 mistakes, you completed the course!")
+        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold);
+}
+
+void
+WordsworthTutor::setShowSummary(bool show) {
+  _showSummary = show;
+}
+
+void
+WordsworthTutor::start() {
+  this->reset();
+  Tutor::start();
+  _encoder->start();
+  _encoder->send(this->next());
+}
+
+void
+WordsworthTutor::stop() {
+  Tutor::stop();
+  _encoder->stop();
+}
+
+void
+WordsworthTutor::reset()
+{
+  // Empty current session
+  _text.clear();
+  // Reset line count
+  _linecount = 0;
+  // Insert "vvv\n"
+  _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
+  // Insert newest char if "repeat last word" is enabled
+  if (_repeatLastWord) {
+    for (int i=0; i<5; i++) {
+      for (int j=0; j<_lessons[_lesson-1].size(); j++)
+        _text.push_back(_lessons[_lesson-1][j]);
+      _text.push_back(' ');
+    }
+    _text.push_back('\n');
+  }
+  _sendText.clear();
+  _chars_send = 0;
+  _words_send = 0;
+  _lines_send = 0;
+  // sample a line of text.
+  _nextline();
+}
+
+bool
+WordsworthTutor::needsDecoder() const {
+  return false;
+}
+
+bool
+WordsworthTutor::isVerifying() const {
+  return _verify;
+}
+
+bool
+WordsworthTutor::isOutputHidden() const {
+  return _hideOutput;
+}
+
+int
+WordsworthTutor::verify(const QString &text, QString &summary) {
+  QVector<int> mistakes;
+  int err = textCompare(_sendText, text, mistakes);
+  // Format Send text
+  QString tx, rx;
+  QTextStream buffer(&tx);
+  for (int i=0; i<_sendText.size(); i++) {
+    if ('\n' == _sendText.at(i))
+      buffer << "<br>";
+    else if (mistakes.contains(i))
+      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+    else
+      buffer << _sendText.at(i);
+  }
+  buffer.setString(&rx);
+  for (int i=0; i<text.size(); i++) {
+    if ('\n' == text.at(i))
+      buffer << "<br>";
+    else
+      buffer << text.at(i);
+  }
+  int correct = 100*double(_chars_send-err)/_chars_send;
+  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+               "<h3>Text entered:</h3><p>%2</p>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "Mistakes: %6<br>"
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
+      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+  if (correct >= _threshold) {
+    summary.append(tr("<p><b>You achieved an accuracy of %1% &gt;= %2%. "
+                      "You may advance to the next lesson!</b></p></html>").arg(correct).arg(_threshold));
+  } else {
+    summary.append(tr("<p><b>You achieved an accuracy of %1% &lt; %2%. "
+                      "Keep on practicing!</b> Have a look at the mistakes you made above. "
+                      "If you confused some characters (e.g., s, h & 5) frequently, consider "
+                      "using the Random tutor to practice only those characters you "
+                      "confused.</p></html>").arg(correct).arg(_threshold));
+  }
+
+  emit sessionVerified("koch", _lesson, correct);
+  return err;
+}
+
+void
+WordsworthTutor::onCharSend(QChar c) {
+  Q_UNUSED(c);
+  if ((! this->atEnd()) && _running)
+    _encoder->send(next());
+  else if (atEnd())
+    emit sessionFinished();
+}
+
+void
+WordsworthTutor::_nextline() {
+  for (size_t i=0; i<10; i++) {
+    // Sample word from lesson
+    size_t idx = 0;
+    if (_prefLastWords) {
+      double v = -1;
+      while ((v < 0) || (v > _lesson)) {
+        v = (_lesson + _lesson*std::log(double(rand())/RAND_MAX)/4);
+      }
+      idx = size_t(v);
+    } else {
+      idx = _lesson*double(rand())/RAND_MAX;
+    }
+    for (int j=0; j<_lessons[idx].size(); j++)
+      _text.push_back(_lessons[idx][j]);
+    _sendText.push_back(_lessons[idx]);
+    _chars_send += _lessons[idx].size();
+    _text.push_back(' ');
+    _sendText.push_back(' ');
+    _words_send++;
+  }
+  _text.push_back('=');
+  _text.push_back(' ');
+  _text.push_back(' ');
+  _text.push_back('\n');
+  _sendText.push_back('\n');
+  _linecount++;
+  _lines_send++;
 }
 
 
