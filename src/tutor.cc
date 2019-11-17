@@ -225,7 +225,7 @@ KochTutor::isOutputHidden() const {
 int
 KochTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText, text, mistakes);
+  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
   // Format Send text
   QString tx, rx;
   QTextStream buffer(&tx);
@@ -309,6 +309,11 @@ KochTutor::_nextline() {
   _sendText.push_back('\n');
   _linecount++;
   _lines_send++;
+}
+
+const QVector<QChar> &
+KochTutor::lessons() {
+  return _lessons;
 }
 
 
@@ -449,7 +454,7 @@ RandomTutor::isOutputHidden() const {
 int
 RandomTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText, text, mistakes);
+  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
   // Format Send text
   QString tx, rx;
   QTextStream buffer(&tx);
@@ -498,6 +503,7 @@ RandomTutor::_nextline() {
     _words_send++;
   }
   _text.push_back('=');
+  _text.push_back(' ');
   _text.push_back('\n');
   _sendText.push_back('\n');
   _linecount++;
@@ -536,7 +542,16 @@ RandomTutor::setLines(int lines) {
  * ********************************************************************************************* */
 inline QVector<QString> _initWordsworthLessons() {
   QVector<QString> words;
-  words << "cq" << "de" << "k";
+  words << "k"  << "cq" << "de" << "es" << "is" << "hi" << "hr" << "ur" << "vy" << "73" << "my"
+        << "88" << "bk" << "cl" << "dx" << "wx" << "el" << "fb" << "om" << "no" << "op" << "tu"
+        << "yl" << "gm" << "gd" << "ga" << "ge" << "gn"
+        << "abt" << "age" << "agn" << "ant" << "btu" << "cpy" << "cul" << "gud" << "hw?" << "key"
+        << "pkt" << "pse" << "pwr" << "qrm" << "qrn" << "qrp" << "qro" << "qrs" << "qrt" << "qrx"
+        << "qrz" << "qsb" << "qsl" << "qso" << "qsy" << "qth" << "rig" << "rpt" << "rst" << "tks"
+        << "tnx" << "yrs"
+        << "beam" << "long" << "loop" << "name" << "runs" << "temp" << "test" << "vert" << "watt"
+        << "wire" << "yagi"
+        << "dipole";
   return words;
 }
 // The vector of all chars ordered by lesson
@@ -696,7 +711,7 @@ WordsworthTutor::isOutputHidden() const {
 int
 WordsworthTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText, text, mistakes);
+  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
   // Format Send text
   QString tx, rx;
   QTextStream buffer(&tx);
@@ -733,7 +748,7 @@ WordsworthTutor::verify(const QString &text, QString &summary) {
                       "confused.</p></html>").arg(correct).arg(_threshold));
   }
 
-  emit sessionVerified("koch", _lesson, correct);
+  emit sessionVerified("words", _lesson, correct);
   return err;
 }
 
@@ -777,6 +792,10 @@ WordsworthTutor::_nextline() {
   _lines_send++;
 }
 
+const QVector<QString> &
+WordsworthTutor::lessons() {
+  return _lessons;
+}
 
 /* ********************************************************************************************* *
  * GenQSOTutor

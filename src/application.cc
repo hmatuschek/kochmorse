@@ -168,6 +168,14 @@ Application::applySettings()
                                settings.randomHideOutput(), this);
       break;
 
+    case Settings::TUTOR_WORDSWORTH:
+      _tutor = new WordsworthTutor(_encoder, settings.wordsworthLesson(), settings.wordsworthPrefLastWords(),
+                                   settings.wordsworthRepeatLastWord(),
+                                   (settings.wordsworthInfiniteLineCount() ? -1: settings.wordsworthLineCount()),
+                                   settings.wordsworthSummary(), settings.wordsworthVerify(),
+                                   settings.wordsworthHideOutput(), settings.wordsworthSuccessThreshold(), this);
+      break;
+
     case Settings::TUTOR_TEXTGEN:
       _tutor = new GenTextTutor(_encoder, settings.textGenFilename());
       break;

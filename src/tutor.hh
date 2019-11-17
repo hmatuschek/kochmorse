@@ -108,6 +108,9 @@ public:
   /** If @ctrue, the current session is at the end. */
   bool atEnd();
 
+public:
+  static const QVector<QChar> &lessons();
+
 public slots:
   /** Reset/restarts a session. */
   void reset();
@@ -229,7 +232,8 @@ protected:
 };
 
 
-/** A tutor for the "Wordsworth" (Farnsworth with words) method. */
+/** A tutor for the "Wordsworth" (Farnsworth with words) method.
+ * @see http://www.sk6qa.se/WP/wp-content/uploads/2017/04/Increase-your-CW-Speed-with-Wordsworth.pdf */
 class WordsworthTutor: public Tutor
 {
   Q_OBJECT
@@ -280,6 +284,9 @@ public:
   QChar next();
   /** If @ctrue, the current session is at the end. */
   bool atEnd();
+
+public:
+  static const QVector<QString> &lessons();
 
 public slots:
   /** Reset/restarts a session. */
