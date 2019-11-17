@@ -27,6 +27,7 @@ public:
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
+    TUTOR_WORDSWORTH = 2, ///< Wordsworth tutor.
     TUTOR_TX  = 4,    ///< The TX tutor.
     TUTOR_CHAT  = 5,  ///< The Chat tutor.
     TUTOR_TEXTGEN = 6 ///< Generated text tuto.
@@ -146,6 +147,32 @@ public:
   void setRandomHideOutput(bool hide);
   bool randomSummary() const;
   void setRandomSummary(bool show);
+
+  /** Wordworth tutor: Retunrs the current lesson. */
+  int wordsworthLesson() const;
+  /** Wordworth tutor: Sets the lesson. */
+  void setWordsworthLesson(int n);
+
+  /** Wordsworth tutor: Returns true if "new" words are more likely to be picked by the tutor. */
+  bool wordsworthPrefLastWords() const;
+  /** Wordsworth totor: Sets if "new" words are more likely to be picked by the tutor. */
+  void setWordsworthPrefLastWords(bool pref);
+
+  bool wordsworthRepeatLastWord() const;
+  void setWordsworthRepeatLastWord(bool enable);
+
+  bool wordsworthInfiniteLineCount() const;
+  void setWordsworthInifiniteLineCount(bool enable);
+  int wordsworthLineCount() const;
+  void setWordsworthLineCount(int lines);
+  bool wordsworthSummary() const;
+  void setWordsworthSummary(bool show);
+  int wordsworthSuccessThreshold() const;
+  void setWordsworthSuccessThreshold(int thres);
+  bool wordsworthVerify() const;
+  void setWordsworthVerify(bool verify);
+  bool wordsworthHideOutput() const;
+  void setWordsworthHideOutput(bool hide);
 
   QString textGenFilename() const;
   void setTextGenFilename(const QString &filename);
@@ -300,6 +327,35 @@ protected:
 };
 
 
+/** A configuration panel for the Koch tutor. */
+class WordsworthTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit WordsworthTutorSettingsView(QWidget *parent=0);
+
+  /** Updates the persistent settings. */
+  void save();
+
+protected slots:
+  void onInfiniteToggled(bool enabled);
+  void onShowSummaryToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
+
+protected:
+  QSpinBox *_lesson;
+  QCheckBox *_prefLastWords;
+  QCheckBox *_repLastWord;
+  QCheckBox *_infinite;
+  QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
+  QCheckBox *_summary;
+  QSpinBox *_threshold;
+};
+
+
 /** A configuration panel for the TextGen tutor. */
 class TextGenTutorSettingsView: public QGroupBox
 {
@@ -338,6 +394,7 @@ protected:
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
+  WordsworthTutorSettingsView *_wordsworthSettings;
   TextGenTutorSettingsView *_textgetSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;

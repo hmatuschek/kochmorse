@@ -15,6 +15,7 @@
 #include <QDesktopServices>
 #include <QFontComboBox>
 #include <QUuid>
+#include "tutor.hh"
 
 
 /* ********************************************************************************************* *
@@ -180,7 +181,7 @@ Settings::kochLesson() const {
 }
 void
 Settings::setKochLesson(int n) {
-  n = std::max(2, std::min(n, 43));
+  n = std::max(2, std::min(n, KochTutor::lessons().size()));
   this->setValue("koch/lesson", n);
 }
 
@@ -388,6 +389,99 @@ void
 Settings::setRandomSummary(bool show) {
   this->setValue("random/summary", show);
 }
+
+
+
+int
+Settings::wordsworthLesson() const {
+  return this->value("wordsworth/lesson", 2).toInt();
+}
+void
+Settings::setWordsworthLesson(int n) {
+  n = std::max(2, std::min(n, WordsworthTutor::lessons().size()));
+  this->setValue("wordsworth/lesson", n);
+}
+
+bool
+Settings::wordsworthPrefLastWords() const {
+  return this->value("wordsworth/prefLastWords", false).toBool();
+}
+
+void
+Settings::setWordsworthPrefLastWords(bool pref) {
+  this->setValue("wordsworth/prefLastWords", pref);
+}
+
+bool
+Settings::wordsworthRepeatLastWord() const {
+  return this->value("wordsworth/repeatLastWord", false).toBool();
+}
+
+void
+Settings::setWordsworthRepeatLastWord(bool enable) {
+  this->setValue("wordsworth/repeatLastWord", enable);
+}
+
+bool
+Settings::wordsworthInfiniteLineCount() const {
+  return this->value("wordsworth/infinite", false).toBool();
+}
+
+void
+Settings::setWordsworthInifiniteLineCount(bool enable) {
+  this->setValue("wordsworth/infinite", enable);
+}
+
+int
+Settings::wordsworthLineCount() const {
+  return this->value("wordsworth/linecount", 5).toInt();
+}
+void
+Settings::setWordsworthLineCount(int lines) {
+  this->setValue("wordsworth/linecount", lines);
+}
+
+bool
+Settings::wordsworthSummary() const {
+  return this->value("wordsworth/summary", true).toBool();
+}
+
+void
+Settings::setWordsworthSummary(bool show) {
+  this->setValue("wordsworth/summary", show);
+}
+
+int
+Settings::wordsworthSuccessThreshold() const {
+  return this->value("wordsworth/thres", 90).toInt();
+}
+
+void
+Settings::setWordsworthSuccessThreshold(int thres) {
+  this->setValue("wordsworth/thres", thres);
+}
+
+bool
+Settings::wordsworthVerify() const {
+  return this->value("wordsworth/verify", false).toBool();
+}
+
+void
+Settings::setWordsworthVerify(bool verify) {
+  this->setValue("wordsworth/verify", verify);
+}
+
+bool
+Settings::wordsworthHideOutput() const {
+  return wordsworthVerify() && this->value("wordsworth/hideOutput", false).toBool();
+}
+
+void
+Settings::setWordsworthHideOutput(bool hide) {
+  this->setValue("wordsworth/hideOutput", hide);
+}
+
+
 
 QString
 Settings::textGenFilename() const {
@@ -734,12 +828,14 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->setToolTip(tr("Select a tutor. If you learn the code, start with 'Koch method'."));
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
+  _tutor->addItem(tr("Wordsworth"));
   _tutor->addItem(tr("Rule based tutor"));
   _tutor->addItem(tr("Transmit"));
   _tutor->addItem(tr("QSO Chat"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
+  _wordsworthSettings = new WordsworthTutorSettingsView();
   _textgetSettings = new TextGenTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
   _chatSettings = new ChatTutorSettingsView();
@@ -747,6 +843,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
+  _tutorSettings->addWidget(_wordsworthSettings);
   _tutorSettings->addWidget(_textgetSettings);
   _tutorSettings->addWidget(_txSettings);
   _tutorSettings->addWidget(_chatSettings);
@@ -758,15 +855,18 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
     _tutor->setCurrentIndex(1);
     _tutorSettings->setCurrentIndex(1);
-  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
+  } else if (Settings::TUTOR_WORDSWORTH == settings.tutor()) {
     _tutor->setCurrentIndex(2);
     _tutorSettings->setCurrentIndex(2);
-  } else if (Settings::TUTOR_TX == settings.tutor()) {
+  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
     _tutor->setCurrentIndex(3);
     _tutorSettings->setCurrentIndex(3);
-  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
+  } else if (Settings::TUTOR_TX == settings.tutor()) {
     _tutor->setCurrentIndex(4);
     _tutorSettings->setCurrentIndex(4);
+  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
+    _tutor->setCurrentIndex(5);
+    _tutorSettings->setCurrentIndex(5);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -790,6 +890,7 @@ TutorSettingsView::save() {
   // Save all tutors
   _kochSettings->save();
   _randSettings->save();
+  _wordsworthSettings->save();
   _textgetSettings->save();
 
   // Get tutor by index
@@ -799,10 +900,12 @@ TutorSettingsView::save() {
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
   } else if (2 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_TEXTGEN);
+    settings.setTutor(Settings::TUTOR_WORDSWORTH);
   } else if (3 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_TX);
+    settings.setTutor(Settings::TUTOR_TEXTGEN);
   } else if (4 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_TX);
+  } else if (5 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_CHAT);
   }
 }
@@ -817,7 +920,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   Settings settings;
 
   _lesson = new QSpinBox();
-  _lesson->setMinimum(2); _lesson->setMaximum(43);
+  _lesson->setMinimum(2); _lesson->setMaximum(KochTutor::lessons().size());
   _lesson->setValue(settings.kochLesson());
   _lesson->setToolTip(tr("Specifies the number of symbols for this lesson."));
 
@@ -941,6 +1044,7 @@ void
 KochTutorSettingsView::onVerifyToggled(bool enabled) {
   _hideOutput->setEnabled(enabled);
 }
+
 
 /* ********************************************************************************************* *
  * Random Tutor Settings Widget
@@ -1128,6 +1232,113 @@ RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
 
 void
 RandomTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
+}
+
+
+/* ********************************************************************************************* *
+ * Wordworth Tutor Settings Widget
+ * ********************************************************************************************* */
+WordsworthTutorSettingsView::WordsworthTutorSettingsView(QWidget *parent)
+  : QGroupBox(tr("Wordsworth tutor settings"), parent)
+{
+  Settings settings;
+
+  _lesson = new QSpinBox();
+  _lesson->setMinimum(2); _lesson->setMaximum(WordsworthTutor::lessons().size());
+  _lesson->setValue(settings.wordsworthLesson());
+  _lesson->setToolTip(tr("Specifies the number of words for this lesson."));
+
+  _prefLastWords = new QCheckBox();
+  _prefLastWords->setChecked(settings.wordsworthPrefLastWords());
+  _prefLastWords->setToolTip(tr("If enabled, increases the likelihood of newer words."));
+
+  _repLastWord = new QCheckBox();
+  _repLastWord->setChecked(settings.wordsworthRepeatLastWord());
+  _repLastWord->setToolTip(tr("If enabled, repeats the new word before the lesson starts."));
+
+  _infinite = new QCheckBox();
+  _infinite->setChecked(settings.wordsworthInfiniteLineCount());
+  _infinite->setToolTip(tr("Sends an infinite number of lines."));
+
+  _lineCount = new QSpinBox();
+  _lineCount->setMinimum(1);
+  _lineCount->setValue(settings.wordsworthLineCount());
+  _lineCount->setToolTip(tr("Specifies the number of lines to send."));
+  if (settings.wordsworthInfiniteLineCount())
+    _lineCount->setEnabled(false);
+
+  _summary = new QCheckBox();
+  _summary->setChecked(settings.wordsworthSummary());
+  _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
+  if (settings.wordsworthInfiniteLineCount())
+    _summary->setEnabled(false);
+
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.wordsworthVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received words using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.wordsworthHideOutput());
+  _hideOutput->setEnabled(settings.wordsworthVerify());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
+  _threshold = new QSpinBox();
+  _threshold->setMinimum(75);
+  _threshold->setMaximum(100);
+  _threshold->setValue(settings.wordsworthSuccessThreshold());
+  _threshold->setToolTip(tr("Specifies the success rate at which the lesson is completed."));
+  _threshold->setEnabled(_summary->isEnabled() && _summary->isChecked());
+
+  // Cross connect min and max group size splin boxes to maintain
+  // consistent settings
+  connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
+  connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Lesson"), _lesson);
+  layout->addRow(tr("Prefer last words"), _prefLastWords);
+  layout->addRow(tr("Repeat last word"), _repLastWord);
+  layout->addRow(tr("Infinite lines"), _infinite);
+  layout->addRow(tr("Line count"), _lineCount);
+  layout->addRow(tr("Verify"), _verify);
+  layout->addRow(tr("Hide send text"), _hideOutput);
+  layout->addRow(tr("Show summary"), _summary);
+  layout->addRow(tr("Lesson target"), _threshold);
+
+  this->setLayout(layout);
+}
+
+void
+WordsworthTutorSettingsView::save() {
+  Settings settings;
+  settings.setWordsworthLesson(_lesson->value());
+  settings.setWordsworthPrefLastWords(_prefLastWords->isChecked());
+  settings.setWordsworthRepeatLastWord(_repLastWord->isChecked());
+  settings.setWordsworthInifiniteLineCount(_infinite->isChecked());
+  settings.setWordsworthLineCount(_lineCount->value());
+  settings.setWordsworthVerify(_verify->isChecked());
+  settings.setWordsworthHideOutput(_hideOutput->isChecked());
+  settings.setWordsworthSummary(_summary->isChecked());
+  settings.setWordsworthSuccessThreshold(_threshold->value());
+}
+
+void
+WordsworthTutorSettingsView::onInfiniteToggled(bool enabled) {
+  _lineCount->setEnabled(! enabled);
+  _summary->setEnabled(! enabled);
+  _threshold->setEnabled((! enabled) && _summary->isChecked());
+}
+
+void
+WordsworthTutorSettingsView::onShowSummaryToggled(bool enabled) {
+  _threshold->setEnabled(enabled);
+}
+
+void
+WordsworthTutorSettingsView::onVerifyToggled(bool enabled) {
   _hideOutput->setEnabled(enabled);
 }
 
