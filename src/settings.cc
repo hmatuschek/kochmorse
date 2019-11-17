@@ -546,7 +546,7 @@ QString
 Settings::hsID() {
   if (contains("hsID"))
     return value("hsID").toString();
-  setValue("hsID", QUuid::createUuid().toString(QUuid::WithoutBraces));
+  setValue("hsID", QUuid::createUuid().toString());
   return value("hsID").toString();
 }
 
