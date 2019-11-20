@@ -736,12 +736,12 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   _onEffSpeedChanged();
 
   _tone = new QLineEdit(QString::number(settings.tone()));
-  QIntValidator *tone_val = new QIntValidator(20,20000);
+  QIntValidator *tone_val = new QIntValidator(20,20000, _tone);
   _tone->setValidator(tone_val);
   _tone->setToolTip(tr("Specifies the freqency (in Hz) of the CW tone."));
 
   _daPitch = new QLineEdit(QString::number(settings.dashPitch()));
-  QIntValidator *pitch_val = new QIntValidator(-1000,1000);
+  QIntValidator *pitch_val = new QIntValidator(-1000,1000, _daPitch);
   _daPitch->setValidator(pitch_val);
   _daPitch->setToolTip(tr("Specifies the freqency offset (in Hz) for the 'dah' tone."));
 

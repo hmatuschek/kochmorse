@@ -14,7 +14,7 @@ MorseDecoder::MorseDecoder(double speed, float threshold, QObject *parent)
 }
 
 MorseDecoder::~MorseDecoder() {
-  delete _buffer;
+  delete[] _buffer;
 }
 
 void
@@ -31,7 +31,7 @@ void
 MorseDecoder::_updateConfig() {
   // Free "old" tables and buffers.
   if (nullptr != _buffer)
-    delete _buffer;
+    delete[] _buffer;
 
   // Compute dit length in samples from speed and sample rate
   _ditLength = size_t((60.*Globals::sampleRate)/(50.*_speed));
