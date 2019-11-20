@@ -20,7 +20,6 @@ Application::Application(int &argc, char *argv[])
   installTranslator(translator);
 
   _audio_sink = new QAudioSink(nullptr, this);
-  _audio_sink->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(nullptr, settings.noiseEnabled(), settings.noiseSNR(),
                                  settings.noiseFilterEnabled(), settings.tone(),
