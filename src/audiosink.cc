@@ -10,8 +10,41 @@
  * QAudioSink, playback
  * ********************************************************************************************* */
 QAudioSink::QAudioSink(QIODevice *src, QObject *parent)
-  : QIODevice(parent), _output(nullptr), _source(src)
+  : QIODevice(parent), _output(nullptr), _source(nullptr), _volume(1.0)
 {
+  this->open(QIODevice::ReadOnly);
+  setSource(src);
+}
+
+QAudioSink::~QAudioSink() {
+  if (this->isOpen())
+    this->close();
+  _output->stop();
+}
+
+double
+QAudioSink::volume() const {
+  return _volume;
+}
+
+void
+QAudioSink::setVolume(double volume) {
+  _volume = std::max(0.0, std::min(volume, 1.0));
+  if (_output)
+    _output->setVolume(_volume);
+}
+
+void
+QAudioSink::setOutputDevice(const QAudioDeviceInfo &output_device) {
+  if (_output && _output_device == output_device)
+    return;
+
+  if (_output) {
+    _output->stop();
+    delete _output;
+    _output = nullptr;
+  }
+
   QAudioFormat fmt;
   fmt.setByteOrder(QAudioFormat::LittleEndian);
   fmt.setChannelCount(1);
@@ -19,33 +52,15 @@ QAudioSink::QAudioSink(QIODevice *src, QObject *parent)
   fmt.setSampleSize(16);
   fmt.setSampleType(QAudioFormat::SignedInt);
   fmt.setCodec("audio/pcm");
-  QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+  QAudioDeviceInfo info(output_device);
   if (! info.isFormatSupported(fmt)) {
     qDebug() << "Warning: Audio format is not supported by device" << info.deviceName();
   }
 
-  if (_source) {
-    connect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
-    _source->open(QIODevice::ReadOnly);
-  }
-
-  _output = new QAudioOutput(fmt, this);
-  this->open(QIODevice::ReadOnly);
+  _output_device = output_device;
+  _output = new QAudioOutput(_output_device, fmt, this);
+  _output->setVolume(_volume);
   _output->start(this);
-}
-
-QAudioSink::~QAudioSink() {
-  _output->stop();
-}
-
-double
-QAudioSink::volume() const {
-  return _output->volume();
-}
-
-void
-QAudioSink::setVolume(double factor) {
-  return _output->setVolume(std::max(0.0, std::min(factor,1.0)));
 }
 
 void
@@ -95,8 +110,38 @@ QAudioSink::writeData(const char *data, qint64 len) {
  * QAudioSource, recording
  * ********************************************************************************************* */
 QAudioSource::QAudioSource(QIODevice *sink, QObject *parent)
-  : QIODevice(parent), _stream(0), _sink(sink)
+  : QIODevice(parent), _input(nullptr), _sink(sink)
 {
+}
+
+QAudioSource::~QAudioSource() {
+  this->stop();
+  this->close();
+}
+
+void
+QAudioSource::start() {
+  if (_input && QAudio::ActiveState != _input->state())
+    _input->start(this);
+}
+
+void
+QAudioSource::stop() {
+  if (_input)
+    _input->stop();
+}
+
+void
+QAudioSource::setInputDevice(const QAudioDeviceInfo &input_device) {
+  if (_input && _input_device == input_device)
+    return;
+
+  if (_input) {
+    this->stop();
+    delete _input;
+    _input = nullptr;
+  }
+
   QAudioFormat fmt;
   fmt.setByteOrder(QAudioFormat::LittleEndian);
   fmt.setChannelCount(1);
@@ -104,31 +149,21 @@ QAudioSource::QAudioSource(QIODevice *sink, QObject *parent)
   fmt.setSampleType(QAudioFormat::SignedInt);
   fmt.setSampleSize(16);
   fmt.setCodec("audio/pcm");
-  _stream = new QAudioInput(fmt, this);
+
+  QAudioDeviceInfo info(input_device);
+  if (! info.isFormatSupported(fmt)) {
+    qDebug() << "Warning: Audio format is not supported by device" << info.deviceName();
+  }
+
+  _input_device = input_device;
+  _input = new QAudioInput(_input_device, fmt, this);
   this->open(QIODevice::WriteOnly);
   _buffer.reserve(2048*sizeof(int16_t));
 }
 
-QAudioSource::~QAudioSource() {
-  if (0 != _stream)
-    this->stop();
-  this->close();
-}
-
-void
-QAudioSource::start() {
-  if (QAudio::ActiveState != _stream->state())
-    _stream->start(this);
-}
-
-void
-QAudioSource::stop() {
-  _stream->stop();
-}
-
 bool
 QAudioSource::isRunning() const {
-  return QAudio::ActiveState == _stream->state();
+  return QAudio::ActiveState == _input->state();
 }
 
 qint64

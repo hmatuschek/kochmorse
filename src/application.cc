@@ -20,7 +20,6 @@ Application::Application(int &argc, char *argv[])
   installTranslator(translator);
 
   _audio_sink = new QAudioSink(nullptr, this);
-  _audio_sink->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(nullptr, settings.noiseEnabled(), settings.noiseSNR(),
                                  settings.noiseFilterEnabled(), settings.tone(),
@@ -118,7 +117,10 @@ Application::applySettings()
   Settings settings;
 
   // Update audio settings
+  _audio_sink->setOutputDevice(settings.outputDevice());
   _audio_sink->setVolume(settings.volume());
+  _audio_src->setInputDevice(settings.inputDevice());
+
   // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
   _decoder->setThreshold(std::pow(10, settings.decoderLevel()/20));
 
