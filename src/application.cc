@@ -226,7 +226,7 @@ Application::onSessionVerified(const QString &tutor, int lesson, int score) {
 void
 Application::onUpdateAvailable(QString version) {
   QString text("<b>%1</b> of KochMorse is available for download. "
-               "You are runnnig version <b>%2.%3.%4</b>.<br><br>"
+               "You are running version <b>%2.%3.%4</b>.<br><br>"
                "Head to <a href=\"https://github.com/hmatuschek/kochmorse/releases\">"
                "github.com/hmatuschek/kochmorse/releases</a> for download.");
 
