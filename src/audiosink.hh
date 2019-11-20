@@ -24,6 +24,9 @@ public:
   /** Sets the current volume. */
   void setVolume(double factor);
 
+  /** (Re-) Sets the audio output device. */
+  void setOutputDevice(const QAudioDeviceInfo &output_device);
+
   /** (Re-) Sets the audio source. */
   void setSource(QIODevice *source);
 
@@ -42,8 +45,12 @@ protected:
 protected:
   /** The port-audio stream. */
   QAudioOutput *_output;
+  /** Holds the current output audio device of _output. */
+  QAudioDeviceInfo _output_device;
   /** Holds the audio source. */
   QIODevice *_source;
+
+  double _volume;
 };
 
 
@@ -60,6 +67,9 @@ public:
   /** Destructor. */
   virtual ~QAudioSource();
 
+  /** (Re-) Sets the audio input device. */
+  void setInputDevice(const QAudioDeviceInfo &input_device);
+
   /** Starts processing. */
   void start();
   /** Stops processing. */
@@ -75,7 +85,9 @@ protected:
 
 protected:
   /** The Qt Audio stream. */
-  QAudioInput *_stream;
+  QAudioInput *_input;
+  /** Holds the current input audio device of _input. */
+  QAudioDeviceInfo _input_device;
   /** The first processing node. */
   QIODevice *_sink;
   /** Output buffer. */
