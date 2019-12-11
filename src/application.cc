@@ -20,7 +20,6 @@ Application::Application(int &argc, char *argv[])
   installTranslator(translator);
 
   _audio_sink = new QAudioSink(nullptr, this);
-  _audio_sink->setVolume(settings.volume());
 
   _noiseEffect = new NoiseEffect(nullptr, settings.noiseEnabled(), settings.noiseSNR(),
                                  settings.noiseFilterEnabled(), settings.tone(),
@@ -118,7 +117,10 @@ Application::applySettings()
   Settings settings;
 
   // Update audio settings
+  _audio_sink->setOutputDevice(settings.outputDevice());
   _audio_sink->setVolume(settings.volume());
+  _audio_src->setInputDevice(settings.inputDevice());
+
   // factor is [0,2] -> mapped logarithmic on [-60, 0] db for decoder threshold
   _decoder->setThreshold(std::pow(10, settings.decoderLevel()/20));
 
@@ -226,7 +228,7 @@ Application::onSessionVerified(const QString &tutor, int lesson, int score) {
 void
 Application::onUpdateAvailable(QString version) {
   QString text("<b>%1</b> of KochMorse is available for download. "
-               "You are runnnig version <b>%2.%3.%4</b>.<br><br>"
+               "You are running version <b>%2.%3.%4</b>.<br><br>"
                "Head to <a href=\"https://github.com/hmatuschek/kochmorse/releases\">"
                "github.com/hmatuschek/kochmorse/releases</a> for download.");
 
