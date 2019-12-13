@@ -54,5 +54,7 @@
         <file>qso/wx-de.xml</file>
         <file>chat/chat.xml</file>
         <file>qso/words.xml</file>
+        <file alias="lang/kochmorse_es_ES.qm">shared/kochmorse_es.qm</file>
+        <file alias="lang/kochmorse_fr_FR.qm">shared/kochmorse_fr.qm</file>
     </qresource>
 </RCC>

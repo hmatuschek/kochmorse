@@ -4,7 +4,7 @@ KochMorse is a simple morse-code tutor using the
 [Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses
 [Qt5](https://qt-project.org) for the graphical user interface (GUI). [More ...](https://github.com/hmatuschek/kochmorse/wiki#how-to-use-kochmorse)
 
-<img src="http://i60.tinypic.com/mlnhqc.png" alt="Koch Morse in action." align="middle"/>
+<img src="https://raw.githubusercontent.com/hmatuschek/kochmorse/master/doc/Koch_example.png" alt="Koch Morse in action." align="middle"/>
 
 KochMorse runs under Linux, MacOS X and even under Windows. See the
 [Install](https://github.com/hmatuschek/kochmorse/wiki/Install) wiki page for details.

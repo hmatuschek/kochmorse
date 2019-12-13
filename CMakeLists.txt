@@ -16,8 +16,8 @@ find_package(Qt5LinguistTools REQUIRED)
 ADD_DEFINITIONS(${Qt5Widgets_DEFINITIONS})
 
 set(VERSION_MAJOR 3)
-set(VERSION_MINOR 4)
-set(VERSION_PATCH 1)
+set(VERSION_MINOR 5)
+set(VERSION_PATCH -0)
 configure_file(${PROJECT_SOURCE_DIR}/src/config.h.in ${PROJECT_BINARY_DIR}/src/config.h)
 
 set(CMAKE_CXX_STANDARD 11)
