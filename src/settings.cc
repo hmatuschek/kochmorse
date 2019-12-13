@@ -675,7 +675,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
   _tabs->addTab(_appearance, tr("Appearance"));
-  _tabs->addTab(_highscore, tr("Highscore"));
+  //_tabs->addTab(_highscore, tr("Highscore"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
