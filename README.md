@@ -17,7 +17,7 @@ Below, you will find a list of features of the current KochMorse release.
  * A [random morse tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#random-tutor) -- Allows to select a set of characters and prosigns for practicing.
  * A [QSO tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#qso-tutor) -- Generates a random QSO text so you can practice reading typical QSOs.
  * A [customized text tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#generated-text-tutor) -- This tutor allows you to listen to a plain-text file or to a text 
-   [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from a user-defined rules.
+   [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from user-defined rules.
  * A [transmit tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#transmit-tutor) -- Connect your practice tone-generator to your microphone input and check your
    transmissions with KochMorse.
  * A [chat tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#chat-tutor) -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ
