@@ -12,7 +12,7 @@
     <message>
         <location filename="../src/aboutdialog.cc" line="25"/>
         <source>Contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Contributeurs</translation>
     </message>
     <message>
         <location filename="../src/aboutdialog.cc" line="38"/>
@@ -25,27 +25,27 @@
     <message>
         <location filename="../src/settings.cc" line="1700"/>
         <source>Text Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Police du texte</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1701"/>
         <source>Font Size (pt)</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille de police (pt)</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1702"/>
         <source>RX Text Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur du texte RX</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1703"/>
         <source>TX Text Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur du texte TX</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1704"/>
         <source>Summary Text Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Couleur du texte récapitulatif</translation>
     </message>
 </context>
 <context>
@@ -53,7 +53,7 @@
     <message>
         <location filename="../src/application.cc" line="236"/>
         <source>New version available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une nouvelle version est disponible.</translation>
     </message>
 </context>
 <context>
@@ -61,27 +61,27 @@
     <message>
         <location filename="../src/qsochat.cc" line="151"/>
         <source>&lt;start&gt; element at line %1 needs &apos;id&apos; attribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;élément &lt;start&gt; à la ligne %1 nécessite un attribut «&#xa0;id&#xa0;».</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="156"/>
         <source>&lt;start&gt; element at line %1: Multiple &lt;start&gt; elements in one document!</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;start&gt; à la ligne %1&#xa0;: plusieurs éléments &lt;start&gt; détectés dans le même document&#xa0;!</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="162"/>
         <source>&lt;start&gt; element at line %1: Redefinition of state &apos;%2&apos;!</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;start&gt; à la ligne %1&#xa0;: redéfinition de l&apos;état «&#xa0;%2&#xa0;»&#xa0;!</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="170"/>
         <source>&lt;state&gt; element at line %1 needs &apos;id&apos; attribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;state&gt; à la ligne %1 nécessite un attribut «&#xa0;id&#xa0;».</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="176"/>
         <source>&lt;state&gt; element at line %1: Redefinition of state &apos;%2&apos;!</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;state&gt; à la ligne %1&#xa0;: redéfinition de l&apos;état «&#xa0;%2&#xa0;»&#xa0;!</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="184"/>
@@ -90,37 +90,37 @@
         <location filename="../src/qsochat.cc" line="264"/>
         <location filename="../src/qsochat.cc" line="311"/>
         <source>Unexpected element at line %1: %2</source>
-        <translation type="unfinished">Élément inattendu à la ligne %1 : %2</translation>
+        <translation>Élément inattendu à la ligne %1&#xa0;: %2</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="222"/>
         <source>&lt;state&gt; or &lt;start&gt; element at line %1 needs &apos;id&apos; attribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;élément &lt;state&gt; ou &lt;start&gt; à la ligne %1 nécessite un attribut «&#xa0;&apos;id&#xa0;».</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="252"/>
         <source>&lt;token&gt; element at line %1 needs &apos;id&apos; attribute.</source>
-        <translation type="unfinished"></translation>
+        <translation>L&apos;élément &lt;token&gt; à la ligne %1 nécessite un attribut «&#xa0;id&#xa0;».</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="283"/>
         <source>&lt;load&gt; or &lt;send&gt; element line %1: &apos;file&apos; attribute needed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;load&gt; ou &lt;send&gt; à la ligne %1&#xa0;: attribut «&#xa0;&apos;file&#xa0;» requis.</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="291"/>
         <source>&lt;on&gt; element line %1: &apos;token&apos; attribute needed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;on&gt; à la ligne %1&#xa0;: attribut «&#xa0;token&#xa0;» requis.</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="298"/>
         <source>&lt;goto&gt; element line %1: &apos;state&apos; attribute needed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;goto&gt; à la ligne %1&#xa0;: attribut «&#xa0;state&#xa0;» requis.</translation>
     </message>
     <message>
         <location filename="../src/qsochat.cc" line="305"/>
         <source>&lt;store-token&gt; element line %1: &apos;var&apos; attribute needed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Élément &lt;store-token&gt; à la ligne %1&#xa0;: attribut «&#xa0;var&#xa0;» requis.</translation>
     </message>
 </context>
 <context>
@@ -200,7 +200,7 @@
     <message>
         <location filename="../src/settings.cc" line="773"/>
         <source>Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitesse</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="775"/>
@@ -210,7 +210,7 @@
     <message>
         <location filename="../src/settings.cc" line="817"/>
         <source>%1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1</translation>
     </message>
     <message>
         <source>Eff. speed (WPM)</source>
@@ -235,27 +235,27 @@
     <message>
         <location filename="../src/settings.cc" line="728"/>
         <source>Specifies the relative pause lengths between symbols.</source>
-        <translation type="unfinished"></translation>
+        <translation>Spécifie la longueur relative des pauses entre les symboles.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="733"/>
         <source>Specifies the relative pause lengths between words.</source>
-        <translation type="unfinished"></translation>
+        <translation>Spécifie la longueur relative des pauses entre les mots.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="776"/>
         <source>Inter-symbol Pause (%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pause entre les symboles (%)</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="777"/>
         <source>Inter-word Pause (%)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pause entre les mots (%)</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="778"/>
         <source>Eff. Speed (WPM)</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitesse effective (MPM)</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="787"/>
@@ -411,17 +411,17 @@
     <message>
         <location filename="../src/settings.cc" line="1734"/>
         <source>Submit highscore</source>
-        <translation type="unfinished"></translation>
+        <translation>Soumettre le meilleur score</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1735"/>
         <source>Your call/nickname</source>
-        <translation type="unfinished"></translation>
+        <translation>Votre indicatif/pseudo</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1736"/>
         <source>Your learning progrss will be sumitted to &lt;a href=&quot;https://dm3mat.darc.de/kochmorse/highscore.php&quot;&gt;https://dm3mat.darc.de/kochmorse/highscore.php&lt;/a&gt;. This allows you to compare your progress with other KochMorse users. </source>
-        <translation type="unfinished"></translation>
+        <translation>Vos progrès d&apos;apprentissage seront envoyés sur &lt;a href=&quot;https://dm3mat.darc.de/kochmorse/highscore.php&quot;&gt;https://dm3mat.darc.de/kochmorse/highscore.php&lt;/a&gt;. Cela vous permettra de comparer vos progrès avec les autres utilisateurs KochMorse. </translation>
     </message>
 </context>
 <context>
@@ -458,6 +458,21 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
         <location filename="../src/tutor.cc" line="258"/>
         <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;lt; %2%. Keep on practicing!&lt;/b&gt; Have a look at the mistakes you made above. If you confused some characters (e.g., s, h &amp; 5) frequently, consider using the Random tutor to practice only those characters you confused.&lt;/p&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="248"/>
+        <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
+        <translation>&lt;html&gt;&lt;h3&gt;Texte transmis&#xa0;:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Texte entré&#xa0;:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Récapitulatif&#xa0;:&lt;/h3&gt;&lt;p&gt;Caractères/Mots/Lignes transmis&#xa0;: %3/%4/%5&lt;br&gt;Erreurs&#xa0;: %6&lt;br&gt;Précision&#xa0;: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="255"/>
+        <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;gt;= %2%. You may advance to the next lesson!&lt;/b&gt;&lt;/p&gt;&lt;/html&gt;</source>
+        <translation>&lt;p&gt;&lt;b&gt;Vous avez atteint une précision de %1% &amp;gt;= %2%. Vous pouvez passer à la leçon suivante&#xa0;!&lt;/b&gt;&lt;/p&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="258"/>
+        <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;lt; %2%. Keep on practicing!&lt;/b&gt; Have a look at the mistakes you made above. If you confused some characters (e.g., s, h &amp; 5) frequently, consider using the Random tutor to practice only those characters you confused.&lt;/p&gt;&lt;/html&gt;</source>
+        <translation>&lt;p&gt;&lt;b&gt;Vous avez atteint une précision de %1% &amp;lt; %2%. Continuez à vous entraîner&#xa0;!&lt;/b&gt; Consultez les erreurs relevées ci-dessus. Si vous avez fréquemment confondu certains caractères (p. ex. s, h &amp; 5), envisagez d&apos;utiliser le tuteur aléatoire pour vous entraîner uniquement avec les caractères qui vous posent problème.&lt;/p&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -510,7 +525,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/settings.cc" line="966"/>
         <source>Verify your progress by entering the received chars using your keyboard and compare the entered text automatically.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifiez vos progrès en entrant les caractères reçus avec le clavier, puis comparez le texte entré automatiquement.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="978"/>
@@ -555,12 +570,12 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/settings.cc" line="997"/>
         <source>Verify</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="998"/>
         <source>Hide send text</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer le texte transmis</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="999"/>
@@ -611,7 +626,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="52"/>
         <source>check</source>
-        <translation type="unfinished"></translation>
+        <translation>vérifier</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="59"/>
@@ -655,6 +670,11 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/tutor.cc" line="477"/>
+        <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
+        <translation>&lt;html&gt;&lt;h3&gt;Texte transmis&#xa0;:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Texte entré&#xa0;:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Récapitulatif&#xa0;:&lt;/h3&gt;&lt;p&gt;Caractères/Mots/Lignes transmis&#xa0;: %3/%4/%5&lt;br&gt;Erreurs&#xa0;: %6&lt;br&gt;Précision&#xa0;: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>RandomTutorSettingsView</name>
@@ -686,7 +706,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1115"/>
         <source>Special</source>
-        <translation type="unfinished"></translation>
+        <translation>Spécial</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1121"/>
@@ -711,7 +731,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1142"/>
         <source>Verify your progress by entering the received chars using your keyboard and compare the entered text automatically.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifiez vos progrès en entrant les caractères reçus avec le clavier, puis comparez le texte entré automatiquement.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1152"/>
@@ -741,12 +761,12 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1170"/>
         <source>Verify</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1171"/>
         <source>Hide output</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer le résultat</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1172"/>
@@ -779,7 +799,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="677"/>
         <source>Appearance</source>
-        <translation type="unfinished"></translation>
+        <translation>Apparence</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="708"/>
@@ -887,7 +907,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1358"/>
         <source>Generated QSO [german]</source>
-        <translation type="unfinished"></translation>
+        <translation>QSO généré [français]</translation>
     </message>
     <message>
         <source>Q-Codes/Words</source>
@@ -896,17 +916,17 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1359"/>
         <source>Q-Codes/Abbr.</source>
-        <translation type="unfinished"></translation>
+        <translation>Codes Q/Abr.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1360"/>
         <source>Words</source>
-        <translation type="unfinished"></translation>
+        <translation>Mots</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1361"/>
         <source>Q-Codes/Words [german]</source>
-        <translation type="unfinished"></translation>
+        <translation>Codes Q/Mots [français]</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1362"/>
@@ -959,7 +979,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="831"/>
         <source>Wordsworth</source>
-        <translation type="unfinished"></translation>
+        <translation>Wordsworth</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="832"/>
@@ -989,33 +1009,33 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <source>
 
 Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you can proceed to lesson %5.</source>
-        <translation type="unfinished">
+        <translation>
 
-%1 caractères, %2 mots et %3 lignes transmis. Si vous avez moins de %4 erreurs, vous pouvez passer à la leçon %5.</translation>
+%1&#xa0;caractères, %2&#xa0;mots et %3&#xa0;lignes transmis. Si vous avez moins de %4&#xa0;erreurs, vous pouvez passer à la leçon&#xa0;%5.</translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="646"/>
         <source>
 
 Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you completed the course!</source>
-        <translation type="unfinished">
+        <translation>
 
-%1 caractères, %2 mots et %3 lignes transmis. Si vous avez moins de %4 erreurs, vous avez fini cette leçon !</translation>
+%1&#xa0;caractères, %2&#xa0;mots et %3&#xa0;lignes transmis. Si vous avez moins de %4&#xa0;erreurs, vous avez fini ce cours&#xa0;!</translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="734"/>
         <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;h3&gt;Texte transmis&#xa0;:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Texte entré&#xa0;:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Récapitulatif&#xa0;:&lt;/h3&gt;&lt;p&gt;Caractères/Mots/Lignes transmis&#xa0;: %3/%4/%5&lt;br&gt;Erreurs&#xa0;: %6&lt;br&gt;Précision&#xa0;: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="741"/>
         <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;gt;= %2%. You may advance to the next lesson!&lt;/b&gt;&lt;/p&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;b&gt;Vous avez atteint une précision de %1% &amp;gt;= %2%. Vous pouvez passer à la leçon suivante&#xa0;!&lt;/b&gt;&lt;/p&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="744"/>
         <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;lt; %2%. Keep on practicing!&lt;/b&gt; Have a look at the mistakes you made above. If you confused some characters (e.g., s, h &amp; 5) frequently, consider using the Random tutor to practice only those characters you confused.&lt;/p&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;b&gt;Vous avez atteint une précision de %1% &amp;lt; %2%. Continuez à vous entraîner&#xa0;!&lt;/b&gt; Consultez les erreurs relevées ci-dessus. Si vous avez fréquemment confondu certains caractères (p. ex. s, h &amp; 5), envisagez d&apos;utiliser le tuteur aléatoire pour vous entraîner uniquement avec les caractères qui vous posent problème.&lt;/p&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -1023,92 +1043,92 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/settings.cc" line="1243"/>
         <source>Wordsworth tutor settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres du tuteur Wordsworth</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1250"/>
         <source>Specifies the number of words for this lesson.</source>
-        <translation type="unfinished"></translation>
+        <translation>Spécifie le nombre de mots pour cette leçon.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1254"/>
         <source>If enabled, increases the likelihood of newer words.</source>
-        <translation type="unfinished"></translation>
+        <translation>Si activé, augmente la probabilité que des nouveaux mots s&apos;affichent.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1258"/>
         <source>If enabled, repeats the new word before the lesson starts.</source>
-        <translation type="unfinished"></translation>
+        <translation>Si activé, répète le nouveau mot avant le début de la leçon.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1262"/>
         <source>Sends an infinite number of lines.</source>
-        <translation type="unfinished">Transmet un nombre de lignes infini.</translation>
+        <translation>Transmet un nombre infini de lignes.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1267"/>
         <source>Specifies the number of lines to send.</source>
-        <translation type="unfinished">Spécifie le nombre de lignes à transmettre.</translation>
+        <translation>Spécifie le nombre de lignes à transmettre.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1273"/>
         <source>If enabled, shows a summary statistics at the end.</source>
-        <translation type="unfinished">Si activé, affiche un récapitulatif avec des statistiques à la fin.</translation>
+        <translation>Si activé, affiche un récapitulatif avec des statistiques à la fin.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1279"/>
         <source>Verify your progress by entering the received words using your keyboard and compare the entered text automatically.</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifiez vos progrès en entrant les mots reçus avec le clavier, puis comparez le texte entré automatiquement.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1291"/>
         <source>Specifies the success rate at which the lesson is completed.</source>
-        <translation type="unfinished">Spécifie le taux de réussite à atteindre pour finir la leçon.</translation>
+        <translation>Spécifie le taux de réussite à atteindre pour finir la leçon.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1301"/>
         <source>Lesson</source>
-        <translation type="unfinished">Leçon</translation>
+        <translation>Leçon</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1302"/>
         <source>Prefer last words</source>
-        <translation type="unfinished"></translation>
+        <translation>Préférer les derniers mots</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1303"/>
         <source>Repeat last word</source>
-        <translation type="unfinished"></translation>
+        <translation>Répéter le dernier mot</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1304"/>
         <source>Infinite lines</source>
-        <translation type="unfinished">Lignes infinies</translation>
+        <translation>Lignes infinies</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1305"/>
         <source>Line count</source>
-        <translation type="unfinished">Nombre de lignes</translation>
+        <translation>Nombre de lignes</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1306"/>
         <source>Verify</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1307"/>
         <source>Hide send text</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer le texte transmis</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1308"/>
         <source>Show summary</source>
-        <translation type="unfinished">Afficher le récapitulatif</translation>
+        <translation>Afficher le récapitulatif</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1309"/>
         <source>Lesson target</source>
-        <translation type="unfinished">Cible de la leçon</translation>
+        <translation>Cible de la leçon</translation>
     </message>
 </context>
 </TS>
