@@ -25,6 +25,12 @@ public:
 
   /** Returns true if the tutor requires a decoder (has user input). */
   virtual bool needsDecoder() const = 0;
+  /** Returns true if the tutor requires an input text field. */
+  virtual bool isVerifying() const;
+  /** Returns true if the tutor requires a hidden output field. */
+  virtual bool isOutputHidden() const;
+  /** Verifies the received text once the session is finished. */
+  virtual int verify(const QString &input, QString &summary);
   /** Returns a summary of the lesson. */
   virtual QString summary() const;
   /** Gets the next char from a session. */
@@ -33,7 +39,8 @@ public:
   virtual bool atEnd() = 0;
 
 signals:
-  void sessionComplete();
+  void sessionFinished();
+  void sessionVerified(const QString &tutor, int lesson, int score);
 
 public slots:
   /** Handles the received char. */
@@ -62,13 +69,21 @@ public:
    * @param parent Specifies the QObject parent. */
   KochTutor(MorseEncoder *encoder, int lesson=2, bool prefLastChars=false, bool repeatLastChar=false,
             size_t minGroupSize=5, size_t maxGroupSize=5,
-            int lines=5, bool showSummary=false, int successThreshold=90, QObject *parent=nullptr);
+            int lines=5, bool showSummary=false, bool verify=false, bool hideOutput=false,
+            int successThreshold=90, QObject *parent=nullptr);
   /** Destructor. */
   virtual ~KochTutor();
 
   QString summary() const;
   /** Returns @c false. */
   bool needsDecoder() const;
+
+  /** Returns @c true. */
+  bool isVerifying() const;
+  /** Returns @c true. */
+  bool isOutputHidden() const;
+  /** Verifies the received text. */
+  int verify(const QString &text, QString &summary);
 
   /** Returns the current lesson. */
   int lesson() const;
@@ -92,6 +107,9 @@ public:
   QChar next();
   /** If @ctrue, the current session is at the end. */
   bool atEnd();
+
+public:
+  static const QVector<QChar> &lessons();
 
 public slots:
   /** Reset/restarts a session. */
@@ -123,6 +141,8 @@ protected:
   /** The number of lines send. */
   int _linecount;
   bool _showSummary;
+  bool _verify;
+  bool _hideOutput;
   int _threshold;
   /** The list of chars of the current session. */
   QList<QChar> _text;
@@ -131,6 +151,7 @@ protected:
   size_t _chars_send;
   size_t _words_send;
   size_t _lines_send;
+  QString _sendText;
 };
 
 
@@ -142,10 +163,11 @@ class RandomTutor: public Tutor
 public:
   /** Constructor. Uses all symbols for practicing. */
   explicit RandomTutor(MorseEncoder *encoder, size_t minGroupSize=5, size_t maxGroupSize=5, int lines=5,
-                       bool showSummary=false, QObject *parent=0);
+                       bool showSummary=false, bool verify=false, bool hideOutput=false, QObject *parent=0);
   /** Constructor. Uses only the symbols specified by the @c chars set for practicing. */
   explicit RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t minGroupSize=5, size_t maxGroupSize=5,
-                       int lines=5, bool showSummary=false, QObject *parent=0);
+                       int lines=5, bool showSummary=false, bool verify=false, bool hideOutput=false,
+                       QObject *parent=0);
   /** Destructor. */
   virtual ~RandomTutor();
 
@@ -153,6 +175,12 @@ public:
 
   /** Returns @c false. */
   bool needsDecoder() const;
+  /** Returns @c true. */
+  bool isVerifying() const;
+  /** Returns @c true. */
+  bool isOutputHidden() const;
+  /** Verifies the received text. */
+  int verify(const QString &text, QString &summary);
 
   /** Returns the set of characters to practice. */
   QSet<QChar> chars() const;
@@ -191,13 +219,111 @@ protected:
   /** Number of lines send. */
   int _linecount;
   bool _showSummary;
+  bool _verify;
+  bool _hideOutput;
   /** Text for the current session. */
   QList<QChar> _text;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
+  QString _sendText;
   size_t _chars_send;
   size_t _words_send;
   size_t _lines_send;
+};
+
+
+/** A tutor for the "Wordsworth" (Farnsworth with words) method.
+ * @see http://www.sk6qa.se/WP/wp-content/uploads/2017/04/Increase-your-CW-Speed-with-Wordsworth.pdf */
+class WordsworthTutor: public Tutor
+{
+  Q_OBJECT
+
+public:
+  /** Constructor.
+   * @param lesson Specifies the lesson of the tutor [2, 43].
+   * @param prefLastWords If @c true, specifies the if the words of the more recent lessons
+   *        should be samples more likely by the tutor.
+   * @param parent Specifies the QObject parent. */
+  WordsworthTutor(MorseEncoder *encoder, int lesson=2, bool prefLastWords=false,
+                  bool repeatLastWord=false, int lines=10, bool showSummary=false,
+                  bool verify=false, bool hideOutput=false, int successThreshold=90,
+                  QObject *parent=nullptr);
+  /** Destructor. */
+  virtual ~WordsworthTutor();
+
+  QString summary() const;
+  /** Returns @c false. */
+  bool needsDecoder() const;
+
+  /** Returns @c true. */
+  bool isVerifying() const;
+  /** Returns @c true. */
+  bool isOutputHidden() const;
+  /** Verifies the received text. */
+  int verify(const QString &text, QString &summary);
+
+  /** Returns the current lesson. */
+  int lesson() const;
+  /** Sets the current lesson. */
+  void setLesson(int lesson);
+  /** Returns @c true if the words of the more resent lessons are sampled more likely. */
+  bool prefLastWords() const;
+  /** Enable preferred sampling of recent words. */
+  void setPrefLastWords(bool pref);
+  /** Repetition of last added word at the beginning of a session. */
+  bool repeatLastWord() const;
+  /** Enable repetition of last added word at the beginning of a session. */
+  void setRepeatLastWord(bool enable);
+  /** Returns the number of lines to send. */
+  int lines() const;
+  /** Sets the number of lines to send. */
+  void setLines(int lines);
+  void setShowSummary(bool show);
+  void setSuccessThreshold(int thres);
+  /** Samples the next word. */
+  QChar next();
+  /** If @ctrue, the current session is at the end. */
+  bool atEnd();
+
+public:
+  static const QVector<QString> &lessons();
+
+public slots:
+  /** Reset/restarts a session. */
+  void reset();
+  void start();
+  void stop();
+
+protected slots:
+  void onCharSend(QChar c);
+
+protected:
+  /** Samples the next line of text. */
+  void _nextline();
+
+protected:
+  /** The current lesson. */
+  int _lesson;
+  /** The "prefer last words" flag. */
+  bool _prefLastWords;
+  /** The "repeat last word" flag. */
+  bool _repeatLastWord;
+  /** The number of lines to send, if negative send an infinite number of lines. */
+  int _lines;
+  /** The number of lines send. */
+  int _linecount;
+  bool _showSummary;
+  bool _verify;
+  bool _hideOutput;
+  int _threshold;
+  /** The list of chars of the current session. */
+  QList<QChar> _text;
+  /** The vector of words for each lesson. */
+  static QVector<QString> _lessons;
+  size_t _chars_send;
+  size_t _words_send;
+  size_t _lines_send;
+  QString _sendText;
 };
 
 
@@ -211,6 +337,7 @@ public:
   virtual ~GenTextTutor();
 
   bool needsDecoder() const;
+
   QChar next();
   bool atEnd();
 
@@ -237,6 +364,7 @@ public:
   virtual ~TXTutor();
 
   bool needsDecoder() const;
+
   QChar next();
   bool atEnd();
 
@@ -254,6 +382,7 @@ public:
   virtual ~ChatTutor();
 
   bool needsDecoder() const;
+
   void handle(const QChar &ch);
   QChar next();
   bool atEnd();

@@ -4,7 +4,7 @@
 #include "globals.hh"
 #include <QDebug>
 #include <iostream>
-
+#include <random>
 
 #define sinc(x) (x==0 ? 1: (std::sin(M_PI*x)/(M_PI*x)))
 

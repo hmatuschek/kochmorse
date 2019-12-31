@@ -6,6 +6,8 @@
 #include <QAction>
 #include <QSlider>
 #include <QLabel>
+#include <QShortcut>
+#include <QPushButton>
 
 #include "application.hh"
 
@@ -35,12 +37,18 @@ protected slots:
   void onVolumeChanged(int value);
   /** Gets called on quit-button press. */
   void onQuit();
+  void onCheck();
+  void onTutorChanged();
 
 protected:
   /** Holds a weak reference to the application instance. */
   Application &_app;
-  /** Holds the text view. */
+  /** Holds the output text view. */
   QTextEdit *_text;
+  /** Holds the input text widget. */
+  QTextEdit *_input;
+  /** The check button. */
+  QPushButton *_check;
   /** QAction for the play/stop toggle button. */
   QAction *_play;
   /** QAction for the "preferences" button. */
@@ -53,6 +61,8 @@ protected:
   QLabel *_volumeLabel;
   /** The action for the "quit" button. */
   QAction *_quit;
+  /** The shortcut for the play button*/
+  QShortcut *playShortcut;
 };
 
 #endif // __KOCHMORSE_MAINWINDOW_HH__

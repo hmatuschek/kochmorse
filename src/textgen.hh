@@ -109,6 +109,30 @@ protected:
 };
 
 
+/** A rule that selects one sub-rule according to weights associated with the sub-rules by means
+ * of Zipf's Law. */
+class TextGenOneOfZipfRule: public TextGenRule
+{
+	Q_OBJECT
+
+public:
+  /** Constructs an empty "one-of" rule. Use @c addRule to add rules. */
+	TextGenOneOfZipfRule(double exp=1.0, QObject *parent=nullptr);
+
+  /** Adds the specified rule with the associated weight. */
+	void addRule(TextGenRule *rule);
+
+	virtual void generate(QTextStream &buffer, QHash<QString, QString> &ctx);
+
+protected:
+  double _exp;
+  /** The vector of rule-weights. */
+	QVector<double>       _weights;
+  /** The vector of rules. */
+	QVector<TextGenRule*> _rules;
+};
+
+
 /** This rule randomly repeates some other text rule. */
 class TextGenRepeatRule: public TextGenRule
 {
@@ -222,10 +246,19 @@ protected:
 };
 
 
+
 /** This class parses a XML description of rules that form the text generators. */
 class TextGen: public TextGenListRule
 {
   Q_OBJECT
+
+public:
+  class Context: public QHash<QString, QString>
+  {
+  public:
+    Context();
+    Context(const Context &other);
+  };
 
 public:
   /** Constructs a text generator from the rules specified as XML in @c filename. */
@@ -257,6 +290,12 @@ protected:
   void parseOneOfItem(QXmlStreamReader &reader, TextGenOneOfRule *rule);
   /** Parses a "one-of" rule text-item. */
   void parseOneOfText(QXmlStreamReader &reader, TextGenOneOfRule *rule);
+  /** Parses a "one-of-zipf" rule. */
+  void parseOneOfZipf(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
+  /** Parses a "one-of-zipf" rule item. */
+  void parseOneOfZipfItem(QXmlStreamReader &reader, TextGenOneOfZipfRule *rule);
+  /** Parses a "one-of-zipf" rule text-item. */
+  void parseOneOfZipfText(QXmlStreamReader &reader, TextGenOneOfZipfRule *rule);
   /** Parses a "rep" rule item. */
   void parseRep(QXmlStreamReader &reader, QList<TextGenRule *> &rules);
   /** Parses a "any-letter" rule. */

@@ -4,7 +4,7 @@ KochMorse is a simple morse-code tutor using the
 [Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses
 [Qt5](https://qt-project.org) for the graphical user interface (GUI). [More ...](https://github.com/hmatuschek/kochmorse/wiki#how-to-use-kochmorse)
 
-<img src="http://i60.tinypic.com/mlnhqc.png" alt="Koch Morse in action." align="middle"/>
+<img src="https://raw.githubusercontent.com/hmatuschek/kochmorse/master/doc/Koch_example.png" alt="Koch Morse in action." align="middle"/>
 
 KochMorse runs under Linux, MacOS X and even under Windows. See the
 [Install](https://github.com/hmatuschek/kochmorse/wiki/Install) wiki page for details.
@@ -17,7 +17,7 @@ Below, you will find a list of features of the current KochMorse release.
  * A [random morse tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#random-tutor) -- Allows to select a set of characters and prosigns for practicing.
  * A [QSO tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#qso-tutor) -- Generates a random QSO text so you can practice reading typical QSOs.
  * A [customized text tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#generated-text-tutor) -- This tutor allows you to listen to a plain-text file or to a text 
-   [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from a user-defined rules.
+   [generated](https://github.com/hmatuschek/kochmorse/wiki/TextGen) from user-defined rules.
  * A [transmit tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#transmit-tutor) -- Connect your practice tone-generator to your microphone input and check your
    transmissions with KochMorse.
  * A [chat tutor](https://github.com/hmatuschek/kochmorse/wiki/Tutors#chat-tutor) -- This tutor is a combination of the transmit tutor and the QSO tutor. Call CQ

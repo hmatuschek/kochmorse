@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDebug>
+#include <QDate>
+#include <cmath>
 
 
 /* ********************************************************************************************* *
@@ -111,6 +113,35 @@ TextGenOneOfRule::addRule(double weight, TextGenRule *rule) {
 
 void
 TextGenOneOfRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
+  // Seed with a real random value, if available
+  std::random_device r;
+  // Choose a random mean between 1 and 6
+  std::default_random_engine entr(r());
+  std::discrete_distribution<int> rnd(_weights.begin(), _weights.end());
+  _rules[rnd(entr)]->generate(buffer, ctx);
+}
+
+
+/* ********************************************************************************************* *
+ * Implementation of TextGenOneZipfOfRule
+ * ********************************************************************************************* */
+TextGenOneOfZipfRule::TextGenOneOfZipfRule(double exp, QObject *parent)
+  : TextGenRule(parent), _exp(exp), _rules()
+{
+	// pass...
+}
+
+void
+TextGenOneOfZipfRule::addRule(TextGenRule *rule) {
+	if (0 == rule)
+		return;
+	rule->setParent(this);
+  _rules.append(rule);
+	_weights.append(1./std::pow(double(_rules.size()), _exp));
+}
+
+void
+TextGenOneOfZipfRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
   // Seed with a real random value, if available
   std::random_device r;
   // Choose a random mean between 1 and 6
@@ -232,6 +263,56 @@ TextGenListRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
 
 
 /* ********************************************************************************************* *
+ * Implementation of TextGen::Context
+ * ********************************************************************************************* */
+TextGen::Context::Context()
+  : QHash<QString, QString>()
+{
+  QDateTime now = QDateTime::currentDateTimeUtc();
+  switch (now.date().month()) {
+    case 12:
+    case 1:
+    case 2:
+      insert("ToY","winter");
+      break;
+    case 3:
+    case 4:
+    case 5:
+      insert("ToY","spring");
+      break;
+    case 6:
+    case 7:
+    case 8:
+      insert("ToY","summer");
+      break;
+    case 9:
+    case 10:
+    case 11:
+      insert("ToY","fall");
+      break;
+    default: break;
+  }
+  if ((now.time().hour()>=6) && (now.time().hour()<12)) {
+    insert("ToD","gm");
+  } else if ((now.time().hour()>=12) && (now.time().hour()<15)) {
+    insert("ToD","gd");
+  } if ((now.time().hour()>=15) && (now.time().hour()<18)) {
+    insert("ToD","ga");
+  } if ((now.time().hour()>=18) && (now.time().hour()<23)) {
+    insert("ToD","ge");
+  } else {
+    insert("ToD","gn");
+  }
+}
+
+TextGen::Context::Context(const Context &other)
+  : QHash<QString, QString>(other)
+{
+  // pass...
+}
+
+
+/* ********************************************************************************************* *
  * Implementation of TextGen
  * ********************************************************************************************* */
 TextGen::TextGen(const QString &filename, QObject *parent)
@@ -318,6 +399,8 @@ TextGen::parseRules(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
         this->parseOptRule(reader, rules);
       } else if ("one-of" == reader.name()) {
         this->parseOneOf(reader, rules);
+      } else if ("one-of-zipf" == reader.name()) {
+        this->parseOneOfZipf(reader, rules);
       } else if ("rep" == reader.name()) {
         this->parseRep(reader, rules);
       } else if ("any-letter" == reader.name()) {
@@ -493,6 +576,49 @@ TextGen::parseOneOfText(QXmlStreamReader &reader, TextGenOneOfRule *rule) {
 }
 
 void
+TextGen::parseOneOfZipf(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
+  double exp = 1;
+  if (reader.attributes().hasAttribute("exp")) {
+    bool ok;
+    double tmp = reader.attributes().value("exp").toDouble(&ok);
+    if (ok)
+      exp = tmp;
+  }
+
+  TextGenOneOfZipfRule *rule = new TextGenOneOfZipfRule(exp, this);
+  rules.push_back(rule);
+
+  while (! reader.atEnd()) {
+    reader.readNext();
+    if (reader.isStartElement() && ("i" == reader.name())) {
+      parseOneOfZipfItem(reader, rule);
+    } else if (reader.isStartElement() && ("t" == reader.name())) {
+      parseOneOfZipfText(reader, rule);
+    } else if (reader.isEndElement()) {
+      return;
+    } else if (reader.isStartElement()){
+      // Handle error
+      reader.raiseError(tr("Unexpected element at line %1: %2")
+                        .arg(reader.lineNumber()).arg(reader.name().toString()));
+    }
+  }
+}
+
+void
+TextGen::parseOneOfZipfItem(QXmlStreamReader &reader, TextGenOneOfZipfRule *rule) {
+  QList<TextGenRule *> rules;
+  parseRules(reader, rules);
+  rule->addRule(new TextGenListRule(rules, this));
+}
+
+void
+TextGen::parseOneOfZipfText(QXmlStreamReader &reader, TextGenOneOfZipfRule *rule) {
+  QList<TextGenRule *> rules;
+  parseText(reader, rules);
+  rule->addRule(new TextGenListRule(rules));
+}
+
+void
 TextGen::parseRep(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
   // Get min
   if (! reader.attributes().hasAttribute("min")) {
@@ -608,7 +734,7 @@ TextGen::parseSK(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
 
 void
 TextGen::parsePause(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
-  rules.append(new TextGenTextRule(" ", this));
+  rules.append(new TextGenTextRule("\t", this));
   while (! reader.atEnd()) {
     reader.readNext();
     if (reader.isEndElement())

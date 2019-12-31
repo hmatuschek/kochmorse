@@ -19,6 +19,28 @@ inline QHash<QString, QChar> _initCodeTable() {
   table[".-..."] = '&';  table["---..."] = ':'; table["-.-.-."] = ';'; table["-...-"] = '=';
   table[".-.-."] = '+';  table["-.--."] = '(';  table["-.--.-"] = ')'; table["-....-"] = '-';
   table[".--.-."] = '@';
+
+  // Special letters (language dependent)
+  table[".-.-"] = QChar(0x00e4); // ä
+  table["---."] = QChar(0x00f6); // ö
+  table["..--"] = QChar(0x00fc); // ü
+  table["----"] = QChar(0x03c7); // χ,CH
+  table[".--.-"] = QChar(0x00e5); // å
+  table["..-.."] = QChar(0x00e9); // é
+  table["..--."] = QChar(0x00f0); // ð
+  table[".--.."] = QChar(0x00de); // þ
+  table["-.-.."] = QChar(0x0107); // ć
+  table["--.-."] = QChar(0x011d); // ĝ
+  table[".---."] = QChar(0x0125); // ĵ
+  table["...-."] = QChar(0x015d); // ŝ
+  table[".-..-"] = QChar(0x0142); // ł
+  table["--.--"] = QChar(0x00f1); // ñ
+  table["--..-"] = QChar(0x0107); // ż
+  table["..-.-"] = QChar(0x00bf); // ¿
+  table["--...-"] = QChar(0x00a1); // ¡
+  table["...--.."] = QChar(0x00df); // ß
+  table["...-..."] = QChar(0x0144); // ś
+
   // Some prosigns:
   table["-...-.-"] = QChar(0x2417);  // BK -> ETB
   table["-.-..-.."] = QChar(0x2404); // CL -> EOT
@@ -50,6 +72,39 @@ inline QHash<QChar, QString> _initCharTable() {
   table['&'] = ".-...";  table[':'] = "---..."; table[';'] = "-.-.-."; table['='] = "-...-";
   table['+'] = ".-.-.";  table['('] = "-.--.";  table[')'] = "-.--.-"; table['-'] = "-....-";
   table['@'] = ".--.-.";
+
+  // Special letters (language dependent)
+  table[QChar(0x017a)] = "--"; // ź
+  table[QChar(0x00e4)] = ".-.-"; // ä
+  table[QChar(0x0105)] = ".-.-"; // ą
+  table[QChar(0x00f6)] = "---."; // ö
+  table[QChar(0x00f8)] = "---."; // ø
+  table[QChar(0x00f3)] = "---."; // ó
+  table[QChar(0x00fc)] = "..--"; // ü
+  table[QChar(0x016d)] = "..--"; // ŭ
+  table[QChar(0x03c7)] = "----"; // χ,CH
+  table[QChar(0x0125)] = "----"; // ĥ
+  table[QChar(0x00e0)] = ".--.-"; // à
+  table[QChar(0x00e5)] = ".--.-"; // å
+  table[QChar(0x00e8)] = "..-.."; // è
+  table[QChar(0x00e9)] = "..-.."; // é
+  table[QChar(0x0109)] = "..-.."; // ę
+  table[QChar(0x00f0)] = "..--."; // ð
+  table[QChar(0x00de)] = ".--.."; // þ
+  table[QChar(0x0109)] = "-.-.."; // ĉ
+  table[QChar(0x0107)] = "-.-.."; // ć
+  table[QChar(0x011d)] = "--.-."; // ĝ
+  table[QChar(0x0125)] = ".---."; // ĵ
+  table[QChar(0x015d)] = "...-."; // ŝ
+  table[QChar(0x0142)] = ".-..-"; // ł
+  table[QChar(0x0144)] = "--.--"; // ń
+  table[QChar(0x00f1)] = "--.--"; // ñ
+  table[QChar(0x0107)] = "--..-"; // ż
+  table[QChar(0x00bf)] = "..-.-"; // ¿
+  table[QChar(0x00a1)] = "--...-"; // ¡
+  table[QChar(0x00df)] = "...--.."; // ß
+  table[QChar(0x0144)] = "...-..."; // ś
+
   // Some prosigns:
   table[QChar(0x2417)] = "-...-.-";  // BK -> ETB
   table[QChar(0x2404)] = "-.-..-.."; // CL -> EOT
@@ -72,6 +127,7 @@ inline QHash<QChar, QString> _initProsignTable() {
   table[QChar(0x2403)] = "SK"; // SK -> ETX
   table[QChar(0x2406)] = "SN"; // SN -> ACK
   table[QChar(0x2407)] = "KN"; // KN -> BEL
+  table[QChar('\t')] = "  ";   // TAB -> "  "
   return table;
 }
 

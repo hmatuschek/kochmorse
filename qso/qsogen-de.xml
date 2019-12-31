@@ -4,17 +4,17 @@
  <load file="dxcc.xml"/>
  <load file="rst.xml"/>
  <load file="rig.xml"/>
- <load file="wx.xml"/>
+ <load file="wx-de.xml"/>
 
  <!-- sample qso quality -->
  <var id="rst-q"><apply rule="rst-q"/></var>
  <!-- sample qso time from "gm", "ga" "ge" or "gn" -->
- <var id="time"><one-of><t>gm</t><t>ga</t><t>ge</t><t>gn</t></one-of></var>
+ <var id="time"><one-of><t>gm</t><t>gt</t><t>ga</t><t>gn</t></one-of></var>
  <!-- sample some common WX -->
  <var id="wx-temp"><apply rule="wx-temp"/></var>
 
 <!-- Define call, name, qth, etc OP A -->
- <var id="dxcc"><apply rule="dxcc"/></var>
+ <var id="dxcc">dl</var>
  <var id="CallA"><apply rule="call"/></var>
  <var id="NameA"><apply rule="name"/></var>
  <var id="CityA"><opt>nr </opt><apply rule="city"/></var>
@@ -29,7 +29,7 @@
                             <t w="10">rig</t>  <t w="10">pwr</t> <t w="10">ant</t></one-of></var>
 
  <!-- Define call, name, qth, etc OP B -->
- <var id="dxcc"><apply rule="dxcc"/></var>
+ <var id="dxcc">dl</var>
  <var id="CallB"><apply rule="call"/></var>
  <var id="NameB"><apply rule="name"/></var>
  <var id="CityB"><opt>nr </opt><apply rule="city"/></var>
@@ -55,9 +55,8 @@
  <!-- Reply by OP A to B -->
  <t><ref var="FullCallB"/> de <ref var="CallA"/> <bt/> </t>
  <one-of>
-  <t><opt><ref var="time"/> es </opt><one-of><t>tnx</t><t>tu</t></one-of> fer call <bt/> </t>
-  <t><opt><ref var="time"/> es </opt><one-of><t>tnx</t><t>tu</t></one-of> fer coming bak <bt/> </t>
-  <t><opt><ref var="time"/> es </opt>fb dr om <bt/> </t>
+  <t><opt><ref var="time"/> es </opt>vln dnk fr <one-of><t>anruf</t><t>ruf</t></one-of> <bt/> </t>
+  <t><opt><ref var="time"/> es </opt>fb dnr om <bt/> </t>
   <t></t>
  </one-of>
  <one-of>
@@ -66,7 +65,7 @@
  </one-of>
  <one-of>
   <t><opt>hr </opt>in <ref var="CityA"/> <ref var="CityA"/> <bt/> <one-of><t>name <opt>is </opt></t><t>op <opt>hr </opt></t></one-of><ref var="NameA"/> <ref var="NameA"/> </t>
-  <t><bt/> <one-of><t>name <opt>is </opt></t><t>op <opt>hr </opt></t></one-of><ref var="NameA"/> <ref var="NameA"/> <bt/> qth <opt>is </opt><ref var="CityA"/> <ref var="CityA"/> </t>
+  <t><bt/> name <opt>is </opt>hr <ref var="NameA"/> <ref var="NameA"/> <bt/> qth <opt>is </opt><ref var="CityA"/> <ref var="CityA"/> </t>
   <t><bt/> qth <opt>is </opt><ref var="CityA"/> <ref var="CityA"/> <bt/> <one-of><t>name <opt>is </opt></t><t>op <opt>hr </opt></t></one-of><ref var="NameA"/> <ref var="NameA"/> </t>
  </one-of>
  <one-of>
@@ -80,15 +79,15 @@
  </one-of>
 
  <if var="BMissed" matches="rst">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt rst<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt rst <bk/><stop/></t>
   <t><opt>ur </opt>rst <ref var="RSTB"/> <ref var="RSTB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="BMissed" matches="qth">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt qth<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt qth <bk/><stop/></t>
   <t>qth <opt>hr </opt><ref var="CityA"/> <ref var="CityA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="BMissed" matches="name">
-  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt>sri </opt><opt p="0.7">pse </opt>rpt name<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallA"/> de <ref var="CallB"/> <bt/> <opt p="0.7">pse </opt>rpt name <bk/><stop/></t>
   <t>name <opt>hr </opt><ref var="NameA"/> <ref var="NameA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
 
@@ -98,10 +97,10 @@
   <t w="30">rr </t>
  </one-of>
  <one-of>
-  <t><opt><ref var="time"/> es </opt><one-of><t>tnx</t><t>tu</t></one-of> fer rpt <opt>dr </opt><ref var="NameA"/> <bt/> </t>
-  <t><opt><ref var="time"/> es </opt><one-of><t>tnx</t><t>tu</t></one-of> fer rply <opt>dr </opt><ref var="NameA"/> <bt/> </t>
-  <t><opt>fb es </opt><ref var="time"/> dr <ref var="NameA"/> <opt>es <one-of><t>tnx</t><t>tu</t></one-of> fer rpt </opt> <bt/> </t>
-  <t><opt>fb es </opt><ref var="time"/> dr <ref var="NameA"/> <opt>es <one-of><t>tnx</t><t>tu</t></one-of> fer rply </opt> <bt/> </t>
+  <t><opt><ref var="time"/> es </opt>vln dnk fr rpt <opt>dr </opt><ref var="NameA"/> <bt/> </t>
+  <t><opt><ref var="time"/> es </opt>vln dnk fr ruf <opt>dr </opt><ref var="NameA"/> <bt/> </t>
+  <t><opt>fb es </opt><ref var="time"/> dr <ref var="NameA"/> <opt>es vln dnk fr rpt </opt> <bt/> </t>
+  <t><opt>fb es </opt><ref var="time"/> dr <ref var="NameA"/> <opt>es vln dnk fr ruf </opt> <bt/> </t>
   <t/>
  </one-of>
  <one-of>
@@ -119,15 +118,15 @@
  </one-of>
 
  <if var="AMissed" matches="rst">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt rst<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt rst <bk/><stop/></t>
   <t><opt>ur </opt>rst <ref var="RSTA"/> <ref var="RSTA"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="AMissed" matches="qth">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt qth<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt qth <bk/><stop/></t>
   <t>qth <opt>hr </opt><ref var="CityB"/> <ref var="CityB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
  <if var="AMissed" matches="name">
-  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>sri </opt><opt>pse </opt>rpt name<opt>?</opt> <bk/><stop/></t>
+  <t><ref var="CallB"/> de <ref var="CallA"/> <bt/> <opt>pse </opt>rpt name <bk/><stop/></t>
   <t>name <opt>hr </opt><ref var="NameB"/> <ref var="NameB"/> <one-of><t>k</t><t><bk/></t></one-of><stop/></t>
  </if>
 

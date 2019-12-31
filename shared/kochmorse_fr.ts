@@ -155,7 +155,7 @@
     <message>
         <location filename="../src/settings.cc" line="746"/>
         <source>Specifies the freqency offset (in Hz) for the &apos;dah&apos; tone.</source>
-        <translation>Spécifie le décalage de fréquence (en Hz) pour la tonalité «&#xa0;dah&#xa0;».</translation>
+        <translation>Spécifie le décalage de fréquence (en Hz) pour la tonalité « dah ».</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="749"/>
@@ -175,7 +175,7 @@
     <message>
         <location filename="../src/settings.cc" line="752"/>
         <source>Selects the sound &apos;sharpness&apos; for the CW tone.</source>
-        <translation>Sélectionne la «&#xa0;netteté&#xa0;» sonore pour la tonalité CW.</translation>
+        <translation>Sélectionne la « netteté » sonore pour la tonalité CW.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="760"/>
@@ -306,7 +306,7 @@
     <message>
         <location filename="../src/settings.cc" line="1502"/>
         <source>Specifies the signal-to-noise ratio in dB for the noise effect (should be &gt;10dB).</source>
-        <translation>Spécifie le rapport signal-bruit en dB pour l&apos;effet du bruit (devrait être &gt;10&#xa0;dB).</translation>
+        <translation>Spécifie le rapport signal-bruit en dB pour l&apos;effet du bruit (devrait être &gt;10 dB).</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1507"/>
@@ -388,7 +388,7 @@
     <message>
         <location filename="../src/settings.cc" line="1567"/>
         <source>Specifies the relative power (in dB) of all QRM stations to the CW signal.</source>
-        <translation>Spécifie la puissance relative (en&#xa0;dB) de toutes les stations QRM pour le signal CW.</translation>
+        <translation>Spécifie la puissance relative (en dB) de toutes les stations QRM pour le signal CW.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1573"/>
@@ -433,7 +433,7 @@
 Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you can proceed to lesson %5.</source>
         <translation>
 
-%1&#xa0;caractères, %2&#xa0;mots et %3&#xa0;lignes transmis. Si vous avez moins de %4&#xa0;erreurs, vous pouvez passer à la leçon&#xa0;%5.</translation>
+%1 caractères, %2 mots et %3 lignes transmis. Si vous avez moins de %4 erreurs, vous pouvez passer à la leçon %5.</translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="162"/>
@@ -442,7 +442,22 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
 Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you completed the course!</source>
         <translation>
 
-%1&#xa0;caractères, %2&#xa0;mots et %3&#xa0;lignes transmis. Si vous avez moins de %4&#xa0;erreurs, vous avez fini cette leçon&#xa0;!</translation>
+%1 caractères, %2 mots et %3 lignes transmis. Si vous avez moins de %4 erreurs, vous avez fini cette leçon !</translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="248"/>
+        <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="255"/>
+        <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;gt;= %2%. You may advance to the next lesson!&lt;/b&gt;&lt;/p&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="258"/>
+        <source>&lt;p&gt;&lt;b&gt;You achieved an accuracy of %1% &amp;lt; %2%. Keep on practicing!&lt;/b&gt; Have a look at the mistakes you made above. If you confused some characters (e.g., s, h &amp; 5) frequently, consider using the Random tutor to practice only those characters you confused.&lt;/p&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="248"/>
@@ -626,7 +641,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="71"/>
         <source>Volume: %1 %</source>
-        <translation>Volume&#xa0;: %1 %</translation>
+        <translation>Volume : %1 %</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cc" line="84"/>
@@ -636,7 +651,7 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
     <message>
         <location filename="../src/mainwindow.cc" line="204"/>
         <source>Volume: %1%</source>
-        <translation>Volume&#xa0;: %1%</translation>
+        <translation>Volume : %1%</translation>
     </message>
 </context>
 <context>
@@ -648,7 +663,12 @@ Sent %1 chars in %2 words and %3 lines. If you have less than %4 mistakes, you c
 Sent %1 chars in %2 words and %3 lines.</source>
         <translation>
 
-%1&#xa0;caractères, %2&#xa0;mots et %3&#xa0;lignes transmis.</translation>
+%1 caractères, %2 mots et %3 lignes transmis.</translation>
+    </message>
+    <message>
+        <location filename="../src/tutor.cc" line="477"/>
+        <source>&lt;html&gt;&lt;h3&gt;Text send:&lt;/h3&gt;&lt;p&gt;%1&lt;/p&gt;&lt;h3&gt;Text entered:&lt;/h3&gt;&lt;p&gt;%2&lt;/p&gt;&lt;h3&gt;Summary:&lt;/h3&gt;&lt;p&gt;Characters/Words/Lines send: %3/%4/%5&lt;br&gt;Mistakes: %6&lt;br&gt;Accuracy: &lt;b&gt;%7%&lt;/b&gt;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/tutor.cc" line="477"/>
@@ -813,12 +833,12 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <location filename="../src/textgen.cc" line="830"/>
         <location filename="../src/textgen.cc" line="862"/>
         <source>Unexpected element at line %1: %2</source>
-        <translation>Élément inattendu à la ligne %1&#xa0;: %2</translation>
+        <translation>Élément inattendu à la ligne %1 : %2</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="442"/>
         <source>&apos;load&apos; element is missing the &apos;file&apos; attribute</source>
-        <translation>Attribut «&#xa0;file&#xa0;» manquant pour l&apos;élément «&#xa0;load&#xa0;»</translation>
+        <translation>Attribut « file » manquant pour l&apos;élément « load »</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="453"/>
@@ -829,7 +849,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
         <location filename="../src/textgen.cc" line="713"/>
         <location filename="../src/textgen.cc" line="729"/>
         <source>Unexpected element &apos;%2&apos;</source>
-        <translation>Élément inattendu «&#xa0;%2&#xa0;»</translation>
+        <translation>Élément inattendu « %2 »</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="462"/>
@@ -844,7 +864,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/textgen.cc" line="505"/>
         <source>&lt;var&gt; has no &apos;id&apos; attribute at line %1</source>
-        <translation>Attribut «&#xa0;id&#xa0;» manquant pour &lt;var&gt; à la ligne %1</translation>
+        <translation>Attribut « id » manquant pour &lt;var&gt; à la ligne %1</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="625"/>
@@ -859,12 +879,12 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/textgen.cc" line="841"/>
         <source>&lt;apply&gt; element needs &apos;rule&apos; attribue at line %1.</source>
-        <translation>Attribut «&#xa0;rule&#xa0;» requis pour l&apos;élément &lt;apply&gt; à la ligne %1.</translation>
+        <translation>Attribut « rule » requis pour l&apos;élément &lt;apply&gt; à la ligne %1.</translation>
     </message>
     <message>
         <location filename="../src/textgen.cc" line="851"/>
         <source>Unknown rule &apos;%1&apos; referenced at line %2.</source>
-        <translation>Règle inconnue «&#xa0;%1&#xa0;» référencée à la ligne %2.</translation>
+        <translation>Règle inconnue « %1 » référencée à la ligne %2.</translation>
     </message>
 </context>
 <context>
@@ -877,7 +897,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="1353"/>
         <source>Select a build-in tutor or &apos;user defined&apos;. The rule file (ending on .xml) or a plain-text file (ending on .txt) can then be selected below.</source>
-        <translation>Sélectionnez un tuteur préconfiguré ou «&#xa0;défini par l&apos;utilisateur&#xa0;». Le fichier de règle (extension .xml) ou texte (extension .txt) peut ensuite être sélectionné ci-dessous.</translation>
+        <translation>Sélectionnez un tuteur préconfiguré ou « défini par l&apos;utilisateur ». Le fichier de règle (extension .xml) ou texte (extension .txt) peut ensuite être sélectionné ci-dessous.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1357"/>
@@ -944,7 +964,7 @@ Sent %1 chars in %2 words and %3 lines.</source>
     <message>
         <location filename="../src/settings.cc" line="828"/>
         <source>Select a tutor. If you learn the code, start with &apos;Koch method&apos;.</source>
-        <translation>Sélectionnez un tuteur. Si vous apprenez le code, commencez par «&#xa0;Méthode Koch&#xa0;».</translation>
+        <translation>Sélectionnez un tuteur. Si vous apprenez le code, commencez par « Méthode Koch ».</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="829"/>

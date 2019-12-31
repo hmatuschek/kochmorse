@@ -8,10 +8,14 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QLineEdit>
+#include <QLabel>
 #include <QSettings>
+#include <QDateTime>
 #include "listwidget.hh"
 #include <QGroupBox>
+#include <QFontComboBox>
 #include "morseencoder.hh"
+#include "colorbutton.hh"
 
 
 /** Represents the global persistent settings. */
@@ -23,6 +27,7 @@ public:
   typedef enum {
     TUTOR_KOCH = 0,   ///< Koch method.
     TUTOR_RANDOM = 1, ///< Random chars.
+    TUTOR_WORDSWORTH = 2, ///< Wordsworth tutor.
     TUTOR_TX  = 4,    ///< The TX tutor.
     TUTOR_CHAT  = 5,  ///< The Chat tutor.
     TUTOR_TEXTGEN = 6 ///< Generated text tuto.
@@ -37,15 +42,25 @@ public:
   /** Sets the current volume. */
   void setVolume(double factor);
 
+  bool checkForUpdates() const;
+  void setCheckForUpdates(bool enable);
+  QDateTime lastCheckForUpdates() const;
+  void checkedForUpdates();
+
   /** Retunrs the current character speed. */
   int speed() const;
   /** Sets the character speed. */
   void setSpeed(int speed);
 
-  /** Retunrs the current effective (pause) speed. */
-  int effSpeed() const;
-  /** Sets the effective (pause) speed. */
-  void setEffSpeed(int speed);
+  /** Returns the inter-symbol pause-length factor. */
+  double icPauseFactor() const;
+  /** Sets the inter-symbol pause-length factor. */
+  void setICPauseFactor(double factor);
+
+  /** Returns the inter-word pause-length factor. */
+  double iwPauseFactor() const;
+  /** Sets the inter-word pause-length factor. */
+  void setIWPauseFactor(double factor);
 
   /** Returns the current tone frequency. */
   int tone() const;
@@ -107,6 +122,10 @@ public:
   void setKochSummary(bool show);
   int kochSuccessThreshold() const;
   void setKochSuccessThreshold(int thres);
+  bool kochVerify() const;
+  void setKochVerify(bool verify);
+  bool kochHideOutput() const;
+  void setKochHideOutput(bool hide);
 
   /** Random tutor: Retunrs the current character set. */
   QSet<QChar> randomChars() const;
@@ -122,8 +141,38 @@ public:
   void setRandomInifiniteLineCount(bool enable);
   int randomLineCount() const;
   void setRandomLineCount(int lines);
+  bool randomVerify() const;
+  void setRandomVerify(bool verify);
+  bool randomHideOutput() const;
+  void setRandomHideOutput(bool hide);
   bool randomSummary() const;
   void setRandomSummary(bool show);
+
+  /** Wordworth tutor: Retunrs the current lesson. */
+  int wordsworthLesson() const;
+  /** Wordworth tutor: Sets the lesson. */
+  void setWordsworthLesson(int n);
+
+  /** Wordsworth tutor: Returns true if "new" words are more likely to be picked by the tutor. */
+  bool wordsworthPrefLastWords() const;
+  /** Wordsworth totor: Sets if "new" words are more likely to be picked by the tutor. */
+  void setWordsworthPrefLastWords(bool pref);
+
+  bool wordsworthRepeatLastWord() const;
+  void setWordsworthRepeatLastWord(bool enable);
+
+  bool wordsworthInfiniteLineCount() const;
+  void setWordsworthInifiniteLineCount(bool enable);
+  int wordsworthLineCount() const;
+  void setWordsworthLineCount(int lines);
+  bool wordsworthSummary() const;
+  void setWordsworthSummary(bool show);
+  int wordsworthSuccessThreshold() const;
+  void setWordsworthSuccessThreshold(int thres);
+  bool wordsworthVerify() const;
+  void setWordsworthVerify(bool verify);
+  bool wordsworthHideOutput() const;
+  void setWordsworthHideOutput(bool hide);
 
   QString textGenFilename() const;
   void setTextGenFilename(const QString &filename);
@@ -167,6 +216,24 @@ public:
   /** QRM effect: signal to "noise" ratio. */
   double qrmSNR() const;
   void setQRMSNR(double db);
+
+  QFont textFont() const;
+  void setTextFont(const QFont &font);
+
+  QColor rxTextColor() const;
+  void setRXTextColor(const QColor &color);
+  QColor txTextColor() const;
+  void setTXTextColor(const QColor &color);
+  QColor summaryTextColor() const;
+  void setSummaryTextColor(const QColor &color);
+
+  bool sendHighScore() const;
+  void setSendHighScore(bool send);
+
+  QString hsID();
+
+  QString hsCall() const;
+  void setHSCall(const QString &call);
 };
 
 
@@ -210,6 +277,7 @@ protected slots:
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
   void onShowSummaryToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
 
 protected:
   QSpinBox *_lesson;
@@ -219,6 +287,8 @@ protected:
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
   QCheckBox *_summary;
   QSpinBox *_threshold;
 };
@@ -239,17 +309,50 @@ protected slots:
   void onMinSet(int value);
   void onMaxSet(int value);
   void onInfiniteToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
 
 protected:
   ListWidget *_alpha;
   ListWidget *_num;
   ListWidget *_punct;
   ListWidget *_prosign;
+  ListWidget *_special;
   QSpinBox *_minGroupSize;
   QSpinBox *_maxGroupSize;
   QCheckBox *_infinite;
   QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
   QCheckBox *_summary;
+};
+
+
+/** A configuration panel for the Koch tutor. */
+class WordsworthTutorSettingsView: public QGroupBox
+{
+  Q_OBJECT
+
+public:
+  explicit WordsworthTutorSettingsView(QWidget *parent=0);
+
+  /** Updates the persistent settings. */
+  void save();
+
+protected slots:
+  void onInfiniteToggled(bool enabled);
+  void onShowSummaryToggled(bool enabled);
+  void onVerifyToggled(bool enabled);
+
+protected:
+  QSpinBox *_lesson;
+  QCheckBox *_prefLastWords;
+  QCheckBox *_repLastWord;
+  QCheckBox *_infinite;
+  QSpinBox *_lineCount;
+  QCheckBox *_verify;
+  QCheckBox *_hideOutput;
+  QCheckBox *_summary;
+  QSpinBox *_threshold;
 };
 
 
@@ -291,6 +394,7 @@ protected:
   QStackedWidget *_tutorSettings;
   KochTutorSettingsView *_kochSettings;
   RandomTutorSettingsView *_randSettings;
+  WordsworthTutorSettingsView *_wordsworthSettings;
   TextGenTutorSettingsView *_textgetSettings;
   TXTutorSettingsView *_txSettings;
   ChatTutorSettingsView *_chatSettings;
@@ -307,9 +411,14 @@ public:
 
   void save();
 
+protected slots:
+  void _onEffSpeedChanged();
+
 protected:
   QSpinBox *_speed;
-  QSpinBox *_effSpeed;
+  QSpinBox *_icpFactor;
+  QSpinBox *_iwpFactor;
+  QLabel *_effSpeed;
   QLineEdit *_tone;
   QLineEdit *_daPitch;
   QComboBox *_sound;
@@ -361,6 +470,38 @@ protected:
   QSpinBox  *_decoderLevel;
 };
 
+
+class AppearanceSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit AppearanceSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QFontComboBox *_font;
+  QSpinBox *_size;
+  ColorButton *_rxColor;
+  ColorButton *_txColor;
+  ColorButton *_sumColor;
+};
+
+class HighScoreSettingsView: public QWidget
+{
+  Q_OBJECT
+
+public:
+  explicit HighScoreSettingsView(QWidget *parent=0);
+
+  void save();
+
+protected:
+  QCheckBox *_enable;
+  QLineEdit *_call;
+};
+
 /** The preferences dialog. */
 class SettingsDialog : public QDialog
 {
@@ -380,6 +521,8 @@ protected:
   CodeSettingsView *_code;
   EffectSettingsView *_effects;
   DeviceSettingsView *_devices;
+  AppearanceSettingsView *_appearance;
+  HighScoreSettingsView *_highscore;
 };
 
 #endif // SETTINGSCTRL_HH

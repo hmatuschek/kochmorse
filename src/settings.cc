@@ -13,6 +13,9 @@
 #include <QDebug>
 #include <QAudioDeviceInfo>
 #include <QDesktopServices>
+#include <QFontComboBox>
+#include <QUuid>
+#include "tutor.hh"
 
 
 /* ********************************************************************************************* *
@@ -34,24 +37,54 @@ Settings::setVolume(double factor) {
   this->setValue("volume", factor);
 }
 
+bool
+Settings::checkForUpdates() const {
+  return value("checkUpdates", true).toBool();
+}
+void
+Settings::setCheckForUpdates(bool enabled) {
+  setValue("checkUpdates", enabled);
+}
+
+QDateTime
+Settings::lastCheckForUpdates() const {
+  return value("lastCheckUpdates", QDateTime()).value<QDateTime>();
+}
+void
+Settings::checkedForUpdates() {
+  setValue("lastCheckUpdates", QDateTime::currentDateTime());
+}
+
+
+
 int
 Settings::speed() const {
   return this->value("speed", 20).toInt();
 }
 void
 Settings::setSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 100));
+  speed = std::max(15, std::min(speed, 100));
   this->setValue("speed", speed);
 }
 
-int
-Settings::effSpeed() const {
-  return this->value("effSpeed", 15).toInt();
+double
+Settings::icPauseFactor() const {
+  return this->value("icPauseFactor", 1).toDouble();
 }
 void
-Settings::setEffSpeed(int speed) {
-  speed = std::max(5, std::min(speed, 100));
-  this->setValue("effSpeed", speed);
+Settings::setICPauseFactor(double factor) {
+  factor = std::max(1.0, std::min(factor, 10.0));
+  this->setValue("icPauseFactor", factor);
+}
+
+double
+Settings::iwPauseFactor() const {
+  return this->value("iwPauseFactor", 1).toDouble();
+}
+void
+Settings::setIWPauseFactor(double factor) {
+  factor = std::max(1.0, std::min(factor, 10.0));
+  this->setValue("iwPauseFactor", factor);
 }
 
 int
@@ -148,7 +181,7 @@ Settings::kochLesson() const {
 }
 void
 Settings::setKochLesson(int n) {
-  n = std::max(2, std::min(n, 43));
+  n = std::max(2, std::min(n, KochTutor::lessons().size()));
   this->setValue("koch/lesson", n);
 }
 
@@ -231,6 +264,27 @@ Settings::setKochSuccessThreshold(int thres) {
   this->setValue("koch/thres", thres);
 }
 
+bool
+Settings::kochVerify() const {
+  return this->value("koch/verify", false).toBool();
+}
+
+void
+Settings::setKochVerify(bool verify) {
+  this->setValue("koch/verify", verify);
+}
+
+bool
+Settings::kochHideOutput() const {
+  return kochVerify() && this->value("koch/hideOutput", false).toBool();
+}
+
+void
+Settings::setKochHideOutput(bool hide) {
+  this->setValue("koch/hideOutput", hide);
+}
+
+
 
 QSet<QChar>
 Settings::randomChars() const {
@@ -240,11 +294,20 @@ Settings::randomChars() const {
           << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z'
           << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '.' << ',' << '?'
           << '/' << '&' << ':' << ';' << '=' << '+' << '-' << '@' << '(' << ')'
+          << QChar(0x017a) /*ź*/ << QChar(0x00e4) /*ä*/ << QChar(0x0105) /*ą*/ << QChar(0x00f6) /*ö*/
+          << QChar(0x00f8) /*ø*/ << QChar(0x00f3) /*ó*/ << QChar(0x00fc) /*ü*/ << QChar(0x016d) /*ŭ*/
+          << QChar(0x03c7) /*χ*/ << QChar(0x0125) /*ĥ*/ << QChar(0x00e0) /*à*/ << QChar(0x00e5) /*å*/
+          << QChar(0x00e8) /*è*/ << QChar(0x00e9) /*é*/ << QChar(0x0109) /*ę*/ << QChar(0x00f0) /*ð*/
+          << QChar(0x00de) /*þ*/ << QChar(0x0109) /*ĉ*/ << QChar(0x0107) /*ć*/ << QChar(0x011d) /*ĝ*/
+          << QChar(0x0125) /*ĵ*/ << QChar(0x015d) /*ŝ*/ << QChar(0x0142) /*ł*/ << QChar(0x0144) /*ń*/
+          << QChar(0x00f1) /*ñ*/ << QChar(0x0107) /*ż*/ << QChar(0x00bf) /*¿*/ << QChar(0x00a1) /*¡*/
+          << QChar(0x00df) /*ß*/ << QChar(0x0144) /*ś*/
           << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */ << QChar(0x2403) /* SK */
           << QChar(0x2406) /* SN */;
   } else {
     QString str = this->value("random/chars").toString();
-    for (int i=0; i<str.size(); i++) { chars.insert(str[i]); }
+    for (int i=0; i<str.size(); i++)
+      chars.insert(str[i]);
   }
   return chars;
 }
@@ -298,6 +361,26 @@ Settings::setRandomLineCount(int lines) {
 }
 
 bool
+Settings::randomVerify() const {
+  return this->value("random/verify", false).toBool();
+}
+
+void
+Settings::setRandomVerify(bool verify) {
+  this->setValue("random/verify", verify);
+}
+
+bool
+Settings::randomHideOutput() const {
+  return randomVerify() && this->value("random/hideOutput", false).toBool();
+}
+
+void
+Settings::setRandomHideOutput(bool hide) {
+  this->setValue("random/hideOutput", hide);
+}
+
+bool
 Settings::randomSummary() const {
   return this->value("random/summary", false).toBool();
 }
@@ -306,6 +389,99 @@ void
 Settings::setRandomSummary(bool show) {
   this->setValue("random/summary", show);
 }
+
+
+
+int
+Settings::wordsworthLesson() const {
+  return this->value("wordsworth/lesson", 2).toInt();
+}
+void
+Settings::setWordsworthLesson(int n) {
+  n = std::max(2, std::min(n, WordsworthTutor::lessons().size()));
+  this->setValue("wordsworth/lesson", n);
+}
+
+bool
+Settings::wordsworthPrefLastWords() const {
+  return this->value("wordsworth/prefLastWords", false).toBool();
+}
+
+void
+Settings::setWordsworthPrefLastWords(bool pref) {
+  this->setValue("wordsworth/prefLastWords", pref);
+}
+
+bool
+Settings::wordsworthRepeatLastWord() const {
+  return this->value("wordsworth/repeatLastWord", false).toBool();
+}
+
+void
+Settings::setWordsworthRepeatLastWord(bool enable) {
+  this->setValue("wordsworth/repeatLastWord", enable);
+}
+
+bool
+Settings::wordsworthInfiniteLineCount() const {
+  return this->value("wordsworth/infinite", false).toBool();
+}
+
+void
+Settings::setWordsworthInifiniteLineCount(bool enable) {
+  this->setValue("wordsworth/infinite", enable);
+}
+
+int
+Settings::wordsworthLineCount() const {
+  return this->value("wordsworth/linecount", 5).toInt();
+}
+void
+Settings::setWordsworthLineCount(int lines) {
+  this->setValue("wordsworth/linecount", lines);
+}
+
+bool
+Settings::wordsworthSummary() const {
+  return this->value("wordsworth/summary", true).toBool();
+}
+
+void
+Settings::setWordsworthSummary(bool show) {
+  this->setValue("wordsworth/summary", show);
+}
+
+int
+Settings::wordsworthSuccessThreshold() const {
+  return this->value("wordsworth/thres", 90).toInt();
+}
+
+void
+Settings::setWordsworthSuccessThreshold(int thres) {
+  this->setValue("wordsworth/thres", thres);
+}
+
+bool
+Settings::wordsworthVerify() const {
+  return this->value("wordsworth/verify", false).toBool();
+}
+
+void
+Settings::setWordsworthVerify(bool verify) {
+  this->setValue("wordsworth/verify", verify);
+}
+
+bool
+Settings::wordsworthHideOutput() const {
+  return wordsworthVerify() && this->value("wordsworth/hideOutput", false).toBool();
+}
+
+void
+Settings::setWordsworthHideOutput(bool hide) {
+  this->setValue("wordsworth/hideOutput", hide);
+}
+
+
 
 QString
 Settings::textGenFilename() const {
@@ -410,6 +586,73 @@ Settings::setQRMSNR(double db) {
   setValue("qrm/snr", db);
 }
 
+QFont
+Settings::textFont() const {
+  QString family = value("textFontFamily", "Courier").toString();
+  int size = value("textFontSize", 14).toInt();
+  QFont font(family, size);
+  font.setStyleHint(QFont::Monospace);
+  return font;
+}
+void
+Settings::setTextFont(const QFont &font) {
+  setValue("textFontFamily", font.family());
+  setValue("testFontSize", font.pointSize());
+}
+
+QColor
+Settings::rxTextColor() const {
+  return value("textRXColor", QColor("black")).value<QColor>();
+}
+void
+Settings::setRXTextColor(const QColor &color) {
+  setValue("textRXColor", color);
+}
+
+QColor
+Settings::txTextColor() const {
+  return value("textTXColor", QColor("red")).value<QColor>();
+}
+void
+Settings::setTXTextColor(const QColor &color) {
+  setValue("textTXColor", color);
+}
+
+QColor
+Settings::summaryTextColor() const {
+  return value("textSummaryColor", QColor("blue")).value<QColor>();
+}
+void
+Settings::setSummaryTextColor(const QColor &color) {
+  setValue("textSummaryColor", color);
+}
+
+bool
+Settings::sendHighScore() const {
+  return value("hsEnable", false).toBool();
+}
+void
+Settings::setSendHighScore(bool send) {
+  return setValue("hsEnable", send);
+}
+
+QString
+Settings::hsID() {
+  if (contains("hsID"))
+    return value("hsID").toString();
+  setValue("hsID", QUuid::createUuid().toString());
+  return value("hsID").toString();
+}
+
+QString
+Settings::hsCall() const {
+  return value("hsCall").toString();
+}
+void
+Settings::setHSCall(const QString &call) {
+  setValue("hsCall", call);
+}
+
 
 /* ********************************************************************************************* *
  * Settings Dialog
@@ -423,12 +666,16 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
   _devices = new DeviceSettingsView();
+  _appearance = new AppearanceSettingsView();
+  _highscore = new HighScoreSettingsView();
 
   _tabs = new QTabWidget();
   _tabs->addTab(_tutor, tr("Tutor"));
   _tabs->addTab(_code, tr("Morse Code"));
   _tabs->addTab(_effects, tr("Effects"));
   _tabs->addTab(_devices, tr("Devices"));
+  _tabs->addTab(_appearance, tr("Appearance"));
+  //_tabs->addTab(_highscore, tr("Highscore"));
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -451,6 +698,8 @@ SettingsDialog::accept() {
   _code->save();
   _effects->save();
   _devices->save();
+  _appearance->save();
+  _highscore->save();
   QDialog::accept();
 }
 
@@ -469,22 +718,30 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   Settings settings;
 
   _speed = new QSpinBox();
-  _speed->setMinimum(5); _speed->setMaximum(100);
+  _speed->setMinimum(15); _speed->setMaximum(100);
   _speed->setValue(settings.speed());
   _speed->setToolTip(tr("Specifies the speed (in WPM) for the symbols."));
 
-  _effSpeed = new QSpinBox();
-  _effSpeed->setMinimum(5); _speed->setMaximum(100);
-  _effSpeed->setValue(settings.effSpeed());
-  _effSpeed->setToolTip(tr("Specifies the pause lengths between symbols and words."));
+  _icpFactor = new QSpinBox();
+  _icpFactor->setMinimum(100); _icpFactor->setMaximum(1000); _icpFactor->setSingleStep(10);
+  _icpFactor->setValue(int(settings.icPauseFactor()*100));
+  _icpFactor->setToolTip(tr("Specifies the relative pause lengths between symbols."));
+
+  _iwpFactor = new QSpinBox();
+  _iwpFactor->setMinimum(100); _iwpFactor->setMaximum(1000); _iwpFactor->setSingleStep(10);
+  _iwpFactor->setValue(int(settings.iwPauseFactor()*100));
+  _iwpFactor->setToolTip(tr("Specifies the relative pause lengths between words."));
+
+  _effSpeed = new QLabel();
+  _onEffSpeedChanged();
 
   _tone = new QLineEdit(QString::number(settings.tone()));
-  QIntValidator *tone_val = new QIntValidator(20,20000);
+  QIntValidator *tone_val = new QIntValidator(20,20000, _tone);
   _tone->setValidator(tone_val);
   _tone->setToolTip(tr("Specifies the freqency (in Hz) of the CW tone."));
 
   _daPitch = new QLineEdit(QString::number(settings.dashPitch()));
-  QIntValidator *pitch_val = new QIntValidator(-1000,1000);
+  QIntValidator *pitch_val = new QIntValidator(-1000,1000, _daPitch);
   _daPitch->setValidator(pitch_val);
   _daPitch->setToolTip(tr("Specifies the freqency offset (in Hz) for the 'dah' tone."));
 
@@ -511,26 +768,53 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
     case MorseEncoder::JITTER_STRAIGHT: _jitter->setCurrentIndex(2); break;
   }
 
-  QFormLayout *layout = new QFormLayout();
-  layout->addRow(tr("Speed (WPM)"), _speed);
-  layout->addRow(tr("Eff. speed (WPM)"), _effSpeed);
-  layout->addRow(tr("Tone (Hz)"), _tone);
-  layout->addRow(tr("Dash pitch (Hz)"), _daPitch);
-  layout->addRow(tr("Sound"), _sound);
-  layout->addRow(tr("Jitter"), _jitter);
+  QVBoxLayout *layout = new QVBoxLayout();
+
+  QGroupBox *speedBox = new QGroupBox(tr("Speed"));
+  QFormLayout *form = new QFormLayout();
+  form->addRow(tr("Speed (WPM)"), _speed);
+  form->addRow(tr("Inter-symbol Pause (%)"), _icpFactor);
+  form->addRow(tr("Inter-word Pause (%)"), _iwpFactor);
+  form->addRow(tr("Eff. Speed (WPM)"), _effSpeed);
+  speedBox->setLayout(form);
+  layout->addWidget(speedBox);
+
+  QGroupBox *soundBox = new QGroupBox(tr("Sound"));
+  form = new QFormLayout();
+  form->addRow(tr("Tone (Hz)"), _tone);
+  form->addRow(tr("Dash pitch (Hz)"), _daPitch);
+  form->addRow(tr("Sound"), _sound);
+  form->addRow(tr("Jitter"), _jitter);
+  soundBox->setLayout(form);
+  layout->addWidget(soundBox);
 
   this->setLayout(layout);
+
+  connect(_speed, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
+  connect(_icpFactor, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
+  connect(_iwpFactor, SIGNAL(valueChanged(int)), this, SLOT(_onEffSpeedChanged()));
 }
 
 void
 CodeSettingsView::save() {
   Settings settings;
   settings.setSpeed(_speed->value());
-  settings.setEffSpeed(_effSpeed->value());
+  settings.setICPauseFactor(double(_icpFactor->value())/100);
+  settings.setIWPauseFactor(double(_iwpFactor->value())/100);
   settings.setTone(_tone->text().toInt());
   settings.setDashPitch(_daPitch->text().toInt());
   settings.setSound(MorseEncoder::Sound(_sound->currentIndex()));
   settings.setJitter(MorseEncoder::Jitter(_jitter->currentIndex()));
+}
+
+void
+CodeSettingsView::_onEffSpeedChanged() {
+  double wpm = _speed->value();
+  double icp = double(_icpFactor->value())/100;
+  double iwp = double(_iwpFactor->value())/100;
+
+  int ewpm = 50.*wpm/(35+10*icp+5*iwp);
+  _effSpeed->setText(tr("%1").arg(ewpm));
 }
 
 
@@ -544,12 +828,14 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutor->setToolTip(tr("Select a tutor. If you learn the code, start with 'Koch method'."));
   _tutor->addItem(tr("Koch method"));
   _tutor->addItem(tr("Random"));
+  _tutor->addItem(tr("Wordsworth"));
   _tutor->addItem(tr("Rule based tutor"));
   _tutor->addItem(tr("Transmit"));
   _tutor->addItem(tr("QSO Chat"));
 
   _kochSettings = new KochTutorSettingsView();
   _randSettings = new RandomTutorSettingsView();
+  _wordsworthSettings = new WordsworthTutorSettingsView();
   _textgetSettings = new TextGenTutorSettingsView();
   _txSettings   = new TXTutorSettingsView();
   _chatSettings = new ChatTutorSettingsView();
@@ -557,6 +843,7 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   _tutorSettings = new QStackedWidget();
   _tutorSettings->addWidget(_kochSettings);
   _tutorSettings->addWidget(_randSettings);
+  _tutorSettings->addWidget(_wordsworthSettings);
   _tutorSettings->addWidget(_textgetSettings);
   _tutorSettings->addWidget(_txSettings);
   _tutorSettings->addWidget(_chatSettings);
@@ -568,15 +855,18 @@ TutorSettingsView::TutorSettingsView(QWidget *parent)
   } else if (Settings::TUTOR_RANDOM == settings.tutor()) {
     _tutor->setCurrentIndex(1);
     _tutorSettings->setCurrentIndex(1);
-  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
+  } else if (Settings::TUTOR_WORDSWORTH == settings.tutor()) {
     _tutor->setCurrentIndex(2);
     _tutorSettings->setCurrentIndex(2);
-  } else if (Settings::TUTOR_TX == settings.tutor()) {
+  } else if (Settings::TUTOR_TEXTGEN == settings.tutor()) {
     _tutor->setCurrentIndex(3);
     _tutorSettings->setCurrentIndex(3);
-  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
+  } else if (Settings::TUTOR_TX == settings.tutor()) {
     _tutor->setCurrentIndex(4);
     _tutorSettings->setCurrentIndex(4);
+  } else if (Settings::TUTOR_CHAT == settings.tutor()) {
+    _tutor->setCurrentIndex(5);
+    _tutorSettings->setCurrentIndex(5);
   }
 
   QFormLayout *sel = new QFormLayout();
@@ -600,6 +890,7 @@ TutorSettingsView::save() {
   // Save all tutors
   _kochSettings->save();
   _randSettings->save();
+  _wordsworthSettings->save();
   _textgetSettings->save();
 
   // Get tutor by index
@@ -609,10 +900,12 @@ TutorSettingsView::save() {
   } else if (1 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_RANDOM);
   } else if (2 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_TEXTGEN);
+    settings.setTutor(Settings::TUTOR_WORDSWORTH);
   } else if (3 == _tutor->currentIndex()) {
-    settings.setTutor(Settings::TUTOR_TX);
+    settings.setTutor(Settings::TUTOR_TEXTGEN);
   } else if (4 == _tutor->currentIndex()) {
+    settings.setTutor(Settings::TUTOR_TX);
+  } else if (5 == _tutor->currentIndex()) {
     settings.setTutor(Settings::TUTOR_CHAT);
   }
 }
@@ -627,7 +920,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   Settings settings;
 
   _lesson = new QSpinBox();
-  _lesson->setMinimum(2); _lesson->setMaximum(43);
+  _lesson->setMinimum(2); _lesson->setMaximum(KochTutor::lessons().size());
   _lesson->setValue(settings.kochLesson());
   _lesson->setToolTip(tr("Specifies the number of symbols for this lesson."));
 
@@ -668,6 +961,16 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   if (settings.kochInfiniteLineCount())
     _summary->setEnabled(false);
 
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.kochVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received chars using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.kochHideOutput());
+  _hideOutput->setEnabled(settings.kochVerify());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
   _threshold = new QSpinBox();
   _threshold->setMinimum(75);
   _threshold->setMaximum(100);
@@ -681,6 +984,7 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
   connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
 
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Lesson"), _lesson);
@@ -690,6 +994,8 @@ KochTutorSettingsView::KochTutorSettingsView(QWidget *parent)
   layout->addRow(tr("Max. group size"), _maxGroupSize);
   layout->addRow(tr("Infinite lines"), _infinite);
   layout->addRow(tr("Line count"), _lineCount);
+  layout->addRow(tr("Verify"), _verify);
+  layout->addRow(tr("Hide send text"), _hideOutput);
   layout->addRow(tr("Show summary"), _summary);
   layout->addRow(tr("Lesson target"), _threshold);
 
@@ -706,6 +1012,8 @@ KochTutorSettingsView::save() {
   settings.setKochMaxGroupSize(_maxGroupSize->value());
   settings.setKochInifiniteLineCount(_infinite->isChecked());
   settings.setKochLineCount(_lineCount->value());
+  settings.setKochVerify(_verify->isChecked());
+  settings.setKochHideOutput(_hideOutput->isChecked());
   settings.setKochSummary(_summary->isChecked());
   settings.setKochSuccessThreshold(_threshold->value());
 }
@@ -732,6 +1040,11 @@ KochTutorSettingsView::onShowSummaryToggled(bool enabled) {
   _threshold->setEnabled(enabled);
 }
 
+void
+KochTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
+}
+
 
 /* ********************************************************************************************* *
  * Random Tutor Settings Widget
@@ -742,37 +1055,56 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   Settings settings;
 
   QSet<QChar> enabled_chars = settings.randomChars();
-  QList<QChar> alpha, num, punct, prosign;
+  QList<QChar> alpha, num, punct, prosign, special;
   alpha << 'a' << 'b' << 'c' << 'd' << 'e' << 'f' << 'g' << 'h' << 'i' << 'j' << 'k' << 'l' << 'm'
         << 'n' << 'o' << 'p' << 'q' << 'r' << 's' << 't' << 'u' << 'v' << 'w' << 'x' << 'y' << 'z';
   num << '0' << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9';
   punct << '.' << ',' << ':' << ';' << '?' << '-' << '@' << '(' << ')' << '/';
   prosign << '=' << '+' << '&' << QChar(0x2417) /* BK */ << QChar(0x2404) /* CL */
           << QChar(0x2403) /* SK */ << QChar(0x2406) /* SN */ << QChar(0x2407) /* KL */;
+  special << QChar(0x017a) /*ź*/ << QChar(0x00e4) /*ä*/ << QChar(0x0105) /*ą*/ << QChar(0x00f6) /*ö*/
+          << QChar(0x00f8) /*ø*/ << QChar(0x00f3) /*ó*/ << QChar(0x00fc) /*ü*/ << QChar(0x016d) /*ŭ*/
+          << QChar(0x03c7) /*χ*/ << QChar(0x0125) /*ĥ*/ << QChar(0x00e0) /*à*/ << QChar(0x00e5) /*å*/
+          << QChar(0x00e8) /*è*/ << QChar(0x00e9) /*é*/ << QChar(0x0109) /*ę*/ << QChar(0x00f0) /*ð*/
+          << QChar(0x00de) /*þ*/ << QChar(0x0109) /*ĉ*/ << QChar(0x0107) /*ć*/ << QChar(0x011d) /*ĝ*/
+          << QChar(0x0125) /*ĵ*/ << QChar(0x015d) /*ŝ*/ << QChar(0x0142) /*ł*/ << QChar(0x0144) /*ń*/
+          << QChar(0x00f1) /*ñ*/ << QChar(0x0107) /*ż*/ << QChar(0x00bf) /*¿*/ << QChar(0x00a1) /*¡*/
+          << QChar(0x00df) /*ß*/ << QChar(0x0144) /*ś*/;
 
   // Assemble char table
   _alpha = new ListWidget();
   foreach (QChar c, alpha) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _alpha->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble char table
   _num = new ListWidget();
   foreach (QChar c, num) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _num->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble punc table
   _punct = new ListWidget();
   foreach (QChar c, punct) {
-    QString txt = QString("%1 (%2)").arg(c).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _punct->addItem(txt, c, enabled_chars.contains(c));
   }
   // Assemble prosig table
   _prosign = new ListWidget();
   foreach (QChar c, prosign) {
-    QString txt = QString("%1 (%2)").arg(Globals::mapProsign(c)).arg(Globals::charTable[c]);
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
     _prosign->addItem(txt, c, enabled_chars.contains(c));
+  }
+  // Assemble special table
+  _special = new ListWidget();
+  foreach (QChar c, special) {
+    QString code = Globals::charTable[c]; code.replace('.',QChar(0x00b7)).replace("-",QChar(0x2212));
+    QString txt = QString("%1 (%2)").arg(c).arg(code);
+    _special->addItem(txt, c, enabled_chars.contains(c));
   }
 
   QTabWidget *tabs = new QTabWidget();
@@ -780,6 +1112,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   tabs->addTab(_num, tr("Numbers"));
   tabs->addTab(_punct, tr("Punctuations"));
   tabs->addTab(_prosign, tr("Prosigns"));
+  tabs->addTab(_special, tr("Special"));
 
   _minGroupSize = new QSpinBox();
   _minGroupSize->setValue(settings.randomMinGroupSize());
@@ -804,6 +1137,16 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   if (settings.randomInfiniteLineCount())
     _lineCount->setEnabled(false);
 
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.randomVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received chars using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.randomHideOutput());
+  _hideOutput->setEnabled(settings.randomVerify());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
   _summary = new QCheckBox();
   _summary->setChecked(settings.randomSummary());
   _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
@@ -815,6 +1158,7 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   connect(_minGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMinSet(int)));
   connect(_maxGroupSize, SIGNAL(valueChanged(int)), this, SLOT(onMaxSet(int)));
   connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
 
   QVBoxLayout *layout = new QVBoxLayout();
   layout->addWidget(tabs);
@@ -823,6 +1167,8 @@ RandomTutorSettingsView::RandomTutorSettingsView(QWidget *parent)
   box->addRow(tr("Max. group size"), _maxGroupSize);
   box->addRow(tr("Infinite lines"), _infinite);
   box->addRow(tr("Line count"), _lineCount);
+  box->addRow(tr("Verify"), _verify);
+  box->addRow(tr("Hide output"), _hideOutput);
   box->addRow(tr("Show summary"), _summary);
 
   layout->addLayout(box);
@@ -852,12 +1198,19 @@ RandomTutorSettingsView::save() {
       enabled_chars.insert(_prosign->itemData(i).toChar());
     }
   }
+  for (int i=0; i<_special->numRows(); i++) {
+    if (_special->isChecked(i)) {
+      enabled_chars.insert(_special->itemData(i).toChar());
+    }
+  }
 
   Settings().setRandomChars(enabled_chars);
   Settings().setRandomMinGroupSize(_minGroupSize->value());
   Settings().setRandomMaxGroupSize(_maxGroupSize->value());
   Settings().setRandomInifiniteLineCount(_infinite->isChecked());
   Settings().setRandomLineCount(_lineCount->value());
+  Settings().setRandomVerify(_verify->isChecked());
+  Settings().setRandomHideOutput(_hideOutput->isChecked());
   Settings().setRandomSummary(_summary->isChecked());
 }
 
@@ -877,6 +1230,118 @@ RandomTutorSettingsView::onInfiniteToggled(bool enabled) {
   _summary->setEnabled(! enabled);
 }
 
+void
+RandomTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
+}
+
+
+/* ********************************************************************************************* *
+ * Wordworth Tutor Settings Widget
+ * ********************************************************************************************* */
+WordsworthTutorSettingsView::WordsworthTutorSettingsView(QWidget *parent)
+  : QGroupBox(tr("Wordsworth tutor settings"), parent)
+{
+  Settings settings;
+
+  _lesson = new QSpinBox();
+  _lesson->setMinimum(2); _lesson->setMaximum(WordsworthTutor::lessons().size());
+  _lesson->setValue(settings.wordsworthLesson());
+  _lesson->setToolTip(tr("Specifies the number of words for this lesson."));
+
+  _prefLastWords = new QCheckBox();
+  _prefLastWords->setChecked(settings.wordsworthPrefLastWords());
+  _prefLastWords->setToolTip(tr("If enabled, increases the likelihood of newer words."));
+
+  _repLastWord = new QCheckBox();
+  _repLastWord->setChecked(settings.wordsworthRepeatLastWord());
+  _repLastWord->setToolTip(tr("If enabled, repeats the new word before the lesson starts."));
+
+  _infinite = new QCheckBox();
+  _infinite->setChecked(settings.wordsworthInfiniteLineCount());
+  _infinite->setToolTip(tr("Sends an infinite number of lines."));
+
+  _lineCount = new QSpinBox();
+  _lineCount->setMinimum(1);
+  _lineCount->setValue(settings.wordsworthLineCount());
+  _lineCount->setToolTip(tr("Specifies the number of lines to send."));
+  if (settings.wordsworthInfiniteLineCount())
+    _lineCount->setEnabled(false);
+
+  _summary = new QCheckBox();
+  _summary->setChecked(settings.wordsworthSummary());
+  _summary->setToolTip(tr("If enabled, shows a summary statistics at the end."));
+  if (settings.wordsworthInfiniteLineCount())
+    _summary->setEnabled(false);
+
+  _verify = new QCheckBox();
+  _verify->setChecked(settings.wordsworthVerify());
+  _verify->setToolTip(tr("Verify your progress by entering the received words using your keyboard "
+                         "and compare the entered text automatically."));
+
+  _hideOutput = new QCheckBox();
+  _hideOutput->setChecked(settings.wordsworthHideOutput());
+  _hideOutput->setEnabled(settings.wordsworthVerify());
+  _hideOutput->setToolTip("If verification is enabled, hide the send text.");
+
+  _threshold = new QSpinBox();
+  _threshold->setMinimum(75);
+  _threshold->setMaximum(100);
+  _threshold->setValue(settings.wordsworthSuccessThreshold());
+  _threshold->setToolTip(tr("Specifies the success rate at which the lesson is completed."));
+  _threshold->setEnabled(_summary->isEnabled() && _summary->isChecked());
+
+  // Cross connect min and max group size splin boxes to maintain
+  // consistent settings
+  connect(_infinite, SIGNAL(toggled(bool)), this, SLOT(onInfiniteToggled(bool)));
+  connect(_summary, SIGNAL(toggled(bool)), this, SLOT(onShowSummaryToggled(bool)));
+  connect(_verify, SIGNAL(toggled(bool)), this, SLOT(onVerifyToggled(bool)));
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Lesson"), _lesson);
+  layout->addRow(tr("Prefer last words"), _prefLastWords);
+  layout->addRow(tr("Repeat last word"), _repLastWord);
+  layout->addRow(tr("Infinite lines"), _infinite);
+  layout->addRow(tr("Line count"), _lineCount);
+  layout->addRow(tr("Verify"), _verify);
+  layout->addRow(tr("Hide send text"), _hideOutput);
+  layout->addRow(tr("Show summary"), _summary);
+  layout->addRow(tr("Lesson target"), _threshold);
+
+  this->setLayout(layout);
+}
+
+void
+WordsworthTutorSettingsView::save() {
+  Settings settings;
+  settings.setWordsworthLesson(_lesson->value());
+  settings.setWordsworthPrefLastWords(_prefLastWords->isChecked());
+  settings.setWordsworthRepeatLastWord(_repLastWord->isChecked());
+  settings.setWordsworthInifiniteLineCount(_infinite->isChecked());
+  settings.setWordsworthLineCount(_lineCount->value());
+  settings.setWordsworthVerify(_verify->isChecked());
+  settings.setWordsworthHideOutput(_hideOutput->isChecked());
+  settings.setWordsworthSummary(_summary->isChecked());
+  settings.setWordsworthSuccessThreshold(_threshold->value());
+}
+
+void
+WordsworthTutorSettingsView::onInfiniteToggled(bool enabled) {
+  _lineCount->setEnabled(! enabled);
+  _summary->setEnabled(! enabled);
+  _threshold->setEnabled((! enabled) && _summary->isChecked());
+}
+
+void
+WordsworthTutorSettingsView::onShowSummaryToggled(bool enabled) {
+  _threshold->setEnabled(enabled);
+}
+
+void
+WordsworthTutorSettingsView::onVerifyToggled(bool enabled) {
+  _hideOutput->setEnabled(enabled);
+}
+
 
 /* ********************************************************************************************* *
  * TextGen Tutor Settings Widget
@@ -890,7 +1355,10 @@ TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
 
   _defined = new QComboBox();
   _defined->addItem(tr("Generated QSO"), ":/qso/qsogen.xml");
-  _defined->addItem(tr("Q-Codes/Words"), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Generated QSO [german]"), ":/qso/qsogen-de.xml");
+  _defined->addItem(tr("Q-Codes/Abbr."), ":/qso/qcodes.xml");
+  _defined->addItem(tr("Words"), ":/qso/words.xml");
+  _defined->addItem(tr("Q-Codes/Words [german]"), ":/qso/qcodes-de.xml");
   _defined->addItem(tr("Call signs"),    ":/qso/callsigns.xml");
   _defined->addItem(tr("User defined ..."));
 
@@ -906,12 +1374,18 @@ TextGenTutorSettingsView::TextGenTutorSettingsView(QWidget *parent)
   QString selected = settings.textGenFilename();
   if (":/qso/qsogen.xml" == selected) {
     _defined->setCurrentIndex(0);
-  } else if (":/qso/qcodes.xml" == selected) {
+  } else if (":/qso/qsogen-de.xml" == selected) {
     _defined->setCurrentIndex(1);
-  } else if (":/qso/callsigns.xml" == selected) {
+  } else if (":/qso/qcodes.xml" == selected) {
     _defined->setCurrentIndex(2);
-  } else {
+  } else if (":/qso/words.xml" == selected) {
     _defined->setCurrentIndex(3);
+  } else if (":/qso/qcodes-de.xml" == selected) {
+    _defined->setCurrentIndex(4);
+  } else if (":/qso/callsigns.xml" == selected) {
+    _defined->setCurrentIndex(5);
+  } else {
+    _defined->setCurrentIndex(6);
     _filename->setText(selected);
     _filename->setEnabled(true);
     _selectFile->setEnabled(true);
@@ -960,7 +1434,7 @@ TextGenTutorSettingsView::onSelectFile() {
 
 void
 TextGenTutorSettingsView::onPreDefinedSelected(int idx) {
-  if (3 == idx) {
+  if (6 == idx) {
     _filename->setEnabled(true);
     _selectFile->setEnabled(true);
   } else {
@@ -1199,4 +1673,79 @@ DeviceSettingsView::save() {
   settings.setOutputDevice(_outputDevices->currentText());
   settings.setInputDevice(_inputDevices->currentText());
   settings.setDecoderLevel(_decoderLevel->value());
+}
+
+
+/* ********************************************************************************************* *
+ * Appearance Settings Widget
+ * ********************************************************************************************* */
+AppearanceSettingsView::AppearanceSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _font = new QFontComboBox();
+  _font->setFontFilters(QFontComboBox::MonospacedFonts);
+  _font->setCurrentFont(settings.textFont());
+
+  _size = new QSpinBox();
+  _size->setRange(3, 120);
+  _size->setValue(_font->currentFont().pointSize());
+
+  _rxColor = new ColorButton(settings.rxTextColor());
+  _txColor = new ColorButton(settings.txTextColor());
+  _sumColor = new ColorButton(settings.summaryTextColor());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Text Font"), _font);
+  layout->addRow(tr("Font Size (pt)"), _size);
+  layout->addRow(tr("RX Text Color"), _rxColor);
+  layout->addRow(tr("TX Text Color"), _txColor);
+  layout->addRow(tr("Summary Text Color"), _sumColor);
+
+  setLayout(layout);
+}
+
+void
+AppearanceSettingsView::save() {
+  Settings settings;
+  QFont font = _font->currentFont();
+  font.setPointSize(_size->value());
+  settings.setTextFont(font);
+  settings.setRXTextColor(_rxColor->color());
+  settings.setTXTextColor(_txColor->color());
+  settings.setSummaryTextColor(_sumColor->color());
+}
+
+
+/* ********************************************************************************************* *
+ * HighScore Settings Widget
+ * ********************************************************************************************* */
+HighScoreSettingsView::HighScoreSettingsView(QWidget *parent)
+  : QWidget(parent)
+{
+  Settings settings;
+
+  _enable = new QCheckBox();
+  _enable->setChecked(settings.sendHighScore());
+  _call   = new QLineEdit(settings.hsCall());
+
+  QFormLayout *layout = new QFormLayout();
+  layout->addRow(tr("Submit highscore"), _enable);
+  layout->addRow(tr("Your call/nickname"), _call);
+  QLabel *hint = new QLabel(tr("Your learning progrss will be sumitted to "
+                               "<a href=\"https://dm3mat.darc.de/kochmorse/highscore.php\">https://dm3mat.darc.de/kochmorse/highscore.php</a>"
+                               ". This allows you to compare your progress with other KochMorse users. "));
+  hint->setWordWrap(true);
+  hint->setOpenExternalLinks(true);
+  layout->addWidget(hint);
+
+  setLayout(layout);
+}
+
+void
+HighScoreSettingsView::save() {
+  Settings settings;
+  settings.setSendHighScore(_enable->isChecked());
+  settings.setHSCall(_call->text().simplified());
 }

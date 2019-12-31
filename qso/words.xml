@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<rules>
+ <rule id="word">
+  <one-of-zipf exp="0.7">
+   <t>the</t> <t>be</t> <t>to</t> <t>of</t> <t>and</t> <t>a</t> <t>in</t> <t>that</t> <t>have</t>
+   <t>i</t> <t>it</t> <t>for</t> <t>not</t> <t>on</t> <t>with</t> <t>he</t> <t>as</t> <t>you</t>
+   <t>do</t> <t>at</t> <t>this</t> <t>but</t> <t>his</t> <t>by</t> <t>from</t> <t>they</t> <t>we</t>
+   <t>say</t> <t>her</t> <t>she</t> <t>or</t> <t>an</t> <t>will</t> <t>my</t> <t>one</t> <t>all</t>
+   <t>would</t> <t>there</t> <t>their</t> <t>what</t> <t>so</t> <t>up</t> <t>out</t> <t>if</t>
+   <t>about</t> <t>who</t> <t>get</t> <t>which</t> <t>go</t> <t>me</t> <t>when</t> <t>make</t>
+   <t>can</t> <t>like</t> <t>time</t> <t>no</t> <t>just</t> <t>him</t> <t>know</t> <t>take</t>
+   <t>people</t> <t>into</t> <t>year</t> <t>your</t> <t>good</t> <t>some</t> <t>could</t> <t>them</t>
+   <t>see</t> <t>other</t> <t>than</t> <t>then</t> <t>now</t> <t>look</t> <t>only</t> <t>come</t>
+   <t>its</t> <t>over</t> <t>think</t> <t>also</t> <t>back</t> <t>after</t> <t>use</t> <t>two</t>
+   <t>how</t> <t>our</t> <t>work</t> <t>first</t> <t>well</t> <t>way</t> <t>even</t> <t>new</t>
+   <t>want</t> <t>because</t> <t>any</t> <t>these</t> <t>give</t> <t>day</t> <t>most</t> <t>us</t>
+  </one-of-zipf>
+ </rule>
+
+ <t>vvv<stop/></t>
+ <rep min="10">
+  <rep min="10">
+   <apply rule="word"/><t> </t>
+  </rep>
+  <bt/><stop/>
+ </rep>
+</rules>

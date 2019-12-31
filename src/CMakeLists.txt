@@ -1,10 +1,12 @@
-set(kochmorse_SOURCES main.cc qhal.cc
+set(kochmorse_SOURCES main.cc qhal.cc textcompare.cc
     globals.cc audiosink.cc effect.cc morseencoder.cc tutor.cc application.cc mainwindow.cc
-    settings.cc aboutdialog.cc listwidget.cc morsedecoder.cc textgen.cc qsochat.cc qrm.cc)
+    settings.cc aboutdialog.cc listwidget.cc morsedecoder.cc textgen.cc qsochat.cc qrm.cc
+	checkupdate.cc colorbutton.cc highscore.cc)
 set(kochmorse_MOC_HEADERS
     audiosink.hh effect.hh morseencoder.hh tutor.hh application.hh mainwindow.hh settings.hh
-    aboutdialog.hh listwidget.hh morsedecoder.hh textgen.hh qsochat.hh qrm.hh)
-set(kochmorse_HEADERS globals.hh qhal.hh ${kochmorse_MOC_HEADERS})
+    aboutdialog.hh listwidget.hh morsedecoder.hh textgen.hh qsochat.hh qrm.hh
+	checkupdate.hh colorbutton.hh highscore.hh)
+set(kochmorse_HEADERS globals.hh qhal.hh textcompare.hh ${kochmorse_MOC_HEADERS})
 
 qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
 qt5_add_resources(kochmorse_RCC_SOURCES ../resources.qrc)

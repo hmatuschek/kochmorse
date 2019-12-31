@@ -8,7 +8,8 @@
 #include "tutor.hh"
 #include "effect.hh"
 #include "qrm.hh"
-
+#include "checkupdate.hh"
+#include "highscore.hh"
 
 /** Central application class. Manages audio output, effects, morse encoding and the tutors. */
 class Application : public QApplication
@@ -25,6 +26,8 @@ public:
 
   QString summary() const;
 
+  Tutor *currentTutor() const;
+
 public slots:
   /** Starts a session. */
   void startSession();
@@ -34,8 +37,10 @@ public slots:
   void applySettings();
 
 signals:
+  /** Gets emitted whenever the current tutor has been changed. */
+  void tutorChanged();
   /** Gets emitted once a session is done. */
-  void sessionComplete();
+  void sessionFinished();
   /** Gets emitted once for each character send. */
   void charSend(QString ch);
   /** Gets emitted once for each character received. */
@@ -48,6 +53,8 @@ protected slots:
   void onCharReceived(QChar ch);
   /** Gets called if the morse-decoder received an unknown char. */
   void onUnknownCharReceived(QString ch);
+  void onUpdateAvailable(QString version);
+  void onSessionVerified(const QString &tutor, int lesson, int score);
 
 protected:
   /** If @c true a session is running. */
@@ -69,6 +76,9 @@ protected:
   QAudioSource *_audio_src;
   /** The decoder device. */
   MorseDecoder *_decoder;
+
+  CheckUpdate _checkUpdate;
+  HighScore   *_highscore;
 };
 
 #endif // __KOCHMORSE_APPLICATION_HH__

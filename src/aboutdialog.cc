@@ -3,6 +3,7 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QDesktopServices>
+#include <QTabWidget>
 
 
 AboutDialog::AboutDialog(QWidget *parent)
@@ -15,8 +16,16 @@ AboutDialog::AboutDialog(QWidget *parent)
   about->setMinimumSize(450, 400);
   QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Help);
 
+  QTextBrowser *contr = new QTextBrowser();
+  contr->setSource(QUrl("qrc:/text/contributors.html"));
+  about->setMinimumSize(450, 400);
+
+  QTabWidget *tabs = new QTabWidget();
+  tabs->addTab(about, tr("About KochMorse"));
+  tabs->addTab(contr, tr("Contributors"));
+
   QVBoxLayout *layout = new QVBoxLayout();
-  layout->addWidget(about);
+  layout->addWidget(tabs);
   layout->addWidget(buttons);
   this->setLayout(layout);
 
