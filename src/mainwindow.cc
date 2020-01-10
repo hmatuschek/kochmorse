@@ -215,7 +215,7 @@ MainWindow::onCheck() {
   if (!_app.currentTutor())
     return;
   QString result;
-  _app.currentTutor()->verify(_input->document()->toRawText(), result);
+  _app.currentTutor()->verify(_input->document()->toPlainText(), result);
   _input->document()->setHtml(result);
   _check->setEnabled(false);
 }
