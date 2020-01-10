@@ -1,5 +1,5 @@
-SET QT_LIB_PATH=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/bin
-SET QT_PLUGIN_PATH=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/plugins
+SET QT_LIB_PATH=C:/Qt/5.12.6/mingw73_32/bin
+SET QT_PLUGIN_PATH=C:/Qt/5.12.6/mingw73_32/plugins
 SET NSIS_PATH=C:/Program Files (x86)/NSIS
 SET PATH=%NSIS_PATH%;%PAHT%
 

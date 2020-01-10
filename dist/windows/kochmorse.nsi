@@ -3,7 +3,7 @@
 !define DESCRIPTION "A simple morse tutor using the Koch method."
 # These three must be integers
 !define VERSIONMAJOR 3
-!define VERSIONMINOR 4
+!define VERSIONMINOR 5
 !define VERSIONBUILD 0
 
 RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on)
@@ -11,7 +11,7 @@ RequestExecutionLevel admin ;Require admin rights on NT6+ (When UAC is turned on
 InstallDir "$PROGRAMFILES\${APPNAME}"
 
 Name "${APPNAME}"
-outFile "kochmorse-3.4.0-setup.exe"
+outFile "kochmorse-3.5.0-setup.exe"
 
 !include LogicLib.nsh
  
