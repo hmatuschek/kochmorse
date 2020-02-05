@@ -369,10 +369,9 @@ QString
 RandomTutor::summary() const {
   if (! _showSummary)
     return "";
-  int chars_send = _chars_send; chars_send -= 3; // - "vvv\n"
+  int chars_send = _chars_send;
   int words_send = _words_send;
-  int lines_send = _lines_send; lines_send -= 1; // - "vvv\n"
-  chars_send -= lines_send; // - " =\n" at end of each line
+  int lines_send = _lines_send;
   return tr("\n\nSent %1 chars in %2 words and %3 lines.")
       .arg(chars_send).arg(words_send).arg(lines_send);
 }
