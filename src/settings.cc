@@ -597,7 +597,7 @@ Settings::textFont() const {
 void
 Settings::setTextFont(const QFont &font) {
   setValue("textFontFamily", font.family());
-  setValue("testFontSize", font.pointSize());
+  setValue("textFontSize", font.pointSize());
 }
 
 QColor
@@ -1690,7 +1690,7 @@ AppearanceSettingsView::AppearanceSettingsView(QWidget *parent)
 
   _size = new QSpinBox();
   _size->setRange(3, 120);
-  _size->setValue(_font->currentFont().pointSize());
+  _size->setValue(settings.textFont().pointSize());
 
   _rxColor = new ColorButton(settings.rxTextColor());
   _txColor = new ColorButton(settings.txTextColor());
