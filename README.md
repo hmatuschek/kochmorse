@@ -31,6 +31,8 @@ Below, you will find a list of features of the current KochMorse release.
  * QRM effect -- Increases the difficulty to read the morse code by simulating parallel QSOs nearby.
 
 ## Releases
+[![kochmorse](https://snapcraft.io//kochmorse/badge.svg)](https://snapcraft.io/kochmorse)
+
  * 2020-01-10 - [**Version 3.5.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.5.0)
  * 2018-09-25 - [**Version 3.4.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.4.0)
  * 2018-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
@@ -40,7 +42,6 @@ Below, you will find a list of features of the current KochMorse release.
  * 2014-10-29 - [**Version 3.1.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.1.0)
  * 2014-10-25 - [**Version 3.0.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) - First "official" release of the C++ reimplementation.
 
-[![kochmorse](https://snapcraft.io//kochmorse/badge.svg)](https://snapcraft.io/kochmorse)
 
 ## History
 
