@@ -41,6 +41,7 @@ Below, you will find a list of features of the current KochMorse release.
  * 2014-10-29 - [**Version 3.1.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.1.0)
  * 2014-10-25 - [**Version 3.0.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) - First "official" release of the C++ reimplementation.
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/kochmorse.svg)](https://repology.org/project/kochmorse/versions)
 
 ## History
 
