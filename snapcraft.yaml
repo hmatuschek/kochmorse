@@ -1,6 +1,6 @@
 name: kochmorse
 version: git
-grade: edge
+grade: devel
 # version: 3.5.0
 #grade: stable
 summary: A simple Morse tutor.
