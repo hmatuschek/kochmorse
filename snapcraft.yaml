@@ -1,0 +1,41 @@
+name: kochmorse
+version: 3.5.0
+grade: stable
+summary: A simple Morse tutor.
+description: |
+  Kochmorse is a simple to use morse-code tutor using the so called Koch mehtod. It can not only
+  be used to learn the more-code but also to practice it using a random QSO simulator.
+
+confinement: strict
+base: core18
+
+architectures:
+  - build-on: amd64
+
+apps:
+  kochmorse:
+    command: kochmorse
+    desktop: usr/share/applications/kochmorse.desktop
+    plugs:
+      - desktop
+      - network
+      - audio-playback
+
+parts:
+  kochmorse:
+    plugin: cmake
+    build-packages:
+      - qtbase5-dev
+      - qtmultimedia5-dev
+      - qttools5-dev
+      - qttools5-dev-tools
+    stage-packages:
+      - libqt5svg5
+      - libqt5multimedia5
+      - libqt5multimedia5-plugins
+    source: https://github.com/hmatuschek/kochmorse.git
+    source-type: git
+    source-tag: v3.5.0
+    configflags:
+      - "-DCMAKE_INSTALL_PREFIX=/usr"
+      - "-DCMAKE_BUILD_TYPE=Release"
