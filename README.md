@@ -1,5 +1,4 @@
 # KochMorse -- A morse-code tutor
-
 KochMorse is a simple morse-code tutor using the
 [Koch method](http://www.qsl.net/n1irz/finley.morse.html). It is written in C++ and uses
 [Qt5](https://qt-project.org) for the graphical user interface (GUI). [More ...](https://github.com/hmatuschek/kochmorse/wiki#how-to-use-kochmorse)
@@ -32,6 +31,8 @@ Below, you will find a list of features of the current KochMorse release.
  * QRM effect -- Increases the difficulty to read the morse code by simulating parallel QSOs nearby.
 
 ## Releases
+[![kochmorse](https://snapcraft.io//kochmorse/badge.svg)](https://snapcraft.io/kochmorse)
+
  * 2020-01-10 - [**Version 3.5.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.5.0)
  * 2018-09-25 - [**Version 3.4.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.4.0)
  * 2018-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
@@ -41,7 +42,6 @@ Below, you will find a list of features of the current KochMorse release.
  * 2014-10-29 - [**Version 3.1.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.1.0)
  * 2014-10-25 - [**Version 3.0.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.0.0) - First "official" release of the C++ reimplementation.
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/kochmorse.svg)](https://repology.org/project/kochmorse/versions)
 
 ## History
 
