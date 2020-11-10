@@ -33,6 +33,8 @@ Below, you will find a list of features of the current KochMorse release.
 ## Releases
 [![kochmorse](https://snapcraft.io//kochmorse/badge.svg)](https://snapcraft.io/kochmorse)
 
+[![Packaging status](https://repology.org/badge/vertical-allrepos/kochmorse.svg)](https://repology.org/project/kochmorse/versions)
+
  * 2020-01-10 - [**Version 3.5.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.5.0)
  * 2018-09-25 - [**Version 3.4.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.4.0)
  * 2018-06-12 - [**Version 3.3.0**](https://github.com/hmatuschek/kochmorse/releases/tag/v3.3.0)
