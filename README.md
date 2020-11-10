@@ -31,8 +31,6 @@ Below, you will find a list of features of the current KochMorse release.
  * QRM effect -- Increases the difficulty to read the morse code by simulating parallel QSOs nearby.
 
 ## Releases
-[![kochmorse](https://snapcraft.io//kochmorse/badge.svg)](https://snapcraft.io/kochmorse)
-
  <a href="https://snapcraft.io/kochmorse">
   <img alt="kochmorse" src="https://snapcraft.io/kochmorse/badge.svg"/>
  </a>
