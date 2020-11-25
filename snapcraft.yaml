@@ -22,6 +22,8 @@ apps:
       - desktop
       - network
       - audio-playback
+    extensions:
+      - kde-neon
 
 parts:
   kochmorse:
