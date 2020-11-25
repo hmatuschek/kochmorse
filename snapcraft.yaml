@@ -35,6 +35,7 @@ parts:
       - libqt5svg5
       - libqt5multimedia5
       - libqt5multimedia5-plugins
+      - qt5dxcb-plugin
     source: https://github.com/hmatuschek/kochmorse.git
     source-type: git
 #    source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
