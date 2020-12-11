@@ -62,12 +62,12 @@ NoiseEffect::bytesAvailable() const {
 
 void
 NoiseEffect::gaussRNG(float &a, float &b) {
-  float x = 2*float(rand())/RAND_MAX - 1;
-  float y = 2*float(rand())/RAND_MAX - 1;
+  float x = 2*float(rand())/float(RAND_MAX) - 1;
+  float y = 2*float(rand())/float(RAND_MAX) - 1;
   float s = x*x + y*y;
   while (s >= 1) {
-    x = 2*float(rand())/RAND_MAX - 1;
-    y = 2*float(rand())/RAND_MAX - 1;
+    x = 2*float(rand())/float(RAND_MAX) - 1;
+    y = 2*float(rand())/float(RAND_MAX) - 1;
     s = x*x + y*y;
   }
   a = x*std::sqrt(-2*std::log(s)/s);
