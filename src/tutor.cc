@@ -81,7 +81,7 @@ KochTutor::KochTutor(MorseEncoder *encoder, int lesson, bool prefLastChars, bool
     _repeatLastChar(repeatLastChar), _minGroupSize(std::min(minGroupSize, maxGroupSize)),
     _maxGroupSize(std::max(minGroupSize, maxGroupSize)), _lines(lines), _linecount(0),
     _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput),
-    _threshold(successThreshold), _text(), _chars_send(0), _words_send(0), _lines_send(0)
+    _threshold(successThreshold), _text(), _chars_sent(0), _words_sent(0), _lines_sent(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -153,15 +153,15 @@ QString
 KochTutor::summary() const {
   if (! _showSummary)
     return "";
-  int threshold = int(_chars_send*(100-_threshold))/100;
+  int threshold = int(_chars_sent*(100-_threshold))/100;
   if (_lesson < (_lessons.size()-1))
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you can proceed to lesson %5.")
-        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold).arg(_lesson+1);
+        .arg(_chars_sent).arg(_words_sent).arg(_lines_sent).arg(threshold).arg(_lesson+1);
   else
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you completed the course!")
-        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold);
+        .arg(_chars_sent).arg(_words_sent).arg(_lines_sent).arg(threshold);
 }
 
 void
@@ -199,10 +199,10 @@ KochTutor::reset()
     }
     _text.push_back('\n');
   }
-  _sendText.clear();
-  _chars_send = 0;
-  _words_send = 0;
-  _lines_send = 0;
+  _sentText.clear();
+  _chars_sent = 0;
+  _words_sent = 0;
+  _lines_sent = 0;
   // sample a line of text.
   _nextline();
 }
@@ -225,17 +225,17 @@ KochTutor::isOutputHidden() const {
 int
 KochTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
+  int err = textCompare(_sentText.toLower(), text.toLower(), mistakes);
   // Format Send text
   QString tx, rx;
   QTextStream buffer(&tx);
-  for (int i=0; i<_sendText.size(); i++) {
-    if ('\n' == _sendText.at(i))
+  for (int i=0; i<_sentText.size(); i++) {
+    if ('\n' == _sentText.at(i))
       buffer << "<br>";
     else if (mistakes.contains(i))
-      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+      buffer << "<span style=\"background-color:red;\">" << _sentText.at(i) << "</span>";
     else
-      buffer << _sendText.at(i);
+      buffer << _sentText.at(i);
   }
   buffer.setString(&rx);
   for (int i=0; i<text.size(); i++) {
@@ -244,13 +244,13 @@ KochTutor::verify(const QString &text, QString &summary) {
     else
       buffer << text.at(i);
   }
-  int correct = 100*double(_chars_send-err)/_chars_send;
-  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+  int correct = 100*double(_chars_sent-err)/_chars_sent;
+  summary = tr("<html><h3>Text sent:</h3><p>%1</p>"
                "<h3>Text entered:</h3><p>%2</p>"
-               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines sent: %3/%4/%5<br>"
                "Mistakes: %6<br>"
-               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
-      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_sent)
+      .arg(_words_sent).arg(_lines_sent).arg(err).arg(correct);
   if (correct >= _threshold) {
     summary.append(tr("<p><b>You achieved an accuracy of %1% &gt;= %2%. "
                       "You may advance to the next lesson!</b></p></html>").arg(correct).arg(_threshold));
@@ -294,21 +294,21 @@ KochTutor::_nextline() {
         idx = _lesson*double(rand())/RAND_MAX;
       }
       _text.push_back(_lessons[idx]);
-      _sendText.push_back(_lessons[idx]);
-      _chars_send++;
+      _sentText.push_back(_lessons[idx]);
+      _chars_sent++;
     }
     i += n;
     _text.push_back(' ');
-    _sendText.push_back(' ');
-    _words_send++;
+    _sentText.push_back(' ');
+    _words_sent++;
   }
   _text.push_back('=');
   _text.push_back(' ');
   _text.push_back(' ');
   _text.push_back('\n');
-  _sendText.push_back('\n');
+  _sentText.push_back('\n');
   _linecount++;
-  _lines_send++;
+  _lines_sent++;
 }
 
 const QVector<QChar> &
@@ -323,7 +323,7 @@ KochTutor::lessons() {
 RandomTutor::RandomTutor(MorseEncoder *encoder, size_t minGroupSize, size_t maxGroupSize, int lines, bool showSummary, bool verify, bool hideOutput, QObject *parent)
   : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize),
     _lines(lines), _linecount(0), _showSummary(showSummary), _verify(verify),
-    _hideOutput(hideOutput), _text(), _chars(), _chars_send(0), _words_send(0), _lines_send(0)
+    _hideOutput(hideOutput), _text(), _chars(), _chars_sent(0), _words_sent(0), _lines_sent(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -349,7 +349,7 @@ RandomTutor::RandomTutor(MorseEncoder *encoder, const QSet<QChar> &chars, size_t
                          bool hideOutput, QObject *parent)
   : Tutor(encoder, parent), _minGroupSize(minGroupSize), _maxGroupSize(maxGroupSize), _lines(lines),
     _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput), _text(), _chars(),
-    _chars_send(0), _words_send(0), _lines_send(0)
+    _chars_sent(0), _words_sent(0), _lines_sent(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -369,9 +369,9 @@ QString
 RandomTutor::summary() const {
   if (! _showSummary)
     return "";
-  int chars_send = _chars_send;
-  int words_send = _words_send;
-  int lines_send = _lines_send;
+  int chars_send = _chars_sent;
+  int words_send = _words_sent;
+  int lines_send = _lines_sent;
   return tr("\n\nSent %1 chars in %2 words and %3 lines.")
       .arg(chars_send).arg(words_send).arg(lines_send);
 }
@@ -414,13 +414,13 @@ RandomTutor::reset()
 {
   // Empty current session
   _text.clear();
-  _sendText.clear();
+  _sentText.clear();
   // If empty char set -> done.
   if (0 == _chars.size()) { return; }
   // Reset linecount
   _linecount = 0;
   // reset char, word & line count
-  _chars_send = _words_send = _lines_send = 0;
+  _chars_sent = _words_sent = _lines_sent = 0;
   // Insert "vvv\n"
   _text.push_back('v'); _text.push_back('v'); _text.push_back('v'); _text.push_back('\n');
   // sample a line
@@ -453,17 +453,17 @@ RandomTutor::isOutputHidden() const {
 int
 RandomTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
-  // Format Send text
+  int err = textCompare(_sentText.toLower(), text.toLower(), mistakes);
+  // Format Sent text
   QString tx, rx;
   QTextStream buffer(&tx);
-  for (int i=0; i<_sendText.size(); i++) {
-    if ('\n' == _sendText.at(i))
+  for (int i=0; i<_sentText.size(); i++) {
+    if ('\n' == _sentText.at(i))
       buffer << "<br>";
     else if (mistakes.contains(i))
-      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+      buffer << "<span style=\"background-color:red;\">" << _sentText.at(i) << "</span>";
     else
-      buffer << _sendText.at(i);
+      buffer << _sentText.at(i);
   }
   buffer.setString(&rx);
   for (int i=0; i<text.size(); i++) {
@@ -472,13 +472,13 @@ RandomTutor::verify(const QString &text, QString &summary) {
     else
       buffer << text.at(i);
   }
-  int correct = 100*double(_chars_send-err)/_chars_send;
-  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+  int correct = 100*double(_chars_sent-err)/_chars_sent;
+  summary = tr("<html><h3>Text sent:</h3><p>%1</p>"
                "<h3>Text entered:</h3><p>%2</p>"
-               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines sent: %3/%4/%5<br>"
                "Mistakes: %6<br>"
-               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
-      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_sent)
+      .arg(_words_sent).arg(_lines_sent).arg(err).arg(correct);
 
   emit sessionVerified("rand", _chars.size(), correct);
   return err;
@@ -493,20 +493,20 @@ RandomTutor::_nextline() {
       // Sample char from chars
       size_t idx = _chars.size()*double(rand())/RAND_MAX;
       _text.push_back(_chars[idx]);
-      _sendText.push_back(_chars[idx]);
-      _chars_send++;
+      _sentText.push_back(_chars[idx]);
+      _chars_sent++;
     }
     i += n;
     _text.push_back(' ');
-    _sendText.push_back(' ');
-    _words_send++;
+    _sentText.push_back(' ');
+    _words_sent++;
   }
   _text.push_back('=');
   _text.push_back(' ');
   _text.push_back('\n');
-  _sendText.push_back('\n');
+  _sentText.push_back('\n');
   _linecount++;
-  _lines_send++;
+  _lines_sent++;
 }
 
 QSet<QChar>
@@ -564,7 +564,7 @@ WordsworthTutor::WordsworthTutor(
   : Tutor(encoder, parent), _lesson(lesson), _prefLastWords(prefLastWords),
     _repeatLastWord(repeatLastWord), _lines(lines), _linecount(0),
     _showSummary(showSummary), _verify(verify), _hideOutput(hideOutput),
-    _threshold(successThreshold), _text(), _chars_send(0), _words_send(0), _lines_send(0)
+    _threshold(successThreshold), _text(), _chars_sent(0), _words_sent(0), _lines_sent(0)
 {
   // Init random number generator
   srand(time(nullptr));
@@ -636,15 +636,15 @@ QString
 WordsworthTutor::summary() const {
   if (! _showSummary)
     return "";
-  int threshold = int(_chars_send*(100-_threshold))/100;
+  int threshold = int(_chars_sent*(100-_threshold))/100;
   if (_lesson < (_lessons.size()-1))
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you can proceed to lesson %5.")
-        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold).arg(_lesson+1);
+        .arg(_chars_sent).arg(_words_sent).arg(_lines_sent).arg(threshold).arg(_lesson+1);
   else
     return tr("\n\nSent %1 chars in %2 words and %3 lines. "
               "If you have less than %4 mistakes, you completed the course!")
-        .arg(_chars_send).arg(_words_send).arg(_lines_send).arg(threshold);
+        .arg(_chars_sent).arg(_words_sent).arg(_lines_sent).arg(threshold);
 }
 
 void
@@ -684,10 +684,10 @@ WordsworthTutor::reset()
     }
     _text.push_back('\n');
   }
-  _sendText.clear();
-  _chars_send = 0;
-  _words_send = 0;
-  _lines_send = 0;
+  _sentText.clear();
+  _chars_sent = 0;
+  _words_sent = 0;
+  _lines_sent = 0;
   // sample a line of text.
   _nextline();
 }
@@ -710,17 +710,17 @@ WordsworthTutor::isOutputHidden() const {
 int
 WordsworthTutor::verify(const QString &text, QString &summary) {
   QVector<int> mistakes;
-  int err = textCompare(_sendText.toLower(), text.toLower(), mistakes);
-  // Format Send text
+  int err = textCompare(_sentText.toLower(), text.toLower(), mistakes);
+  // Format text
   QString tx, rx;
   QTextStream buffer(&tx);
-  for (int i=0; i<_sendText.size(); i++) {
-    if ('\n' == _sendText.at(i))
+  for (int i=0; i<_sentText.size(); i++) {
+    if ('\n' == _sentText.at(i))
       buffer << "<br>";
     else if (mistakes.contains(i))
-      buffer << "<span style=\"background-color:red;\">" << _sendText.at(i) << "</span>";
+      buffer << "<span style=\"background-color:red;\">" << _sentText.at(i) << "</span>";
     else
-      buffer << _sendText.at(i);
+      buffer << _sentText.at(i);
   }
   buffer.setString(&rx);
   for (int i=0; i<text.size(); i++) {
@@ -729,13 +729,13 @@ WordsworthTutor::verify(const QString &text, QString &summary) {
     else
       buffer << text.at(i);
   }
-  int correct = 100*double(_chars_send-err)/_chars_send;
-  summary = tr("<html><h3>Text send:</h3><p>%1</p>"
+  int correct = 100*double(_chars_sent-err)/_chars_sent;
+  summary = tr("<html><h3>Text sent:</h3><p>%1</p>"
                "<h3>Text entered:</h3><p>%2</p>"
-               "<h3>Summary:</h3><p>Characters/Words/Lines send: %3/%4/%5<br>"
+               "<h3>Summary:</h3><p>Characters/Words/Lines sent: %3/%4/%5<br>"
                "Mistakes: %6<br>"
-               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_send)
-      .arg(_words_send).arg(_lines_send).arg(err).arg(correct);
+               "Accuracy: <b>%7%</b></p>").arg(tx).arg(rx).arg(_chars_sent)
+      .arg(_words_sent).arg(_lines_sent).arg(err).arg(correct);
   if (correct >= _threshold) {
     summary.append(tr("<p><b>You achieved an accuracy of %1% &gt;= %2%. "
                       "You may advance to the next lesson!</b></p></html>").arg(correct).arg(_threshold));
@@ -776,19 +776,19 @@ WordsworthTutor::_nextline() {
     }
     for (int j=0; j<_lessons[idx].size(); j++)
       _text.push_back(_lessons[idx][j]);
-    _sendText.push_back(_lessons[idx]);
-    _chars_send += _lessons[idx].size();
+    _sentText.push_back(_lessons[idx]);
+    _chars_sent += _lessons[idx].size();
     _text.push_back(' ');
-    _sendText.push_back(' ');
-    _words_send++;
+    _sentText.push_back(' ');
+    _words_sent++;
   }
   _text.push_back('=');
   _text.push_back(' ');
   _text.push_back(' ');
   _text.push_back('\n');
-  _sendText.push_back('\n');
+  _sentText.push_back('\n');
   _linecount++;
-  _lines_send++;
+  _lines_sent++;
 }
 
 const QVector<QString> &

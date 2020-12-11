@@ -1,8 +1,8 @@
 name: kochmorse
-#version: git
-#grade: devel
-version: 3.5.0
-grade: stable
+version: git
+grade: devel
+#version: 3.5.0
+#grade: stable
 summary: A simple Morse tutor.
 description: |
   Kochmorse is a simple to use morse-code tutor using the so called Koch mehtod. It can not only
@@ -41,7 +41,7 @@ parts:
       - qt5dxcb-plugin
     source: https://github.com/hmatuschek/kochmorse.git
     source-type: git
-    source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
+    #source-tag: "v$SNAPCRAFT_PROJECT_VERSION"
     configflags:
       - "-DCMAKE_INSTALL_PREFIX=/usr"
       - "-DCMAKE_BUILD_TYPE=Release"

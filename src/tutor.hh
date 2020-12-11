@@ -148,10 +148,10 @@ protected:
   QList<QChar> _text;
   /** The vector of symbols for each lesson. */
   static QVector<QChar> _lessons;
-  size_t _chars_send;
-  size_t _words_send;
-  size_t _lines_send;
-  QString _sendText;
+  size_t _chars_sent;
+  size_t _words_sent;
+  size_t _lines_sent;
+  QString _sentText;
 };
 
 
@@ -225,10 +225,10 @@ protected:
   QList<QChar> _text;
   /** Vector of chars to choose from. */
   QVector<QChar> _chars;
-  QString _sendText;
-  size_t _chars_send;
-  size_t _words_send;
-  size_t _lines_send;
+  QString _sentText;
+  size_t _chars_sent;
+  size_t _words_sent;
+  size_t _lines_sent;
 };
 
 
@@ -308,9 +308,9 @@ protected:
   bool _prefLastWords;
   /** The "repeat last word" flag. */
   bool _repeatLastWord;
-  /** The number of lines to send, if negative send an infinite number of lines. */
+  /** The number of lines to send. If negative, send an infinite number of lines. */
   int _lines;
-  /** The number of lines send. */
+  /** The number of lines sent. */
   int _linecount;
   bool _showSummary;
   bool _verify;
@@ -320,10 +320,10 @@ protected:
   QList<QChar> _text;
   /** The vector of words for each lesson. */
   static QVector<QString> _lessons;
-  size_t _chars_send;
-  size_t _words_send;
-  size_t _lines_send;
-  QString _sendText;
+  size_t _chars_sent;
+  size_t _words_sent;
+  size_t _lines_sent;
+  QString _sentText;
 };
 
 
