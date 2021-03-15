@@ -21,8 +21,8 @@
 /* ********************************************************************************************* *
  * Settings object
  * ********************************************************************************************* */
-Settings::Settings()
-  : QSettings("com.github.hmatuschek", "KochMorse")
+Settings::Settings(QObject *parent)
+  : QSettings("com.github.hmatuschek", "KochMorse", parent)
 {
   // pass...
 }
@@ -55,7 +55,14 @@ Settings::checkedForUpdates() {
   setValue("lastCheckUpdates", QDateTime::currentDateTime());
 }
 
-
+int
+Settings::lastActiveTab() const {
+  return value("lastActiveTab", 0).toInt();
+}
+void
+Settings::setLastActiveTab(int index) {
+  setValue("lastActiveTab", index);
+}
 
 int
 Settings::speed() const {
@@ -662,6 +669,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 {
   this->setModal(true);
 
+  _settings = new Settings(this);
+
   _tutor = new TutorSettingsView();
   _code  = new CodeSettingsView();
   _effects = new EffectSettingsView();
@@ -676,6 +685,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   _tabs->addTab(_devices, tr("Devices"));
   _tabs->addTab(_appearance, tr("Appearance"));
   //_tabs->addTab(_highscore, tr("Highscore"));
+  _tabs->setCurrentIndex(_settings->lastActiveTab());
 
   QDialogButtonBox *bbox = new QDialogButtonBox();
   bbox->addButton(QDialogButtonBox::Ok);
@@ -690,6 +700,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
   QObject::connect(bbox, SIGNAL(accepted()), this, SLOT(accept()));
   QObject::connect(bbox, SIGNAL(rejected()), this, SLOT(reject()));
   QObject::connect(bbox, SIGNAL(helpRequested()), this, SLOT(showHelp()));
+  QObject::connect(_tabs, SIGNAL(currentChanged(int)), this, SLOT(onTabSelected(int)));
 }
 
 void
@@ -706,6 +717,14 @@ SettingsDialog::accept() {
 void
 SettingsDialog::showHelp() {
   QDesktopServices::openUrl(tr("https://github.com/hmatuschek/kochmorse/wiki/Settings"));
+}
+
+void
+SettingsDialog::onTabSelected(int index) {
+  if (3 == index) {
+    _devices->populateDevices();
+  }
+  _settings->setLastActiveTab(index);
 }
 
 
@@ -1631,32 +1650,18 @@ EffectSettingsView::onQRMToggled(bool enabled) {
 DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   : QWidget(parent)
 {
-  Settings settings;
+  _settings = new Settings(this);
 
   _outputDevices = new QComboBox();
   _outputDevices->setToolTip(tr("Select the audio output device."));
-  QAudioDeviceInfo currentDevice = settings.outputDevice();
-  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
-  foreach (auto device, devices) {
-    _outputDevices->addItem(device.deviceName());
-    if (device == currentDevice)
-      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
-  }
 
   _inputDevices = new QComboBox();
   _inputDevices->setToolTip(tr("Select the audio input device used for decoding CW send by you."));
-  currentDevice = settings.inputDevice();
-  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
-  foreach (auto device, devices) {
-    _inputDevices->addItem(device.deviceName());
-    if (device == currentDevice)
-      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
-  }
 
   _decoderLevel = new QSpinBox();
   _decoderLevel->setMinimum(-60);
   _decoderLevel->setMaximum(0);
-  _decoderLevel->setValue(int(settings.decoderLevel()));
+  _decoderLevel->setValue(int(_settings->decoderLevel()));
   _decoderLevel->setToolTip(tr("Specifies the detector threshold in dB for decoding CW."));
 
   QFormLayout *layout = new QFormLayout();
@@ -1668,11 +1673,28 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
 
 void
 DeviceSettingsView::save() {
-  Settings settings;
+  _settings->setOutputDevice(_outputDevices->currentText());
+  _settings->setInputDevice(_inputDevices->currentText());
+  _settings->setDecoderLevel(_decoderLevel->value());
+}
 
-  settings.setOutputDevice(_outputDevices->currentText());
-  settings.setInputDevice(_inputDevices->currentText());
-  settings.setDecoderLevel(_decoderLevel->value());
+void
+DeviceSettingsView::populateDevices() {
+  QAudioDeviceInfo currentDevice = _settings->outputDevice();
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+  foreach (auto device, devices) {
+    _outputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
+  }
+
+  currentDevice = _settings->inputDevice();
+  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  foreach (auto device, devices) {
+    _inputDevices->addItem(device.deviceName());
+    if (device == currentDevice)
+      _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
+  }
 }
 
 

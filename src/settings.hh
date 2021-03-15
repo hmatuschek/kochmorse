@@ -35,7 +35,7 @@ public:
 
 public:
   /** Constructor. */
-  explicit Settings();
+  explicit Settings(QObject *parent=nullptr);
 
   /** Retuns the current volume settings. */
   double volume() const;
@@ -46,6 +46,9 @@ public:
   void setCheckForUpdates(bool enable);
   QDateTime lastCheckForUpdates() const;
   void checkedForUpdates();
+
+  int lastActiveTab() const;
+  void setLastActiveTab(int index);
 
   /** Retunrs the current character speed. */
   int speed() const;
@@ -462,9 +465,13 @@ class DeviceSettingsView: public QWidget
 public:
   explicit DeviceSettingsView(QWidget *parent=0);
 
+public slots:
   void save();
+  void populateDevices();
 
 protected:
+  Settings *_settings;
+  QLabel *_loadingNote;
   QComboBox *_inputDevices;
   QComboBox *_outputDevices;
   QSpinBox  *_decoderLevel;
@@ -514,8 +521,10 @@ public slots:
 
 protected slots:
   void showHelp();
+  void onTabSelected(int index);
 
 protected:
+  Settings *_settings;
   QTabWidget *_tabs;
   TutorSettingsView *_tutor;
   CodeSettingsView *_code;
