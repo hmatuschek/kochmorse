@@ -1,11 +1,11 @@
 set(kochmorse_SOURCES main.cc qhal.cc textcompare.cc
     globals.cc audiosink.cc effect.cc morseencoder.cc tutor.cc application.cc mainwindow.cc
     settings.cc aboutdialog.cc listwidget.cc morsedecoder.cc textgen.cc qsochat.cc qrm.cc
-	checkupdate.cc colorbutton.cc highscore.cc)
+  checkupdate.cc colorbutton.cc highscore.cc logger.cc)
 set(kochmorse_MOC_HEADERS
     audiosink.hh effect.hh morseencoder.hh tutor.hh application.hh mainwindow.hh settings.hh
     aboutdialog.hh listwidget.hh morsedecoder.hh textgen.hh qsochat.hh qrm.hh
-	checkupdate.hh colorbutton.hh highscore.hh)
+  checkupdate.hh colorbutton.hh highscore.hh logger.hh)
 set(kochmorse_HEADERS globals.hh qhal.hh textcompare.hh ${kochmorse_MOC_HEADERS})
 
 qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
@@ -18,8 +18,8 @@ install(TARGETS kochmorse DESTINATION bin)
 
 
 if (WITH_TEXTGEN)
- set(textgen_SOURCES textgen_cli.cc textgen.cc)
- set(textgen_MOC_HEADERS textgen.hh)
+ set(textgen_SOURCES textgen_cli.cc textgen.cc logger.cc globals.cc)
+ set(textgen_MOC_HEADERS textgen.hh logger.hh)
  qt5_wrap_cpp(textgen_MOC_SOURCES ${textgen_MOC_HEADERS})
 
  add_executable(textgen WIN32 ${textgen_SOURCES} ${textgen_MOC_SOURCES})

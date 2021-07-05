@@ -1,7 +1,7 @@
 #include "morseencoder.hh"
 #include "globals.hh"
 #include <cmath>
-#include <QDebug>
+#include "logger.hh"
 #include <QByteArray>
 
 
@@ -125,8 +125,11 @@ MorseEncoder::send(const QString &text) {
 
 void
 MorseEncoder::send(QChar ch) {
-  if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch) && ('\t'!=ch))
+  ch = ch.toLower();
+  if ((! Globals::charTable.contains(ch)) && (' ' != ch) && ('\n' != ch) && ('\t'!=ch)) {
+    logWarn() << "Cannot set char '" << ch << "': Not in symbol table.";
     return;
+  }
   bool empty = _queue.isEmpty();
   _queue.append(ch);
   if (empty)

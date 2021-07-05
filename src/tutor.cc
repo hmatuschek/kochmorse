@@ -2,7 +2,7 @@
 #include <cmath>
 #include <QFile>
 #include <time.h>
-#include <QDebug>
+#include "logger.hh"
 #include "textcompare.hh"
 #include "settings.hh"
 
@@ -833,6 +833,7 @@ GenTextTutor::next() {
     QTextStream buffer(&_currentText);
     QHash<QString, QString> ctx;
     _generator.generate(buffer, ctx);
+    logDebug() << "Generated '" << _currentText << "'.";
   }
   // Get char from QSO
   QChar c = _currentText[0];

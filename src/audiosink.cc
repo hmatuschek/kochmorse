@@ -3,7 +3,7 @@
 #include <iostream>
 #include <QTimer>
 #include <QEventLoop>
-#include <QDebug>
+#include "logger.hh"
 
 
 /* ********************************************************************************************* *
@@ -54,7 +54,7 @@ QAudioSink::setOutputDevice(const QAudioDeviceInfo &output_device) {
   fmt.setCodec("audio/pcm");
   QAudioDeviceInfo info(output_device);
   if (! info.isFormatSupported(fmt)) {
-    qDebug() << "Warning: Audio format is not supported by device" << info.deviceName();
+    logError() << "Audio format is not supported by device" << info.deviceName();
   }
 
   _output_device = output_device;
@@ -152,7 +152,7 @@ QAudioSource::setInputDevice(const QAudioDeviceInfo &input_device) {
 
   QAudioDeviceInfo info(input_device);
   if (! info.isFormatSupported(fmt)) {
-    qDebug() << "Warning: Audio format is not supported by device" << info.deviceName();
+    logWarn() << "Audio format is not supported by device" << info.deviceName();
   }
 
   _input_device = input_device;

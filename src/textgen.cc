@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-#include <QDebug>
+#include "logger.hh"
 #include <QDate>
 #include <cmath>
 
@@ -255,9 +255,13 @@ TextGenListRule::TextGenListRule(const QList<TextGenRule *> &rules, QObject *par
 
 void
 TextGenListRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx) {
+  logDebug() << "Generate text from " << _rules.size() << " rules.";
   foreach(TextGenRule *rule, _rules) {
-    if (rule)
+    if (rule) {
       rule->generate(buffer, ctx);
+    } else {
+      logError() << "Internal error: Rule is nullptr!";
+    }
   }
 }
 
@@ -339,10 +343,12 @@ TextGen::load(QString filename) {
   QFile file(filename);
   _pathStack.push_back(info.dir().absolutePath());
   if (! file.open(QIODevice::ReadOnly)) {
-    qDebug() << "... cannot open file" << filename;
+    logError() << "Cannot open file '" << filename << "': " << file.errorString();
     _pathStack.pop_back();
     return false;
   }
+
+  logDebug() << "Load rule/text file '" << filename << "'...";
 
   bool success = false;
   if ("txt" == info.suffix()) {
@@ -352,7 +358,7 @@ TextGen::load(QString filename) {
     QXmlStreamReader reader(&file);
     success = parse(reader);
     if (reader.hasError())
-      qDebug() << "..." << reader.errorString();
+      logError() << "Parse error while readin '" << filename << "': " << reader.errorString();
   }
   _pathStack.pop_back();
 
@@ -432,6 +438,9 @@ TextGen::parseRules(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
       }
     } else if (reader.isEndElement()) {
       return;
+    } else if (reader.isCharacters() || reader.isCDATA()) {
+      /*logDebug() << "Ignore characters @" << reader.lineNumber()
+                 << ":" << reader.columnNumber() << " '" << reader.text() << "'."; */
     }
   }
 }
@@ -768,6 +777,8 @@ TextGen::parseStop(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
 
 void
 TextGen::parseText(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
+  logDebug() << "Handle <t> element @" << reader.lineNumber()
+             << ":" << reader.columnNumber() << ".";
   while (! reader.atEnd()) {
     reader.readNext();
     if (reader.isStartElement()) {
@@ -805,6 +816,7 @@ TextGen::parseText(QXmlStreamReader &reader, QList<TextGenRule *> &rules) {
     } else if (reader.isEndElement()) {
       return;
     } else if (reader.isCharacters()) {
+      logDebug() << "Add text '" << reader.text() << "' to <t> rule.";
       rules.append(new TextGenTextRule(reader.text().toString(), this));
     }
   }

@@ -2,7 +2,7 @@
 #include "settings.hh"
 #include <QStandardPaths>
 #include <QFile>
-#include <QDebug>
+#include "logger.hh"
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QUrlQuery>
@@ -20,19 +20,19 @@ HighScore::HighScore(QObject *parent)
   QDir dir = QDir(dirname);
   if (! dir.exists()) {
     if (! dir.mkpath(dirname))
-      qDebug() << "Cannot create directory" << dir.path();
+      logError() << "Cannot create directory" << dir.path();
   }
 	QString filename = dirname + "/highscore.json";
 	QFile file(filename);
 	if (! file.open(QIODevice::ReadOnly)) {
-		qDebug() << "Cannot open highscore file" << filename;
+    logError() << "Cannot open highscore file" << filename;
 		return;
 	}
 
 	QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
   file.close();
 	if (! doc.isArray()) {
-		qDebug() << "Cannot read highscore file" << filename << ": Not an array!";
+    logError() << "Cannot read highscore file" << filename << ": Not an array!";
 		return;
 	}
 

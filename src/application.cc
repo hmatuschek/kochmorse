@@ -7,16 +7,27 @@
 #include <QMessageBox>
 #include "config.h"
 
+#include <QStandardPaths>
+#include <QDir>
+#include "logger.hh"
+
 
 Application::Application(int &argc, char *argv[])
  : QApplication(argc, argv), _running(false), _audio_sink(nullptr), _noiseEffect(nullptr),
    _encoder(nullptr), _tutor(nullptr), _checkUpdate(nullptr)
 {
+  setApplicationName("KochMorse");
+  setOrganizationDomain("com.github.hmatuschek");
+
+  QDir logDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  QString logFile = logDir.absoluteFilePath("kochmorse.log");
+  Logger::get().addHandler(new FileLogHandler(logFile));
+  logDebug() << "Startup.";
+
   Settings settings;
 
   QTranslator *translator = new QTranslator(this);
   translator->load(QLocale(), "kochmorse", "_", ":/lang/");
-  //qDebug() << "UI Locales: " << QLocale().uiLanguages();
   installTranslator(translator);
 
   _audio_sink = new QAudioSink(nullptr, this);
@@ -57,7 +68,7 @@ Application::Application(int &argc, char *argv[])
 
 #ifdef CHECK_FOR_UPDATES
   QDateTime lastUpdate = settings.lastCheckForUpdates();
-  qDebug() << "Last check for updates" << lastUpdate;
+  logDebug() << "Last check for updates" << lastUpdate;
   if (settings.checkForUpdates() && ((! lastUpdate.isValid()) || (lastUpdate.daysTo(QDateTime::currentDateTime()) > 7))) {
     _checkUpdate.check();
     settings.checkedForUpdates();
@@ -154,42 +165,48 @@ Application::applySettings()
     delete _tutor;
 
   switch (settings.tutor()) {
-    case Settings::TUTOR_KOCH:
-      _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(),
-                             settings.kochRepeatLastChar(), settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
-                             (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
-                             settings.kochSummary(), settings.kochVerify(),
-                             settings.kochHideOutput(), settings.kochSuccessThreshold(), this);
-      break;
+  case Settings::TUTOR_KOCH:
+    logDebug() << "Create Koch method tutor ...";
+    _tutor = new KochTutor(_encoder, settings.kochLesson(), settings.kochPrefLastChars(),
+                           settings.kochRepeatLastChar(), settings.kochMinGroupSize(), settings.kochMaxGroupSize(),
+                           (settings.kochInfiniteLineCount() ? -1: settings.kochLineCount()),
+                           settings.kochSummary(), settings.kochVerify(),
+                           settings.kochHideOutput(), settings.kochSuccessThreshold(), this);
+    break;
 
-    case Settings::TUTOR_RANDOM:
-      _tutor = new RandomTutor(_encoder, settings.randomChars(), settings.randomMinGroupSize(),
-                               settings.randomMaxGroupSize(),
-                               (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
-                               settings.randomSummary(), settings.randomVerify(),
-                               settings.randomHideOutput(), this);
-      break;
+  case Settings::TUTOR_RANDOM:
+    logDebug() << "Create random tutor ...";
+    _tutor = new RandomTutor(_encoder, settings.randomChars(), settings.randomMinGroupSize(),
+                             settings.randomMaxGroupSize(),
+                             (settings.randomInfiniteLineCount() ? -1: settings.randomLineCount()),
+                             settings.randomSummary(), settings.randomVerify(),
+                             settings.randomHideOutput(), this);
+    break;
 
-    case Settings::TUTOR_WORDSWORTH:
-      _tutor = new WordsworthTutor(_encoder, settings.wordsworthLesson(), settings.wordsworthPrefLastWords(),
-                                   settings.wordsworthRepeatLastWord(),
-                                   (settings.wordsworthInfiniteLineCount() ? -1: settings.wordsworthLineCount()),
-                                   settings.wordsworthSummary(), settings.wordsworthVerify(),
-                                   settings.wordsworthHideOutput(), settings.wordsworthSuccessThreshold(), this);
-      break;
+  case Settings::TUTOR_WORDSWORTH:
+    logDebug() << "Create wordsworth tutor ...";
+    _tutor = new WordsworthTutor(_encoder, settings.wordsworthLesson(), settings.wordsworthPrefLastWords(),
+                                 settings.wordsworthRepeatLastWord(),
+                                 (settings.wordsworthInfiniteLineCount() ? -1: settings.wordsworthLineCount()),
+                                 settings.wordsworthSummary(), settings.wordsworthVerify(),
+                                 settings.wordsworthHideOutput(), settings.wordsworthSuccessThreshold(), this);
+    break;
 
-    case Settings::TUTOR_TEXTGEN:
-      _tutor = new GenTextTutor(_encoder, settings.textGenFilename());
-      break;
+  case Settings::TUTOR_TEXTGEN:
+    logDebug() << "Create text generator tutor ...";
+    _tutor = new GenTextTutor(_encoder, settings.textGenFilename());
+    break;
 
-    case Settings::TUTOR_TX:
-      _tutor = new TXTutor(this);
-      break;
+  case Settings::TUTOR_TX:
+    logDebug() << "Create transmit tutor ...";
+    _tutor = new TXTutor(this);
+    break;
 
-    case Settings::TUTOR_CHAT:
-    default:
-      _tutor = new ChatTutor(_encoder, this);
-      break;
+  case Settings::TUTOR_CHAT:
+  default:
+    logDebug() << "Create chat (RX/TX) tutor ...";
+    _tutor = new ChatTutor(_encoder, this);
+    break;
   }
 
   connect(_tutor, SIGNAL(sessionFinished()), this, SIGNAL(sessionFinished()));
@@ -216,7 +233,7 @@ Application::onUnknownCharReceived(QString ch) {
 
 void
 Application::onSessionVerified(const QString &tutor, int lesson, int score) {
-  qDebug() << "Application: Session verified. Send highscore if enabled...";
+  logDebug() << "Application: Session verified. Send highscore if enabled...";
   Settings settings;
   double wpm = settings.speed();
   double icp = double(settings.icPauseFactor())/100;

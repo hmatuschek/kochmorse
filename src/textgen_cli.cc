@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include "textgen.hh"
+#include "globals.hh"
 #include <QTextStream>
 #include <QFile>
 #include <QXmlStreamReader>
@@ -9,7 +10,7 @@ int
 main(int argc, char *argv[])
 {
 	QCoreApplication app(argc, argv);
-	QTextStream out(stdout);
+
 	QTextStream err(stderr);
 
 	if (2 > argc) {
@@ -18,9 +19,19 @@ main(int argc, char *argv[])
 	}
 
   TextGen gen(argv[1]);
+
+  QString text;
+  QTextStream buffer(&text);
+
   QHash<QString, QString> ctx;
-  gen.generate(out, ctx);
-  out << flush;
+  gen.generate(buffer, ctx);
+
+  foreach (QChar prosign, Globals::prosignTable.keys()) {
+    text.replace(prosign, "<"+Globals::prosignTable[prosign]+">");
+  }
+
+  QTextStream out(stdout);
+  out << text << flush;
 
   return 0;
 }

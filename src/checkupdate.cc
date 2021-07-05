@@ -3,6 +3,7 @@
 #include <QNetworkReply>
 #include <QJsonArray>
 #include <QJsonObject>
+#include "logger.hh"
 
 #include "config.h"
 
@@ -23,12 +24,12 @@ CheckUpdate::gotReleases(QNetworkReply *reply) {
   QJsonParseError err;
   QJsonDocument doc = QJsonDocument::fromJson(reply->readAll(), &err);
   if (QJsonParseError::NoError != err.error) {
-    qDebug() << "Cannot check for updates at" << reply->url() << ":" << err.errorString();
+    logError() << "Cannot check for updates at" << reply->url().toString() << ":" << err.errorString();
     return;
   }
 
   if (! doc.isArray()) {
-    qDebug() << "Cannot check for updates at" << reply->url() << ": Unexpected JSON object.";
+    logError() << "Cannot check for updates at" << reply->url().toString() << ": Unexpected JSON object.";
     return;
   }
 
