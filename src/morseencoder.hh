@@ -34,7 +34,7 @@ public:
 
 public:
   /** Constructor.
-   * @param ditFreq Specifies the tone freqency of a dot (dit).
+   * @param ditFreq Specifies the tone frequency of a dot (dit).
    * @param daFreq Specifies the tone frequency of a dash (da).
    * @param speed Specifies the character speed (in WPM).
    * @param icpFac Specifies the inter-char pause factor (>=1).

@@ -149,12 +149,12 @@
     </message>
     <message>
         <location filename="../src/settings.cc" line="741"/>
-        <source>Specifies the freqency (in Hz) of the CW tone.</source>
+        <source>Specifies the frequency (in Hz) of the CW tone.</source>
         <translation>Define la frecuencia (en Hz) del tono CW.</translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="746"/>
-        <source>Specifies the freqency offset (in Hz) for the &apos;dah&apos; tone.</source>
+        <source>Specifies the frequency offset (in Hz) for the &apos;dah&apos; tone.</source>
         <translation>Define el desplazamiento de la frecuencia (en Hz) para el tono &apos;dah&apos;.</translation>
     </message>
     <message>
@@ -194,7 +194,7 @@
     </message>
     <message>
         <location filename="../src/settings.cc" line="763"/>
-        <source>Selects the timeing jitter to simulate a semi-automatic key (bug) or a straight key.</source>
+        <source>Selects the timing jitter to simulate a semi-automatic key (bug) or a straight key.</source>
         <translatorcomment>Cadence style from french translation.</translatorcomment>
         <translation>Selecciona el estilo de cadencia para emular un manipulador semi automático (bug) o uno tradicional.</translation>
     </message>
@@ -314,7 +314,7 @@ Trepidación =  Sine wave shiver</translatorcomment>
     </message>
     <message>
         <location filename="../src/settings.cc" line="1507"/>
-        <source>Enables a band-pass audio fiter around the CW tone freqency.</source>
+        <source>Enables a band-pass audio fiter around the CW tone frequency.</source>
         <translation>Habilita un filtro de paso de banda para la frecuencia del tono CW.</translation>
     </message>
     <message>
