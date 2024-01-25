@@ -155,12 +155,12 @@
     </message>
     <message>
         <location filename="../src/settings.cc" line="741"/>
-        <source>Specifies the freqency (in Hz) of the CW tone.</source>
+        <source>Specifies the frequency (in Hz) of the CW tone.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/settings.cc" line="746"/>
-        <source>Specifies the freqency offset (in Hz) for the &apos;dah&apos; tone.</source>
+        <source>Specifies the frequency offset (in Hz) for the &apos;dah&apos; tone.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -200,7 +200,7 @@
     </message>
     <message>
         <location filename="../src/settings.cc" line="763"/>
-        <source>Selects the timeing jitter to simulate a semi-automatic key (bug) or a straight key.</source>
+        <source>Selects the timing jitter to simulate a semi-automatic key (bug) or a straight key.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -302,7 +302,7 @@
     </message>
     <message>
         <location filename="../src/settings.cc" line="1507"/>
-        <source>Enables a band-pass audio fiter around the CW tone freqency.</source>
+        <source>Enables a band-pass audio fiter around the CW tone frequency.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
