@@ -129,7 +129,7 @@ void
 MainWindow::onSessionFinished() {
   QTextCharFormat old = _text->currentCharFormat();
   QTextCharFormat fmt = old;
-  fmt.setForeground(QColor("blue"));
+  fmt.setForeground(Settings().summaryTextColor());
   _text->setCurrentCharFormat(fmt);
   _text->insertPlainText(_app.summary());
   _text->setCurrentCharFormat(old);
@@ -142,7 +142,7 @@ MainWindow::onCharSend(QString ch) {
   // Update text-field if tutor is not verifying
   QTextCharFormat old = _text->currentCharFormat();
   QTextCharFormat fmt = old;
-  fmt.setForeground(QColor("black"));
+  fmt.setForeground(Settings().rxTextColor());
   _text->setCurrentCharFormat(fmt);
   _text->insertPlainText(ch);
   _text->setCurrentCharFormat(old);
@@ -153,7 +153,7 @@ MainWindow::onCharReceived(QString ch) {
   // Update text-field
   QTextCharFormat old = _text->currentCharFormat();
   QTextCharFormat fmt = old;
-  fmt.setForeground(QColor("red"));
+  fmt.setForeground(Settings().txTextColor());
   _text->setCurrentCharFormat(fmt);
   _text->insertPlainText(ch);
   _text->setCurrentCharFormat(old);
