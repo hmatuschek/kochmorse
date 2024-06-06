@@ -163,7 +163,7 @@ QAudioSource::setInputDevice(const QAudioDeviceInfo &input_device) {
 
 bool
 QAudioSource::isRunning() const {
-  return QAudio::ActiveState == _input->state();
+  return (nullptr != _input) && QAudio::ActiveState == _input->state();
 }
 
 qint64

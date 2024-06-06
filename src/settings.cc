@@ -16,6 +16,9 @@
 #include <QFontComboBox>
 #include <QUuid>
 #include "tutor.hh"
+#include <QtEndian>
+#include <cmath>
+#include "logger.hh"
 
 
 /* ********************************************************************************************* *
@@ -1648,15 +1651,20 @@ EffectSettingsView::onQRMToggled(bool enabled) {
  * Device Settings Widget
  * ********************************************************************************************* */
 DeviceSettingsView::DeviceSettingsView(QWidget *parent)
-  : QWidget(parent)
+  : QWidget(parent), _buffer(65536), _source(&_buffer)
 {
   _settings = new Settings(this);
+
+  _buffer.open(QIODevice::ReadWrite);
+  connect(&_buffer, SIGNAL(readyRead()), this, SLOT(onAudioDataAvailable()));
 
   _outputDevices = new QComboBox();
   _outputDevices->setToolTip(tr("Select the audio output device."));
 
   _inputDevices = new QComboBox();
   _inputDevices->setToolTip(tr("Select the audio input device used for decoding CW send by you."));
+  connect(_inputDevices, SIGNAL(currentIndexChanged(int)),
+          this, SLOT(onInputDeviceSelected(int)));
 
   _decoderLevel = new QSpinBox();
   _decoderLevel->setMinimum(-60);
@@ -1664,10 +1672,17 @@ DeviceSettingsView::DeviceSettingsView(QWidget *parent)
   _decoderLevel->setValue(int(_settings->decoderLevel()));
   _decoderLevel->setToolTip(tr("Specifies the detector threshold in dB for decoding CW."));
 
+  _levelBar = new QProgressBar();
+  _levelBar->setFormat("%v dB");
+  _levelBar->setMinimum(-60);
+  _levelBar->setMaximum(0);
+
   QFormLayout *layout = new QFormLayout();
   layout->addRow(tr("Output device"), _outputDevices);
   layout->addRow(tr("Input device"), _inputDevices);
   layout->addRow(tr("Detector threshold (dB)"), _decoderLevel);
+  layout->addRow(_levelBar);
+
   setLayout(layout);
 }
 
@@ -1695,6 +1710,40 @@ DeviceSettingsView::populateDevices() {
     if (device == currentDevice)
       _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
   }
+}
+
+void
+DeviceSettingsView::onInputDeviceSelected(int index) {
+  if (_source.isRunning())
+    _source.stop();
+
+  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  foreach (auto device, devices) {
+    if (device.deviceName() == _inputDevices->itemText(index)) {
+      _source.setInputDevice(device);
+      _source.start();
+    }
+  }
+}
+
+void
+DeviceSettingsView::onAudioDataAvailable() {
+  int samples = _buffer.bytesAvailable()/2;
+  logDebug() << "Process " << _buffer.bytesAvailable() <<" bytes...";
+  if (0 == samples)
+    return;
+
+  QByteArray data = _buffer.read(2*samples);
+  int16_t *values = (int16_t *)data.constData();
+  for (int i=0; i<samples; i++) {
+    _level *= gamma;
+    _level += std::abs(qFromLittleEndian(values[i]));
+  }
+
+  int dB = 20*std::log10(_level*(1-gamma)/(1<<15));
+  _levelBar->setValue(dB);
+
+  logDebug() << "... level " << dB << " dB.";
 }
 
 

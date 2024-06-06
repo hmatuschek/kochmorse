@@ -7,7 +7,11 @@ int main(int argc, char *argv[])
 {
   QTextStream err_str(stderr);
 
-  Logger::get().addHandler(new StreamLogHandler(err_str, LogMessage::INFO));
+  LogMessage::Level logLevel = LogMessage::INFO;
+#ifndef NDEBUG
+  logLevel = LogMessage::DEBUG;
+#endif
+  Logger::get().addHandler(new StreamLogHandler(err_str, logLevel));
 
   Application app(argc, argv);
 

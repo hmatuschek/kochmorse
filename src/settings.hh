@@ -11,11 +11,15 @@
 #include <QLabel>
 #include <QSettings>
 #include <QDateTime>
+#include "ringbuffer.hh"
+#include <QLabel>
+#include <QProgressBar>
 #include "listwidget.hh"
 #include <QGroupBox>
 #include <QFontComboBox>
 #include "morseencoder.hh"
 #include "colorbutton.hh"
+#include "audiosink.hh"
 
 
 /** Represents the global persistent settings. */
@@ -469,12 +473,25 @@ public slots:
   void save();
   void populateDevices();
 
+private slots:
+  void onInputDeviceSelected(int index);
+  void onAudioDataAvailable();
+
 protected:
   Settings *_settings;
   QLabel *_loadingNote;
   QComboBox *_inputDevices;
   QComboBox *_outputDevices;
   QSpinBox  *_decoderLevel;
+
+  RingBuffer _buffer;
+  QAudioSource _source;
+  double _level;
+
+  QProgressBar *_levelBar;
+
+protected:
+  static constexpr double gamma = 0.998;
 };
 
 
