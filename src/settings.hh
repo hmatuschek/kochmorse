@@ -88,10 +88,10 @@ public:
   double decoderLevel() const;
   void setDecoderLevel(double level);
 
-  QAudioDeviceInfo outputDevice() const;
+  QAudioDevice outputDevice() const;
   void setOutputDevice(const QString &devicename);
 
-  QAudioDeviceInfo inputDevice() const;
+  QAudioDevice inputDevice() const;
   void setInputDevice(const QString &devicename);
 
   /** Returns the current tutor. */

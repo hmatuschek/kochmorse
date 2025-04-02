@@ -5,19 +5,22 @@
 #include <QByteArray>
 #include <inttypes.h>
 #include <QIODevice>
+#include <QAudioDevice>
 #include <QAudioOutput>
 #include <QAudioInput>
+#include <QAudioSource>
+#include <QAudioSink>
 
 
-class QAudioSink: public QIODevice
+class KAudioSink: public QIODevice
 {
   Q_OBJECT
 
 public:
   /** Constructor. */
-  explicit QAudioSink(QIODevice *src = nullptr, QObject *parent = nullptr);
+  explicit KAudioSink(QIODevice *src = nullptr, QObject *parent = nullptr);
   /** Destructor. */
-  virtual ~QAudioSink();
+  virtual ~KAudioSink();
 
   /** Returns the current volume. */
   double volume() const;
@@ -25,7 +28,7 @@ public:
   void setVolume(double factor);
 
   /** (Re-) Sets the audio output device. */
-  void setOutputDevice(const QAudioDeviceInfo &output_device);
+  void setOutputDevice(const QAudioDevice &output_device);
 
   /** (Re-) Sets the audio source. */
   void setSource(QIODevice *source);
@@ -44,9 +47,9 @@ protected:
 
 protected:
   /** The port-audio stream. */
-  QAudioOutput *_output;
+  QAudioSink *_output;
   /** Holds the current output audio device of _output. */
-  QAudioDeviceInfo _output_device;
+  QAudioDevice _output_device;
   /** Holds the audio source. */
   QIODevice *_source;
 
@@ -54,8 +57,8 @@ protected:
 };
 
 
-/** Wraps QAudioInput for recording. It chooses the default recording device.*/
-class QAudioSource: public QIODevice
+/** Wraps QAudioSource for recording. It chooses the default recording device.*/
+class KAudioSource: public QIODevice
 {
   Q_OBJECT
 
@@ -63,12 +66,12 @@ public:
   /** Constructor.
    * @param sink Specifies the audio sink, the sample will be send to.
    * @param parent Specified the QObject parent. */
-  explicit QAudioSource(QIODevice *sink, QObject *parent=nullptr);
+  explicit KAudioSource(QIODevice *sink, QObject *parent=nullptr);
   /** Destructor. */
-  virtual ~QAudioSource();
+  virtual ~KAudioSource();
 
   /** (Re-) Sets the audio input device. */
-  void setInputDevice(const QAudioDeviceInfo &input_device);
+  void setInputDevice(const QAudioDevice &input_device);
 
   /** Starts processing. */
   void start();
@@ -85,9 +88,9 @@ protected:
 
 protected:
   /** The Qt Audio stream. */
-  QAudioInput *_input;
+  QAudioSource *_input;
   /** Holds the current input audio device of _input. */
-  QAudioDeviceInfo _input_device;
+  QAudioDevice _input_device;
   /** The first processing node. */
   QIODevice *_sink;
   /** Output buffer. */

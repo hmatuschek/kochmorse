@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QBuffer>
 #include <QIODevice>
+#include <QRegularExpression>
 #include <limits>
 
 /* ******************************************************************************************** *
@@ -14,7 +15,7 @@ void
 toWords(const QString text, QStringList &words) {
   if (0 == text.size()) { return; }
 
-  words = text.split(QRegExp("\\b"));
+  words = text.split(QRegularExpression("\\b"));
   //if (words.last() != ".") { words.append("."); }
   return;
 }
@@ -429,7 +430,7 @@ QHalModel::makeReply(const QStringList &keywords) {
    * dictionary so that we can generate backwards to reach the
    * beginning of the string. */
   if(replies.size()) {
-    for(int i=std::min(replies.size()-1, int(_order)); i>=0; --i) {
+    for(int i=std::min(int(replies.size()-1), int(_order)); i>=0; --i) {
       symbol = _dictionary.search(replies[i]);
       updateContext(symbol);
     }

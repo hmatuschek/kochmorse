@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTextStream>
+#include <QHash>
 #include <QVector>
 #include <QXmlStreamReader>
 

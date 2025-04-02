@@ -7,35 +7,35 @@
 
 
 /* ********************************************************************************************* *
- * QAudioSink, playback
+ * KAudioSink, playback
  * ********************************************************************************************* */
-QAudioSink::QAudioSink(QIODevice *src, QObject *parent)
+KAudioSink::KAudioSink(QIODevice *src, QObject *parent)
   : QIODevice(parent), _output(nullptr), _source(nullptr), _volume(1.0)
 {
   this->open(QIODevice::ReadOnly);
   setSource(src);
 }
 
-QAudioSink::~QAudioSink() {
+KAudioSink::~KAudioSink() {
   if (this->isOpen())
     this->close();
   _output->stop();
 }
 
 double
-QAudioSink::volume() const {
+KAudioSink::volume() const {
   return _volume;
 }
 
 void
-QAudioSink::setVolume(double volume) {
+KAudioSink::setVolume(double volume) {
   _volume = std::max(0.0, std::min(volume, 1.0));
   if (_output)
     _output->setVolume(_volume);
 }
 
 void
-QAudioSink::setOutputDevice(const QAudioDeviceInfo &output_device) {
+KAudioSink::setOutputDevice(const QAudioDevice &output_device) {
   if (_output && _output_device == output_device)
     return;
 
@@ -46,25 +46,25 @@ QAudioSink::setOutputDevice(const QAudioDeviceInfo &output_device) {
   }
 
   QAudioFormat fmt;
-  fmt.setByteOrder(QAudioFormat::LittleEndian);
+  //fmt.setByteOrder(QAudioFormat::LittleEndian);
   fmt.setChannelCount(1);
   fmt.setSampleRate(int(Globals::sampleRate));
-  fmt.setSampleSize(16);
-  fmt.setSampleType(QAudioFormat::SignedInt);
-  fmt.setCodec("audio/pcm");
-  QAudioDeviceInfo info(output_device);
+  //fmt.setBytesPerSample(2);
+  fmt.setSampleFormat(QAudioFormat::Int16);
+  //fmt.setCodec("audio/pcm");
+  QAudioDevice info(output_device);
   if (! info.isFormatSupported(fmt)) {
-    logError() << "Audio format is not supported by device" << info.deviceName();
+    logError() << "Audio format is not supported by device" << info.description();
   }
 
   _output_device = output_device;
-  _output = new QAudioOutput(_output_device, fmt, this);
+  _output = new QAudioSink(_output_device, fmt);
   _output->setVolume(_volume);
   _output->start(this);
 }
 
 void
-QAudioSink::setSource(QIODevice *source) {
+KAudioSink::setSource(QIODevice *source) {
   if (_source)
     disconnect(_source, SIGNAL(readyRead()), this, SIGNAL(readyRead()));
 
@@ -77,19 +77,19 @@ QAudioSink::setSource(QIODevice *source) {
 }
 
 bool
-QAudioSink::isSequential() const {
+KAudioSink::isSequential() const {
   return true;
 }
 
 qint64
-QAudioSink::bytesAvailable() const {
+KAudioSink::bytesAvailable() const {
   if (! _source)
     return QIODevice::bytesAvailable();
   return _source->bytesAvailable() + QIODevice::bytesAvailable();
 }
 
 qint64
-QAudioSink::readData(char *data, qint64 maxlen) {
+KAudioSink::readData(char *data, qint64 maxlen) {
   if (! _source)
     return 0;
 
@@ -98,41 +98,39 @@ QAudioSink::readData(char *data, qint64 maxlen) {
 }
 
 qint64
-QAudioSink::writeData(const char *data, qint64 len) {
+KAudioSink::writeData(const char *data, qint64 len) {
   Q_UNUSED(data);
   Q_UNUSED(len);
   return 0;
 }
 
-
-
 /* ********************************************************************************************* *
- * QAudioSource, recording
+ * KAudioSource, recording
  * ********************************************************************************************* */
-QAudioSource::QAudioSource(QIODevice *sink, QObject *parent)
+KAudioSource::KAudioSource(QIODevice *sink, QObject *parent)
   : QIODevice(parent), _input(nullptr), _sink(sink)
 {
 }
 
-QAudioSource::~QAudioSource() {
+KAudioSource::~KAudioSource() {
   this->stop();
   this->close();
 }
 
 void
-QAudioSource::start() {
+KAudioSource::start() {
   if (_input && QAudio::ActiveState != _input->state())
     _input->start(this);
 }
 
 void
-QAudioSource::stop() {
+KAudioSource::stop() {
   if (_input)
     _input->stop();
 }
 
 void
-QAudioSource::setInputDevice(const QAudioDeviceInfo &input_device) {
+KAudioSource::setInputDevice(const QAudioDevice &input_device) {
   if (_input && _input_device == input_device)
     return;
 
@@ -143,36 +141,36 @@ QAudioSource::setInputDevice(const QAudioDeviceInfo &input_device) {
   }
 
   QAudioFormat fmt;
-  fmt.setByteOrder(QAudioFormat::LittleEndian);
+  //fmt.setByteOrder(QSysInfo::LittleEndian);
   fmt.setChannelCount(1);
   fmt.setSampleRate(int(Globals::sampleRate));
-  fmt.setSampleType(QAudioFormat::SignedInt);
-  fmt.setSampleSize(16);
-  fmt.setCodec("audio/pcm");
+  fmt.setSampleFormat(QAudioFormat::Int16);
+  //fmt.setBytesPerSample(2);
+  //fmt.setCodec("audio/pcm");
 
-  QAudioDeviceInfo info(input_device);
+  QAudioDevice info(input_device);
   if (! info.isFormatSupported(fmt)) {
-    logWarn() << "Audio format is not supported by device" << info.deviceName();
+    logWarn() << "Audio format is not supported by device" << info.description();
   }
 
   _input_device = input_device;
-  _input = new QAudioInput(_input_device, fmt, this);
+  _input = new QAudioSource(_input_device, fmt);
   this->open(QIODevice::WriteOnly);
   _buffer.reserve(2048*sizeof(int16_t));
 }
 
 bool
-QAudioSource::isRunning() const {
+KAudioSource::isRunning() const {
   return QAudio::ActiveState == _input->state();
 }
 
 qint64
-QAudioSource::readData(char *data, qint64 maxlen) {
+KAudioSource::readData(char *data, qint64 maxlen) {
   return 0;
 }
 
 qint64
-QAudioSource::writeData(const char *data, qint64 len) {
+KAudioSource::writeData(const char *data, qint64 len) {
   _buffer.append(data, len);
   _sink->write(_buffer);
   _buffer.clear();

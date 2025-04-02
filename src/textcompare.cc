@@ -3,14 +3,13 @@
 #include <QDebug>
 #include <QRegularExpression>
 
-void _add_missing_word(const QStringRef &word, QVector<int> &mistakes) {
-  int offset = word.position();
-  for (int i=0; i<word.size(); i++, offset++) {
-    mistakes.push_back(offset);
+void _add_missing_word(const QString &word, QVector<int> &mistakes) {
+  for (int i=0; i<word.size(); i++) {
+    mistakes.push_back(i);
   }
 }
 
-int wordCompare(const QStringRef &a, const QStringRef &b, QVector<int> &mistakes)
+int wordCompare(const QString &a, const QString &b, QVector<int> &mistakes)
 {
   mistakes.clear();
   mistakes.reserve(a.length());
@@ -19,7 +18,7 @@ int wordCompare(const QStringRef &a, const QStringRef &b, QVector<int> &mistakes
   for (; ia<a.size(); ia++, ib++) {
     // If word B ends earlier -> assume rest of word A is missing
     if (ib >= b.size()) {
-      mistakes.push_back(a.position()+ia);
+      mistakes.push_back(ia);
       continue;
     }
     // If chars in word A & B match -> ok
@@ -27,7 +26,7 @@ int wordCompare(const QStringRef &a, const QStringRef &b, QVector<int> &mistakes
       continue;
 
     // Otherwise there must be a mistake
-    mistakes.push_back(a.position()+ia);
+    mistakes.push_back(ia);
 
     if ((ia+1) >= a.size())
       continue;
@@ -51,7 +50,7 @@ int wordCompare(const QStringRef &a, const QStringRef &b, QVector<int> &mistakes
   return mistakes.size();
 }
 
-int textCompare(const QVector<QStringRef> &awords, const QVector<QStringRef> &bwords,
+int textCompare(const QVector<QString> &awords, const QVector<QString> &bwords,
                 QVector<int> &mistakes, int ia, int ib, int misses=5)
 {
   mistakes.clear();
@@ -104,16 +103,16 @@ int textCompare(const QString &a, const QString &b, QVector<int> &mistakes)
   mistakes.clear();
   mistakes.reserve(a.size());
 
-  QVector<QStringRef> alines = a.splitRef(QRegularExpression("\\R"), QString::SkipEmptyParts);
-  QVector<QStringRef> blines = b.splitRef(QRegularExpression("\\R"), QString::SkipEmptyParts);
+  QVector<QString> alines = a.split(QRegularExpression("\\R"), Qt::SkipEmptyParts);
+  QVector<QString> blines = b.split(QRegularExpression("\\R"), Qt::SkipEmptyParts);
   for (int l=0; l<alines.size(); l++) {
     // Split line into words
-    QVector<QStringRef> awords = alines[l].split(' ', QString::SkipEmptyParts);
+    QVector<QString> awords = alines[l].split(' ', Qt::SkipEmptyParts);
     // If there is a line left in b
     if (l < blines.size()) {
       // -> compare lines
       QVector<int> lineMistakes;
-      QVector<QStringRef> bwords = blines[l].split(' ', QString::SkipEmptyParts);
+      QVector<QString> bwords = blines[l].split(' ', Qt::SkipEmptyParts);
       textCompare(awords, bwords, lineMistakes, 0, 0);
       mistakes.append(lineMistakes);
     } else {

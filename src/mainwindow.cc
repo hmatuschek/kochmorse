@@ -98,7 +98,7 @@ MainWindow::MainWindow(Application &app, QWidget *parent)
 
   QWidget *panel = new QWidget();
   QVBoxLayout *vbox = new QVBoxLayout();
-  vbox->setMargin(0);
+  //vbox->setMargin(0);
   vbox->addWidget(_text);
   vbox->addWidget(_input);
   vbox->addWidget(_check);

@@ -1,5 +1,5 @@
 #include "qsochat.hh"
-#include <QRegExp>
+#include <QRegularExpression>
 #include "textgen.hh"
 #include <QDebug>
 
@@ -72,13 +72,13 @@ Lexer::Lexer()
 }
 
 void
-Lexer::addPattern(const QRegExp &regex, const QString &id) {
-  _pattern.append(QPair<QRegExp, QString>(regex, id));
+Lexer::addPattern(const QRegularExpression &regex, const QString &id) {
+  _pattern.append(QPair<QRegularExpression, QString>(regex, id));
 }
 
 void
 Lexer::addPattern(const QString &regex, const QString &id) {
-  _pattern.append(QPair<QRegExp, QString>(QRegExp(regex, Qt::CaseInsensitive), id));
+  _pattern.append(QPair<QRegularExpression, QString>(QRegularExpression(regex, QRegularExpression::CaseInsensitiveOption), id));
 }
 
 void
@@ -97,13 +97,17 @@ Lexer::next() {
   Token token;
 
   for (int i=0; i<_pattern.size(); i++) {
-    int idx = _pattern[i].first.indexIn(_text, _offset);
-    if (idx < 0)
+    QRegularExpressionMatch matchResult = _pattern[i].first.match(_text, _offset);
+    if (!matchResult.hasMatch()) {
+      // No match for this pattern, continue to next
       continue;
+    }
+
+    int idx = matchResult.capturedStart(1); // Start of the captured group
     if ((match<0) || (match>idx)) {
       match = idx;
-      token = Token(_pattern[i].second, _pattern[i].first.cap(1));
-      length = _pattern[i].first.matchedLength();
+      token = Token(_pattern[i].second, matchResult.captured(1));
+      length = matchResult.capturedLength(1); // Length of the matched string
     }
   }
 
@@ -259,7 +263,7 @@ ChatMachine::parseToken(QXmlStreamReader &reader) {
     reader.readNext();
     if (reader.isCDATA() || reader.isCharacters()) {
       qDebug() << "Found token " << id << reader.text().toString();
-      _lexer.addPattern(QRegExp(reader.text().toString(), Qt::CaseInsensitive), id);
+      _lexer.addPattern(QRegularExpression(reader.text().toString(), QRegularExpression::CaseInsensitiveOption), id);
     } else if (reader.isStartElement()) {
       reader.raiseError(tr("Unexpected element at line %1: %2")
                         .arg(reader.lineNumber()).arg(reader.name().toString()));

@@ -47,7 +47,7 @@ TextGenAnyLetterRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx
     // Seed with a real random value, if available
     std::random_device r;
     std::default_random_engine entr(r());
-    std::uniform_int_distribution<char> rnd(0, 25);
+    std::uniform_int_distribution<int> rnd(0, 25);
     char c = 'a' + rnd(entr);
     buffer << QChar(c);
 }
@@ -67,7 +67,7 @@ TextGenAnyNumberRule::generate(QTextStream &buffer, QHash<QString, QString> &ctx
     // Seed with a real random value, if available
     std::random_device r;
     std::default_random_engine entr(r());
-    std::uniform_int_distribution<char> rnd(0, 9);
+    std::uniform_int_distribution<int> rnd(0, 9);
     char c = '0' + rnd(entr);
     buffer << QChar(c);
 }

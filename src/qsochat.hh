@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QTextStream>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QVector>
 #include <QPair>
 #include <QXmlStreamReader>
@@ -34,7 +34,7 @@ class Lexer
 public:
   Lexer();
 
-  void addPattern(const QRegExp &regex, const QString &id);
+  void addPattern(const QRegularExpression &regex, const QString &id);
   void addPattern(const QString &regex, const QString &id);
 
   void start(const QString &text);
@@ -43,7 +43,7 @@ public:
 protected:
   int _offset;
   QString _text;
-  QList< QPair<QRegExp, QString> > _pattern;
+  QList< QPair<QRegularExpression, QString> > _pattern;
 };
 
 
