@@ -30,7 +30,7 @@ Application::Application(int &argc, char *argv[])
   translator->load(QLocale(), "kochmorse", "_", ":/lang/");
   installTranslator(translator);
 
-  _audio_sink = new QAudioSink(nullptr, this);
+  _audio_sink = new KAudioSink(nullptr, this);
 
   _noiseEffect = new NoiseEffect(nullptr, settings.noiseEnabled(), settings.noiseSNR(),
                                  settings.noiseFilterEnabled(), settings.tone(),
@@ -52,7 +52,7 @@ Application::Application(int &argc, char *argv[])
   _fadingEffect->setSource(_encoder);
 
   _decoder = new MorseDecoder(settings.speed(), std::pow(10.,settings.decoderLevel()/20), this);
-  _audio_src = new QAudioSource(_decoder, this);
+  _audio_src = new KAudioSource(_decoder, this);
 
   _highscore = new HighScore(this);
 

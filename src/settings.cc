@@ -11,7 +11,8 @@
 #include "morseencoder.hh"
 #include "globals.hh"
 #include <QDebug>
-#include <QAudioDeviceInfo>
+#include <QAudioDevice>
+#include <QMediaDevices>
 #include <QDesktopServices>
 #include <QFontComboBox>
 #include <QUuid>
@@ -141,13 +142,13 @@ Settings::setDecoderLevel(double level) {
   this->setValue("decoderlevel", level);
 }
 
-QAudioDeviceInfo
+QAudioDevice
 Settings::outputDevice() const {
-  QAudioDeviceInfo def(QAudioDeviceInfo::defaultOutputDevice());
-  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioOutput));
-  QString devname = this->value("output", def.deviceName()).toString();
+  QAudioDevice def(QMediaDevices::defaultAudioOutput());
+  QList<QAudioDevice> devices(QMediaDevices::audioOutputs());
+  QString devname = this->value("output", def.description()).toString();
   foreach (auto dev, devices) {
-    if (dev.deviceName() == devname)
+    if (dev.description() == devname)
       return dev;
   }
   return def;
@@ -157,13 +158,13 @@ Settings::setOutputDevice(const QString &devicename) {
   this->setValue("output", devicename);
 }
 
-QAudioDeviceInfo
+QAudioDevice
 Settings::inputDevice() const {
-  QAudioDeviceInfo def(QAudioDeviceInfo::defaultInputDevice());
-  QList<QAudioDeviceInfo> devices(QAudioDeviceInfo::availableDevices(QAudio::AudioInput));
-  QString devname = this->value("input", def.deviceName()).toString();
+  QAudioDevice def(QMediaDevices::defaultAudioInput());
+  QList<QAudioDevice> devices(QMediaDevices::audioInputs());
+  QString devname = this->value("input", def.description()).toString();
   foreach (auto dev, devices) {
-    if (dev.deviceName() == devname)
+    if (dev.description() == devname)
       return dev;
   }
   return def;
@@ -188,7 +189,7 @@ Settings::kochLesson() const {
 }
 void
 Settings::setKochLesson(int n) {
-  n = std::max(2, std::min(n, KochTutor::lessons().size()));
+  n = std::max(2, std::min(n, int(KochTutor::lessons().size())));
   this->setValue("koch/lesson", n);
 }
 
@@ -405,7 +406,7 @@ Settings::wordsworthLesson() const {
 }
 void
 Settings::setWordsworthLesson(int n) {
-  n = std::max(2, std::min(n, WordsworthTutor::lessons().size()));
+  n = std::max(2, std::min(n, int(WordsworthTutor::lessons().size())));
   this->setValue("wordsworth/lesson", n);
 }
 
@@ -1680,18 +1681,18 @@ DeviceSettingsView::save() {
 
 void
 DeviceSettingsView::populateDevices() {
-  QAudioDeviceInfo currentDevice = _settings->outputDevice();
-  QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+  QAudioDevice currentDevice = _settings->outputDevice();
+  QList<QAudioDevice> devices(QMediaDevices::audioOutputs());
   foreach (auto device, devices) {
-    _outputDevices->addItem(device.deviceName());
+    _outputDevices->addItem(device.description());
     if (device == currentDevice)
       _outputDevices->setCurrentIndex(_outputDevices->model()->rowCount()-1);
   }
 
   currentDevice = _settings->inputDevice();
-  devices = QAudioDeviceInfo::availableDevices(QAudio::AudioInput);
+  devices = QMediaDevices::audioInputs();
   foreach (auto device, devices) {
-    _inputDevices->addItem(device.deviceName());
+    _inputDevices->addItem(device.description());
     if (device == currentDevice)
       _inputDevices->setCurrentIndex(_inputDevices->model()->rowCount()-1);
   }

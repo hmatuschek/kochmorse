@@ -8,8 +8,8 @@ set(kochmorse_MOC_HEADERS
   checkupdate.hh colorbutton.hh highscore.hh logger.hh)
 set(kochmorse_HEADERS globals.hh qhal.hh textcompare.hh ${kochmorse_MOC_HEADERS})
 
-qt5_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
-qt5_add_resources(kochmorse_RCC_SOURCES ../resources.qrc)
+qt6_wrap_cpp(kochmorse_MOC_SOURCES ${kochmorse_MOC_HEADERS})
+qt6_add_resources(kochmorse_RCC_SOURCES ../resources.qrc)
 
 add_executable(kochmorse WIN32 ${kochmorse_SOURCES} ${kochmorse_MOC_SOURCES} ${kochmorse_RCC_SOURCES})
 target_link_libraries(kochmorse ${LIBS})
@@ -20,7 +20,7 @@ install(TARGETS kochmorse DESTINATION bin)
 if (WITH_TEXTGEN)
  set(textgen_SOURCES textgen_cli.cc textgen.cc logger.cc globals.cc)
  set(textgen_MOC_HEADERS textgen.hh logger.hh)
- qt5_wrap_cpp(textgen_MOC_SOURCES ${textgen_MOC_HEADERS})
+ qt6_wrap_cpp(textgen_MOC_SOURCES ${textgen_MOC_HEADERS})
 
  add_executable(textgen WIN32 ${textgen_SOURCES} ${textgen_MOC_SOURCES})
  target_link_libraries(textgen ${LIBS})
@@ -31,7 +31,7 @@ endif (WITH_TEXTGEN)
 if (WITH_QSOCHAT)
  set(qsochat_SOURCES qsochat_cli.cc textgen.cc qsochat.cc)
  set(qsochat_MOC_HEADERS textgen.hh qsochat.hh)
- qt5_wrap_cpp(qsochat_MOC_SOURCES ${qsochat_MOC_HEADERS})
+ qt6_wrap_cpp(qsochat_MOC_SOURCES ${qsochat_MOC_HEADERS})
 
  add_executable(qsochat WIN32 ${qsochat_SOURCES} ${qsochat_MOC_SOURCES} ${kochmorse_RCC_SOURCES})
  target_link_libraries(qsochat ${LIBS})

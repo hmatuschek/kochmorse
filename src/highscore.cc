@@ -87,7 +87,7 @@ HighScore::upload() {
   QString id = settings.hsID();
   QString call = settings.hsCall().simplified();
 
-  if (! QRegExp("[0-9a-zA-Z]+").exactMatch(call))
+  if (! QRegularExpression("[0-9a-zA-Z]+").match(call).hasMatch())
     return;
 
   if (0 == _entries.size())

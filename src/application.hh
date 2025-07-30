@@ -60,7 +60,7 @@ protected:
   /** If @c true a session is running. */
   bool _running;
   /** The audio output device. */
-  QAudioSink *_audio_sink;
+  KAudioSink *_audio_sink;
   /** The noise effect instance. */
   NoiseEffect *_noiseEffect;
   /** QRM. */
@@ -73,7 +73,7 @@ protected:
   Tutor *_tutor;
 
   /** The audio source device. */
-  QAudioSource *_audio_src;
+  KAudioSource *_audio_src;
   /** The decoder device. */
   MorseDecoder *_decoder;
 

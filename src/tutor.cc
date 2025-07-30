@@ -116,7 +116,7 @@ KochTutor::lesson() const {
 }
 void
 KochTutor::setLesson(int lesson) {
-  _lesson = std::max(2, std::min(lesson, _lessons.size()));
+  _lesson = std::max(2, std::min(lesson, int(_lessons.size())));
 }
 
 bool
@@ -599,7 +599,7 @@ WordsworthTutor::lesson() const {
 }
 void
 WordsworthTutor::setLesson(int lesson) {
-  _lesson = std::max(2, std::min(lesson, _lessons.size()));
+  _lesson = std::max(2, std::min(lesson, int(_lessons.size())));
 }
 
 bool
@@ -881,7 +881,7 @@ TXTutor::~TXTutor() {
 
 QChar
 TXTutor::next() {
-  return 0;
+  return QChar::fromLatin1(0);
 }
 
 bool
@@ -915,7 +915,7 @@ ChatTutor::~ChatTutor() {
 
 QChar
 ChatTutor::next() {
-  QChar c = 0;
+  QChar c(0);
   if (_outputbuffer.size()) {
     c = _outputbuffer.at(0);
     _outputbuffer.remove(0,1);
