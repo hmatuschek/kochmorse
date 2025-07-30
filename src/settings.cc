@@ -758,12 +758,12 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   _tone = new QLineEdit(QString::number(settings.tone()));
   QIntValidator *tone_val = new QIntValidator(20,20000, _tone);
   _tone->setValidator(tone_val);
-  _tone->setToolTip(tr("Specifies the freqency (in Hz) of the CW tone."));
+  _tone->setToolTip(tr("Specifies the frequency (in Hz) of the CW tone."));
 
   _daPitch = new QLineEdit(QString::number(settings.dashPitch()));
   QIntValidator *pitch_val = new QIntValidator(-1000,1000, _daPitch);
   _daPitch->setValidator(pitch_val);
-  _daPitch->setToolTip(tr("Specifies the freqency offset (in Hz) for the 'dah' tone."));
+  _daPitch->setToolTip(tr("Specifies the frequency offset (in Hz) for the 'dah' tone."));
 
   _sound = new QComboBox();
   _sound->addItem(tr("Soft"), uint(MorseEncoder::SOUND_SOFT));
@@ -780,7 +780,7 @@ CodeSettingsView::CodeSettingsView(QWidget *parent)
   _jitter->addItem(tr("Exact"), uint(MorseEncoder::JITTER_EXACT));
   _jitter->addItem(tr("Bug"), uint(MorseEncoder::JITTER_BUG));
   _jitter->addItem(tr("Straight"), uint(MorseEncoder::JITTER_STRAIGHT));
-  _jitter->setToolTip(tr("Selects the timeing jitter to simulate a semi-automatic key (bug) "
+  _jitter->setToolTip(tr("Selects the timing jitter to simulate a semi-automatic key (bug) "
                          "or a straight key."));
   switch (settings.jitter()) {
     case MorseEncoder::JITTER_EXACT: _jitter->setCurrentIndex(0); break;
@@ -1524,7 +1524,7 @@ EffectSettingsView::EffectSettingsView(QWidget *parent)
   _noiseFilter = new QCheckBox();
   _noiseFilter->setChecked(settings.noiseFilterEnabled());
   _noiseFilter->setEnabled(settings.noiseEnabled());
-  _noiseFilter->setToolTip(tr("Enables a band-pass audio fiter around the CW tone freqency."));
+  _noiseFilter->setToolTip(tr("Enables a band-pass audio fiter around the CW tone frequency."));
 
   _noiseBw = new QSpinBox();
   _noiseBw->setMinimum(10);
